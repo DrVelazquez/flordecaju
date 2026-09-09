@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Pousada Flor de Caju — Pipa, RN</title>
 <meta name="description" content="Pousada Flor de Caju, na Rua do Ceú, uma das ruas mais bonitas de Pipa, Rio Grande do Norte. Café da manhã incluso, pertinho da praia.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +29,7 @@
 
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  html,body{overflow-x:hidden; width:100%; max-width:100%;}
   body{
     margin:0;
     background:var(--sand);
@@ -37,7 +38,11 @@
     font-size:16px;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+    touch-action:pan-x pan-y;
   }
+  h1,h2,h3,p,span,strong,a,button{overflow-wrap:break-word; word-break:break-word;}
   h1,h2,h3{
     font-family:'Fraunces',serif;
     color:var(--green-deep);
@@ -94,6 +99,9 @@
     border-bottom:1px solid transparent;
   }
   nav.mainnav a:hover{border-bottom-color:var(--coral);}
+  .nav-insta{display:flex; align-items:center; border-bottom:none !important; opacity:.75;}
+  .nav-insta:hover{opacity:1;}
+  .nav-insta svg{width:20px; height:20px;}
   .head-right{display:flex; align-items:center; gap:18px;}
   .langswitch{display:flex; gap:6px; border:1px solid var(--line); border-radius:999px; padding:4px;}
   .langswitch button{
@@ -153,17 +161,17 @@
   .hero-map-link{display:block; text-align:center; padding:10px; font-size:.86rem; font-weight:600; color:var(--green-deep); text-decoration:none; border-top:1px solid var(--line);}
   .hero-map-link:hover{color:var(--coral-deep);}
 
-  .hero-insta-badge{
-    position:absolute; top:14px; right:14px; z-index:5;
-    display:flex; align-items:center; gap:7px;
-    background:rgba(255,253,248,0.92); backdrop-filter:blur(4px);
-    padding:7px 13px; border-radius:999px; text-decoration:none;
-    font-size:.82rem; font-weight:600; color:var(--green-deep);
-    box-shadow:0 4px 14px rgba(28,54,32,0.18);
-    transition:transform .15s ease, background .15s ease;
-  }
-  .hero-insta-badge:hover{transform:translateY(-1px); background:var(--white);}
-  .hero-insta-badge svg{width:16px; height:16px; flex:none;}
+  /* ============ HIGHLIGHTS ============ */
+  .highlights{padding:40px 0; background:var(--sand-2);}
+  .highlights-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px 28px;}
+  .highlight-item{display:flex; gap:14px; align-items:flex-start; text-decoration:none; color:inherit;}
+  .highlight-item svg{width:26px; height:26px; flex:none; color:var(--coral); margin-top:2px;}
+  .highlight-item strong{display:block; font-family:'Fraunces',serif; font-weight:600; color:var(--green-deep); font-size:1.02rem; margin-bottom:2px;}
+  .highlight-item p{font-size:.88rem; color:var(--ink); margin:0; max-width:none;}
+  .highlight-cta{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin:-14px; transition:border-color .15s ease, transform .15s ease;}
+  .highlight-cta:hover{border-color:var(--coral); transform:translateY(-1px);}
+  @media (max-width:860px){ .highlights-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .highlights-grid{grid-template-columns:1fr;} }
 
   /* ============ ABOUT ============ */
   .about-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:start;}
@@ -175,6 +183,16 @@
   }
   .facts svg{width:20px; height:20px; flex:none; color:var(--coral); margin-top:2px;}
   @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} .facts{grid-template-columns:1fr;} }
+
+  .weather-widget{
+    display:flex; align-items:center; gap:16px; align-self:start;
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:22px 26px;
+  }
+  .weather-icon{width:40px; height:40px; color:var(--gold); flex:none;}
+  .weather-info{display:flex; flex-direction:column;}
+  .weather-info strong{font-family:'Fraunces',serif; font-size:1.7rem; color:var(--green-deep); line-height:1;}
+  .weather-info span{font-size:.86rem; color:var(--green); margin-top:4px;}
 
   /* ============ ROOMS ============ */
   .section-head{max-width:60ch; margin-bottom:44px;}
@@ -363,6 +381,9 @@
       <a href="#galeria" data-i18n="nav.gallery">Galeria</a>
       <a href="#reservar" data-i18n="nav.book">Reservar</a>
       <a href="#contato" data-i18n="nav.contact">Contato</a>
+      <a href="#" id="navInstaBtn" target="_blank" rel="noopener" class="nav-insta" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
     </nav>
     <div class="head-right">
       <div class="langswitch" role="group" aria-label="Idioma / Language / Idioma">
@@ -382,7 +403,7 @@
     <div class="wrap hero-grid">
       <div>
         <h1 data-i18n="hero.headline">Seu pedacinho de paraíso em Pipa</h1>
-        <p class="lede" data-i18n="hero.sub">A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Seu home away from home em Pipa.</p>
+        <p class="lede" data-i18n="hero.sub">A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Sua casa longe de casa, em Pipa.</p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#reservar" data-i18n="hero.cta1">Reservar agora</a>
           <a class="btn btn-outline" id="heroWaBtn" href="#" target="_blank" rel="noopener">
@@ -398,10 +419,6 @@
 
       <div class="hero-media">
         <div class="hero-carousel" id="heroCarousel">
-          <a class="hero-insta-badge" id="heroInstaBadge" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
-            <span id="heroInstaHandle">@flordecaju.pipa</span>
-          </a>
           <div class="hc-track" id="hcTrack">
             <div class="hc-slide hc-1">
               <svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-8h6v8"/></svg>
@@ -454,20 +471,56 @@
     </div>
   </section>
 
+  <!-- ============ HIGHLIGHTS ============ -->
+  <!-- Estes são destaques no estilo Booking.com. Editem, removam ou troquem o que não fizer sentido. -->
+  <section id="destaques" class="highlights">
+    <div class="wrap">
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          <div><strong data-i18n="highlights.location.title">Localização imbatível</strong><p data-i18n="highlights.location.text">Na Rua do Ceú, uma das mais charmosas de Pipa, a poucos passos da praia.</p></div>
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 10h14l-1 9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2Z"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <div><strong data-i18n="highlights.breakfast.title">Café da manhã incluso</strong><p data-i18n="highlights.breakfast.text">Servido todos os dias, já incluído na sua estadia.</p></div>
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5 12a10 10 0 0 1 14 0"/><path d="M8.5 15.5a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/></svg>
+          <div><strong data-i18n="highlights.wifi.title">Wi-Fi grátis</strong><p data-i18n="highlights.wifi.text">Conexão liberada em toda a pousada.</p></div>
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18Z"/></svg>
+          <div><strong data-i18n="highlights.lang.title">Atendimento em 3 idiomas</strong><p data-i18n="highlights.lang.text">Falamos português, espanhol e inglês.</p></div>
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>
+          <div><strong data-i18n="highlights.chat.title">Resposta rápida no WhatsApp</strong><p data-i18n="highlights.chat.text">Tiramos suas dúvidas na hora.</p></div>
+        </div>
+        <a class="highlight-item highlight-cta" id="transferBtn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 16V9a1 1 0 0 1 1-1h11l4 4v4"/><path d="M3 16h1M14 16h1M19 16h1"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/></svg>
+          <div><strong data-i18n="highlights.transfer.title">Precisa de traslado do aeroporto de Natal?</strong><p data-i18n="highlights.transfer.text">Fale com a gente pelo WhatsApp e organizamos para você.</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ ABOUT ============ -->
   <section id="sobre">
     <div class="wrap about-grid">
       <div>
-        <h2 data-i18n="about.title">Na rua mais charmosa de Pipa</h2>
-        <p data-i18n="about.text">Estamos na Rua do Ceú, uma das principais ruas de Pipa e uma das mais fotografadas da cidade, com seus famosos paralelepípedos coloridos — pura foto de Instagram. É uma rua sem trânsito de carros, cercada de restaurantes e lojinhas, e a poucos passos da praia.</p>
+        <h2 data-i18n="about.title">Isso é Pipa</h2>
+        <p data-i18n="about.text">Pipa é para relaxar e também para curtir de verdade: natureza por todo lado, noites animadas e gente boa pra conhecer. Tem praia badalada e praia desertinha, muito surf, muita yoga e uma cena gastronômica que surpreende. Os golfinhos você vai ver, garantido — e as tartarugas marinhas também.</p>
       </div>
-      <ul class="facts">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg><span data-i18n="about.fact1">Pertinho da praia</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h18M3 12l4-4M3 12l4 4"/></svg><span data-i18n="about.fact2">Na Rua do Ceú, uma das principais de Pipa</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M4 8h16M4 16h16"/></svg><span data-i18n="about.fact3">Rua sem trânsito de carros</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 10h14l-1 9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2Z"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span data-i18n="about.fact4">Café da manhã incluso</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2.5"/><path d="M4 21c0-5 3.5-9 8-9s8 4 8 9"/></svg><span data-i18n="about.fact5">Terraço à sombra para relaxar</span></li>
-      </ul>
+      <div class="weather-widget" id="weatherWidget">
+        <svg class="weather-icon" id="weatherIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+        </svg>
+        <div class="weather-info">
+          <strong id="weatherTemp">—°C</strong>
+          <span data-i18n="weather.now">agora em Pipa</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -480,7 +533,7 @@
       </div>
       <div class="rooms-grid">
         <div class="room-card">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-8h6v8"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="13" rx="7.5" ry="5.5"/><path d="M9 8.5v9M15 8.5v9M4.5 13h15"/><circle cx="12" cy="6" r="1.8"/><path d="M3.5 9.5 1.5 8M3.5 16.5 1.5 18M20.5 9.5 22.5 8M20.5 16.5 22.5 18"/></svg>
           <h3 data-i18n="rooms.apt.title">Apartamento Flor de Caju</h3>
           <p data-i18n="rooms.apt.desc">Um apartamento completo, com cozinha própria, para até 4 pessoas. Ideal para famílias ou grupos que querem mais espaço e independência.</p>
           <div class="room-tags" data-i18n="rooms.apt.tags">Até 4 pessoas · Cozinha completa · Banheiro privativo</div>
@@ -490,7 +543,7 @@
           </button>
         </div>
         <div class="room-card">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11h16v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-4Z"/><path d="M2 11h20"/><path d="M8 11V7M12 11V6M16 11V7"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3C7 3 4 9 4 14c0 3 1.5 5 3.5 6L12 12l4.5 8c2-1 3.5-3 3.5-6 0-5-3-11-8-11Z"/><path d="M12 12v9"/></svg>
           <h3 data-i18n="rooms.kit.title">Suíte com cozinha</h3>
           <p data-i18n="rooms.kit.desc">Pensada para casais, com cozinha compacta para quem prefere preparar suas próprias refeições. Se precisar, dá para acomodar uma pessoa a mais.</p>
           <div class="room-tags" data-i18n="rooms.kit.tags">Cozinha compacta · Banheiro privativo</div>
@@ -500,7 +553,7 @@
           </button>
         </div>
         <div class="room-card">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19v-6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v6"/><path d="M2 19h20M6 13V9M18 13V9"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
           <h3 data-i18n="rooms.classic.title">Suíte clássica</h3>
           <p data-i18n="rooms.classic.desc">Simples e aconchegante, para casais — com a opção de acomodar uma pessoa a mais quando necessário.</p>
           <div class="room-tags" data-i18n="rooms.classic.tags">Sem cozinha · Banheiro privativo</div>
@@ -604,6 +657,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           <span data-i18n="footer.email">E-mail</span>
         </a>
+        <a class="btn btn-ghost" id="footInstaBtn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+          <span data-i18n="footer.instagram">Instagram</span>
+        </a>
       </div>
     </div>
     <div class="footer-meta">
@@ -647,13 +704,19 @@ const T = {
   pt: {
     "nav.rooms":"Quartos","nav.gallery":"Galeria","nav.book":"Reservar","nav.contact":"Contato","nav.bookBtn":"Reservar",
     "hero.headline":"Seu pedacinho de paraíso em Pipa",
-    "hero.sub":"A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Seu home away from home em Pipa.",
+    "hero.sub":"A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Sua casa longe de casa, em Pipa.",
     "hero.cta1":"Reservar agora","hero.cta2":"Chamar no WhatsApp","hero.cta3":"Enviar e-mail",
     "hero.mapLabel":"Onde estamos","hero.mapLink":"Ver no mapa",
     "reviews.title":"O que dizem no Booking.com","reviews.placeholder":"Coloque aqui o print de uma avaliação real",
-    "about.title":"Na rua mais charmosa de Pipa",
-    "about.text":"Estamos na Rua do Ceú, uma das principais ruas de Pipa e uma das mais fotografadas da cidade, com seus famosos paralelepípedos coloridos — pura foto de Instagram. É uma rua sem trânsito de carros, cercada de restaurantes e lojinhas, e a poucos passos da praia.",
-    "about.fact1":"Pertinho da praia","about.fact2":"Na Rua do Ceú, uma das principais de Pipa","about.fact3":"Rua sem trânsito de carros","about.fact4":"Café da manhã incluso","about.fact5":"Terraço à sombra para relaxar",
+    "highlights.location.title":"Localização imbatível","highlights.location.text":"Na Rua do Ceú, uma das mais charmosas de Pipa, a poucos passos da praia.",
+    "highlights.breakfast.title":"Café da manhã incluso","highlights.breakfast.text":"Servido todos os dias, já incluído na sua estadia.",
+    "highlights.wifi.title":"Wi-Fi grátis","highlights.wifi.text":"Conexão liberada em toda a pousada.",
+    "highlights.lang.title":"Atendimento em 3 idiomas","highlights.lang.text":"Falamos português, espanhol e inglês.",
+    "highlights.chat.title":"Resposta rápida no WhatsApp","highlights.chat.text":"Tiramos suas dúvidas na hora.",
+    "highlights.transfer.title":"Precisa de traslado do aeroporto de Natal?","highlights.transfer.text":"Fale com a gente pelo WhatsApp e organizamos para você.",
+    "about.title":"Isso é Pipa",
+    "about.text":"Pipa é para relaxar e também para curtir de verdade: natureza por todo lado, noites animadas e gente boa pra conhecer. Tem praia badalada e praia desertinha, muito surf, muita yoga e uma cena gastronômica que surpreende. Os golfinhos você vai ver, garantido — e as tartarugas marinhas também.",
+    "weather.now":"agora em Pipa",
     "rooms.title":"Quartos","rooms.sub":"3 tipos de quartos, todos com banheiro privativo.","rooms.viewPhotos":"Ver fotos",
     "rooms.apt.title":"Apartamento Flor de Caju","rooms.apt.desc":"Um apartamento completo, com cozinha própria, para até 4 pessoas. Ideal para famílias ou grupos que querem mais espaço e independência.","rooms.apt.tags":"Até 4 pessoas · Cozinha completa · Banheiro privativo",
     "rooms.kit.title":"Suíte com cozinha","rooms.kit.desc":"Pensada para casais, com cozinha compacta para quem prefere preparar suas próprias refeições. Se precisar, dá para acomodar uma pessoa a mais.","rooms.kit.tags":"Cozinha compacta · Banheiro privativo",
@@ -671,19 +734,26 @@ const T = {
     monthNames:["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"],
     dowNames:["seg","ter","qua","qui","sex","sáb","dom"],
     waGeneric:"Olá! Gostaria de saber mais sobre a Pousada Flor de Caju.",
+    waTransfer:"Olá! Gostaria de saber sobre o traslado do aeroporto de Natal até a Pousada Flor de Caju.",
     waBooking:"Olá! Gostaria de reservar a Pousada Flor de Caju de {checkin} até {checkout}, para {guests} hóspede(s). Poderiam confirmar a disponibilidade?",
     mailSubject:"Reserva — Pousada Flor de Caju", localeCode:"pt-BR"
   },
   es: {
     "nav.rooms":"Habitaciones","nav.gallery":"Galería","nav.book":"Reservar","nav.contact":"Contacto","nav.bookBtn":"Reservar",
     "hero.headline":"Tu pedacito de paraíso en Pipa",
-    "hero.sub":"A pocos pasos del mar, con sol y calor todo el año. La típica pousada brasileña que imaginás: simple, cálida y hecha para que relajes y disfrutes tus vacaciones de verdad. Tu home away from home en Pipa.",
+    "hero.sub":"A pocos pasos del mar, con sol y calor todo el año. La típica pousada brasileña que imaginás: simple, cálida y hecha para que relajes y disfrutes tus vacaciones de verdad. Tu hogar lejos de casa, en Pipa.",
     "hero.cta1":"Reservar ahora","hero.cta2":"Escribir por WhatsApp","hero.cta3":"Enviar email",
     "hero.mapLabel":"Dónde estamos","hero.mapLink":"Ver mapa completo",
     "reviews.title":"Lo que dicen en Booking.com","reviews.placeholder":"Poné acá la captura de una opinión real",
-    "about.title":"En la calle más pintoresca de Pipa",
-    "about.text":"Estamos en la Rua do Ceú, una de las calles principales de Pipa y una de las más fotografiadas de la ciudad, con sus famosos adoquines coloridos — pura foto de Instagram. Es una calle sin tránsito de autos, rodeada de restaurantes y negocitos, y a pocos pasos de la playa.",
-    "about.fact1":"Cerquita de la playa","about.fact2":"En la Rua do Ceú, una de las principales de Pipa","about.fact3":"Calle sin tránsito de autos","about.fact4":"Desayuno incluido","about.fact5":"Terraza a la sombra para relajarte",
+    "highlights.location.title":"Ubicación inmejorable","highlights.location.text":"En la Rua do Ceú, una de las calles más lindas de Pipa, a pocos pasos de la playa.",
+    "highlights.breakfast.title":"Desayuno incluido","highlights.breakfast.text":"Servido todos los días, ya incluido en tu estadía.",
+    "highlights.wifi.title":"Wi-Fi gratis","highlights.wifi.text":"Conexión liberada en toda la pousada.",
+    "highlights.lang.title":"Atención en 3 idiomas","highlights.lang.text":"Hablamos portugués, español e inglés.",
+    "highlights.chat.title":"Respuesta rápida por WhatsApp","highlights.chat.text":"Resolvemos tus dudas al instante.",
+    "highlights.transfer.title":"¿Necesitás traslado desde el aeropuerto de Natal?","highlights.transfer.text":"Escribinos por WhatsApp y lo organizamos por vos.",
+    "about.title":"Esto es Pipa",
+    "about.text":"Pipa es para relajarte y también para disfrutar a fondo: naturaleza por todos lados, vida nocturna con onda y gente copada para conocer. Hay playas con mucha movida y playas desiertas si buscás tranquilidad, mucho surf, mucho yoga y una oferta gastronómica que sorprende. A los delfines los vas a ver sí o sí, y a las tortugas marinas también.",
+    "weather.now":"ahora en Pipa",
     "rooms.title":"Habitaciones","rooms.sub":"3 tipos de habitaciones, todas con baño privado.","rooms.viewPhotos":"Ver fotos",
     "rooms.apt.title":"Apartamento Flor de Caju","rooms.apt.desc":"Un apartamento completo, con cocina propia, para hasta 4 personas. Ideal para familias o grupos que buscan más espacio e independencia.","rooms.apt.tags":"Hasta 4 personas · Cocina completa · Baño privado",
     "rooms.kit.title":"Suite con cocina","rooms.kit.desc":"Pensada para parejas, con cocina compacta para quienes prefieren preparar sus propias comidas. Si hace falta, se puede sumar una persona más.","rooms.kit.tags":"Cocina compacta · Baño privado",
@@ -701,6 +771,7 @@ const T = {
     monthNames:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],
     dowNames:["lun","mar","mié","jue","vie","sáb","dom"],
     waGeneric:"¡Hola! Me gustaría saber más sobre la Pousada Flor de Caju.",
+    waTransfer:"¡Hola! Me gustaría saber sobre el traslado desde el aeropuerto de Natal hasta la Pousada Flor de Caju.",
     waBooking:"¡Hola! Me gustaría reservar en Pousada Flor de Caju del {checkin} al {checkout}, para {guests} huésped(es). ¿Podrían confirmar la disponibilidad?",
     mailSubject:"Reserva — Pousada Flor de Caju", localeCode:"es-AR"
   },
@@ -711,9 +782,15 @@ const T = {
     "hero.cta1":"Book now","hero.cta2":"Message on WhatsApp","hero.cta3":"Send an email",
     "hero.mapLabel":"Where we are","hero.mapLink":"View full map",
     "reviews.title":"What guests say on Booking.com","reviews.placeholder":"Add a screenshot of a real review here",
-    "about.title":"On Pipa's most picturesque street",
-    "about.text":"We're on Rua do Ceú, one of Pipa's main streets and one of the most photographed in town, known for its colorful cobblestones — pure Instagram material. It's a street with no car traffic, surrounded by restaurants and small shops, and just steps from the beach.",
-    "about.fact1":"Steps from the beach","about.fact2":"On Rua do Ceú, one of Pipa's main streets","about.fact3":"No car traffic on the street","about.fact4":"Breakfast included","about.fact5":"Shady terrace to relax",
+    "highlights.location.title":"Unbeatable location","highlights.location.text":"On Rua do Ceú, one of Pipa's prettiest streets, just steps from the beach.",
+    "highlights.breakfast.title":"Breakfast included","highlights.breakfast.text":"Served daily, already included in your stay.",
+    "highlights.wifi.title":"Free Wi-Fi","highlights.wifi.text":"Available throughout the pousada.",
+    "highlights.lang.title":"Service in 3 languages","highlights.lang.text":"We speak Portuguese, Spanish and English.",
+    "highlights.chat.title":"Fast WhatsApp replies","highlights.chat.text":"We answer your questions right away.",
+    "highlights.transfer.title":"Need a transfer from Natal airport?","highlights.transfer.text":"Message us on WhatsApp and we'll arrange it for you.",
+    "about.title":"This is Pipa",
+    "about.text":"Pipa is for relaxing, and for really letting loose too: nature everywhere, a lively nightlife and great people to meet. There are lively beaches and quiet, empty ones if that's what you're after, plenty of surf, plenty of yoga, and a food scene that surprises. You'll spot dolphins here, guaranteed — and sea turtles too.",
+    "weather.now":"in Pipa right now",
     "rooms.title":"Rooms","rooms.sub":"3 room types, all with a private bathroom.","rooms.viewPhotos":"See photos",
     "rooms.apt.title":"Flor de Caju Apartment","rooms.apt.desc":"A full apartment with its own kitchen, for up to 4 people. Ideal for families or groups who want more space and independence.","rooms.apt.tags":"Up to 4 people · Full kitchen · Private bathroom",
     "rooms.kit.title":"Suite with kitchen","rooms.kit.desc":"Designed for couples, with a compact kitchen for those who prefer to cook their own meals. An extra person can be added if needed.","rooms.kit.tags":"Compact kitchen · Private bathroom",
@@ -731,6 +808,7 @@ const T = {
     monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],
     dowNames:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
     waGeneric:"Hi! I'd like to know more about Pousada Flor de Caju.",
+    waTransfer:"Hi! I'd like to know about the transfer from Natal airport to Pousada Flor de Caju.",
     waBooking:"Hi! I'd like to book Pousada Flor de Caju from {checkin} to {checkout}, for {guests} guest(s). Could you confirm availability?",
     mailSubject:"Booking — Pousada Flor de Caju", localeCode:"en-GB"
   }
@@ -766,9 +844,10 @@ function applyLang(lang){
   document.getElementById("floatWaBtn").href = waUrl(dict.waGeneric);
   document.getElementById("heroMailBtn").href = mailUrl(dict.mailSubject);
   document.getElementById("footMailBtn").href = mailUrl(dict.mailSubject);
+  document.getElementById("transferBtn").href = waUrl(dict.waTransfer);
   const instaUrl = `https://instagram.com/${CONFIG.instagramHandle}`;
-  document.getElementById("heroInstaBadge").href = instaUrl;
-  document.getElementById("heroInstaHandle").textContent = "@" + CONFIG.instagramHandle;
+  document.getElementById("navInstaBtn").href = instaUrl;
+  document.getElementById("footInstaBtn").href = instaUrl;
 
   document.getElementById("modalClose").setAttribute("aria-label", dict["modal.close"]);
   if(!document.getElementById("roomModal").hidden && currentModalRoom){
@@ -900,6 +979,40 @@ document.getElementById("guestPlus").addEventListener("click", ()=>{
   selGuests = Math.min(10, selGuests + 1);
   updateBookingSummary();
 });
+
+/* ============ WEATHER WIDGET (Pipa, RN) ============ */
+function setWeatherIcon(code){
+  const icon = document.getElementById("weatherIcon");
+  if(!icon) return;
+  // 0-1 clear/mostly clear, 2-3 cloudy, 45-48 fog, 51-82 rain/drizzle, 95-99 storm
+  if(code === 0 || code === 1){
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>';
+  } else if(code >= 2 && code <= 48){
+    icon.innerHTML = '<path d="M7 17a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.7A3.5 3.5 0 0 1 17.5 17H7Z"/>';
+  } else if(code >= 95){
+    icon.innerHTML = '<path d="M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.7A3.5 3.5 0 0 1 17.5 15H7Z"/><path d="M11 17l-2 4M15 17l-2 4"/>';
+  } else {
+    icon.innerHTML = '<path d="M7 14a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.7A3.5 3.5 0 0 1 17.5 14H7Z"/><path d="M9 18v2M13 18v2M17 18v2"/>';
+  }
+}
+
+async function loadWeather(){
+  const tempEl = document.getElementById("weatherTemp");
+  if(!tempEl) return;
+  try{
+    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-6.2333&longitude=-35.0378&current_weather=true&timezone=America%2FSao_Paulo");
+    const data = await res.json();
+    if(data && data.current_weather){
+      const t = Math.round(data.current_weather.temperature);
+      tempEl.textContent = `${t}°C`;
+      setWeatherIcon(data.current_weather.weathercode);
+    }
+  } catch(e){
+    // sem internet ou API fora do ar: mantém o ícone de sol padrão e mostra uma faixa típica
+    tempEl.textContent = "28°C";
+  }
+}
+loadWeather();
 
 /* ============ HERO CAROUSEL ============ */
 const hcTrack = document.getElementById("hcTrack");

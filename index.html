@@ -153,6 +153,18 @@
   .hero-map-link{display:block; text-align:center; padding:10px; font-size:.86rem; font-weight:600; color:var(--green-deep); text-decoration:none; border-top:1px solid var(--line);}
   .hero-map-link:hover{color:var(--coral-deep);}
 
+  .hero-insta-badge{
+    position:absolute; top:14px; right:14px; z-index:5;
+    display:flex; align-items:center; gap:7px;
+    background:rgba(255,253,248,0.92); backdrop-filter:blur(4px);
+    padding:7px 13px; border-radius:999px; text-decoration:none;
+    font-size:.82rem; font-weight:600; color:var(--green-deep);
+    box-shadow:0 4px 14px rgba(28,54,32,0.18);
+    transition:transform .15s ease, background .15s ease;
+  }
+  .hero-insta-badge:hover{transform:translateY(-1px); background:var(--white);}
+  .hero-insta-badge svg{width:16px; height:16px; flex:none;}
+
   /* ============ ABOUT ============ */
   .about-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:start;}
   .facts{display:grid; grid-template-columns:1fr 1fr; gap:18px 24px; padding:0; margin:0; list-style:none;}
@@ -207,16 +219,16 @@
   @media (max-width:860px){ .gallery-grid{grid-template-columns:repeat(2,1fr);} .g-tile.big{grid-row:span 1;} }
 
   /* ============ REVIEWS BANNER ============ */
-  .reviews-banner{padding:44px 0; background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-  .reviews-head{margin-bottom:18px;}
-  .reviews-head h2{font-size:1.3rem; margin:0;}
-  .rv-carousel{position:relative; max-width:520px;}
+  .reviews-banner{padding:26px 0; background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .reviews-head{margin-bottom:12px;}
+  .reviews-head h2{font-size:1.05rem; margin:0;}
+  .rv-carousel{position:relative; max-width:100%;}
   .rv-viewport{overflow:hidden; border-radius:var(--radius); border:1px solid var(--line); background:var(--sand-2);}
   .rv-track{display:flex; transition:transform .5s ease;}
   .rv-slide{
-    flex:0 0 100%; aspect-ratio:16/7;
+    flex:0 0 100%; aspect-ratio:21/5; min-height:90px; max-height:150px;
     display:flex; align-items:center; justify-content:center; text-align:center;
-    padding:16px; object-fit:cover;
+    padding:14px; object-fit:cover;
   }
   .rv-slide.rv-placeholder{
     color:var(--green); font-size:.9rem; font-style:italic; border:1px dashed var(--line);
@@ -369,8 +381,8 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <h1 data-i18n="hero.headline">Na Rua do Ceú, pertinho da praia</h1>
-        <p class="lede" data-i18n="hero.sub">Pousada Flor de Caju: na Rua do Ceú, uma das ruas mais bonitas e fotografadas de Pipa, com seus paralelepípedos coloridos. Sem trânsito de carros e a poucos passos da praia. Café da manhã incluso e terraço à sombra.</p>
+        <h1 data-i18n="hero.headline">Seu pedacinho de paraíso em Pipa</h1>
+        <p class="lede" data-i18n="hero.sub">A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Seu home away from home em Pipa.</p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#reservar" data-i18n="hero.cta1">Reservar agora</a>
           <a class="btn btn-outline" id="heroWaBtn" href="#" target="_blank" rel="noopener">
@@ -386,6 +398,10 @@
 
       <div class="hero-media">
         <div class="hero-carousel" id="heroCarousel">
+          <a class="hero-insta-badge" id="heroInstaBadge" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+            <span id="heroInstaHandle">@flordecaju.pipa</span>
+          </a>
           <div class="hc-track" id="hcTrack">
             <div class="hc-slide hc-1">
               <svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-8h6v8"/></svg>
@@ -474,7 +490,7 @@
           </button>
         </div>
         <div class="room-card">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4M7 12h6"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11h16v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-4Z"/><path d="M2 11h20"/><path d="M8 11V7M12 11V6M16 11V7"/></svg>
           <h3 data-i18n="rooms.kit.title">Suíte com cozinha</h3>
           <p data-i18n="rooms.kit.desc">Pensada para casais, com cozinha compacta para quem prefere preparar suas próprias refeições. Se precisar, dá para acomodar uma pessoa a mais.</p>
           <div class="room-tags" data-i18n="rooms.kit.tags">Cozinha compacta · Banheiro privativo</div>
@@ -588,15 +604,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
           <span data-i18n="footer.email">E-mail</span>
         </a>
-        <a class="btn btn-ghost" id="footInstaBtn" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
-          <span data-i18n="footer.instagram">Instagram</span>
-        </a>
       </div>
     </div>
     <div class="footer-meta">
       <p data-i18n="footer.address">Pipa, Tibau do Sul — Rio Grande do Norte, Brasil</p>
-      <p><span data-i18n="footer.instaHandle">Instagram:</span> <a id="instaHandleLink" href="#" target="_blank" rel="noopener">@flordecaju.pipa</a></p>
     </div>
   </div>
   <div class="wrap foot-bottom">
@@ -635,8 +646,8 @@ const CONFIG = {
 const T = {
   pt: {
     "nav.rooms":"Quartos","nav.gallery":"Galeria","nav.book":"Reservar","nav.contact":"Contato","nav.bookBtn":"Reservar",
-    "hero.headline":"Na Rua do Ceú, pertinho da praia",
-    "hero.sub":"Pousada Flor de Caju: na Rua do Ceú, uma das ruas mais bonitas e fotografadas de Pipa, com seus paralelepípedos coloridos. Sem trânsito de carros e a poucos passos da praia. Café da manhã incluso e terraço à sombra.",
+    "hero.headline":"Seu pedacinho de paraíso em Pipa",
+    "hero.sub":"A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Seu home away from home em Pipa.",
     "hero.cta1":"Reservar agora","hero.cta2":"Chamar no WhatsApp","hero.cta3":"Enviar e-mail",
     "hero.mapLabel":"Onde estamos","hero.mapLink":"Ver no mapa",
     "reviews.title":"O que dizem no Booking.com","reviews.placeholder":"Coloque aqui o print de uma avaliação real",
@@ -665,8 +676,8 @@ const T = {
   },
   es: {
     "nav.rooms":"Habitaciones","nav.gallery":"Galería","nav.book":"Reservar","nav.contact":"Contacto","nav.bookBtn":"Reservar",
-    "hero.headline":"En la Rua do Ceú, cerquita del mar",
-    "hero.sub":"Pousada Flor de Caju: en la Rua do Ceú, una de las calles más lindas y fotografiadas de Pipa, con sus adoquines coloridos. Sin tránsito de autos y a pocos pasos de la playa. Desayuno incluido y terraza a la sombra.",
+    "hero.headline":"Tu pedacito de paraíso en Pipa",
+    "hero.sub":"A pocos pasos del mar, con sol y calor todo el año. La típica pousada brasileña que imaginás: simple, cálida y hecha para que relajes y disfrutes tus vacaciones de verdad. Tu home away from home en Pipa.",
     "hero.cta1":"Reservar ahora","hero.cta2":"Escribir por WhatsApp","hero.cta3":"Enviar email",
     "hero.mapLabel":"Dónde estamos","hero.mapLink":"Ver mapa completo",
     "reviews.title":"Lo que dicen en Booking.com","reviews.placeholder":"Poné acá la captura de una opinión real",
@@ -695,8 +706,8 @@ const T = {
   },
   en: {
     "nav.rooms":"Rooms","nav.gallery":"Gallery","nav.book":"Book","nav.contact":"Contact","nav.bookBtn":"Book now",
-    "hero.headline":"On Rua do Ceú, steps from the beach",
-    "hero.sub":"Pousada Flor de Caju: on Rua do Ceú, one of the prettiest and most photographed streets in Pipa, with its colorful cobblestones. No car traffic, and just steps from the beach. Breakfast included and a shady terrace.",
+    "hero.headline":"Your little piece of paradise in Pipa",
+    "hero.sub":"Just steps from the sea, with sun and warmth all year round. A real Brazilian pousada — simple, cozy, made for you to truly unwind and enjoy your vacation. Your home away from home in Pipa.",
     "hero.cta1":"Book now","hero.cta2":"Message on WhatsApp","hero.cta3":"Send an email",
     "hero.mapLabel":"Where we are","hero.mapLink":"View full map",
     "reviews.title":"What guests say on Booking.com","reviews.placeholder":"Add a screenshot of a real review here",
@@ -756,9 +767,8 @@ function applyLang(lang){
   document.getElementById("heroMailBtn").href = mailUrl(dict.mailSubject);
   document.getElementById("footMailBtn").href = mailUrl(dict.mailSubject);
   const instaUrl = `https://instagram.com/${CONFIG.instagramHandle}`;
-  document.getElementById("footInstaBtn").href = instaUrl;
-  document.getElementById("instaHandleLink").href = instaUrl;
-  document.getElementById("instaHandleLink").textContent = "@" + CONFIG.instagramHandle;
+  document.getElementById("heroInstaBadge").href = instaUrl;
+  document.getElementById("heroInstaHandle").textContent = "@" + CONFIG.instagramHandle;
 
   document.getElementById("modalClose").setAttribute("aria-label", dict["modal.close"]);
   if(!document.getElementById("roomModal").hidden && currentModalRoom){

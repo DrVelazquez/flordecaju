@@ -450,8 +450,8 @@
         <div class="hero-map">
           <div class="hero-map-label" data-i18n="hero.mapLabel">Onde estamos</div>
           <iframe title="Localização — Pousada Flor de Caju, Pipa/RN" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=-35.0620%2C-6.2480%2C-35.0180%2C-6.2180&amp;layer=mapnik&amp;marker=-6.2333%2C-35.0378"></iframe>
-          <a class="hero-map-link" id="heroMapLink" href="https://www.openstreetmap.org/?mlat=-6.2333&amp;mlon=-35.0378#map=15/-6.2333/-35.0378" target="_blank" rel="noopener" data-i18n="hero.mapLink">Ver no mapa</a>
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-35.0728%2C-6.2443%2C-35.0288%2C-6.2143&amp;layer=mapnik&amp;marker=-6.229343%2C-35.050782"></iframe>
+          <a class="hero-map-link" id="heroMapLink" href="https://www.openstreetmap.org/?mlat=-6.229343&amp;mlon=-35.050782#map=16/-6.229343/-35.050782" target="_blank" rel="noopener" data-i18n="hero.mapLink">Ver no mapa</a>
         </div>
       </div>
     </div>
@@ -1040,7 +1040,7 @@ async function loadWeather(){
   const tempEl = document.getElementById("weatherTemp");
   if(!tempEl) return;
   try{
-    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-6.2333&longitude=-35.0378&current_weather=true&timezone=America%2FSao_Paulo");
+    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-6.229343&longitude=-35.050782&current_weather=true&timezone=America%2FSao_Paulo");
     const data = await res.json();
     if(data && data.current_weather){
       const t = Math.round(data.current_weather.temperature);

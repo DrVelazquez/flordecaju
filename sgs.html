@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flor de Caju · Gestión de reservas</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌺</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div id="setup-screen" class="setup-screen hidden">
+  <div class="setup-card">
+    <h1>Conectar con tu planilla</h1>
+    <p>Pegá la URL de la aplicación web de Apps Script (ver README) para conectar el sistema con tu Google Sheet.</p>
+    <input id="setup-url" type="text" placeholder="https://script.google.com/macros/s/.../exec" />
+    <button id="setup-save" class="btn btn-primary">Guardar y conectar</button>
+    <p class="setup-hint">Esto se guarda solo en este navegador (localStorage).</p>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" width="34" height="34" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 6C24 14 18 22 18 32c0 8 6 14 14 14s14-6 14-14c0-10-6-18-14-26Z" fill="var(--color-fruit)"/>
+        <path d="M27 14c-6-6-14-8-20-6 2 6 6 12 12 16 3-4 5-7 8-10Z" fill="var(--color-leaf)"/>
+        <circle cx="32" cy="12" r="5" fill="var(--color-flower)"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">Flor de Caju</span>
+        <span class="brand-sub">Gestión de reservas</span>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="calendario">Calendario</button>
+      <button class="tab" data-tab="reservas">Reservas</button>
+      <button class="tab" data-tab="pagos">Pagos</button>
+      <button class="tab" data-tab="habitaciones">Habitaciones</button>
+    </nav>
+    <div class="topbar-actions">
+      <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>
+      <button id="btn-nueva-reserva" class="btn btn-primary">+ Nueva reserva</button>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- CALENDARIO -->
+    <section id="view-calendario" class="view active">
+      <div class="view-header">
+        <div class="month-nav">
+          <button id="mes-prev" class="icon-btn" aria-label="Mes anterior">‹</button>
+          <h2 id="mes-label">—</h2>
+          <button id="mes-next" class="icon-btn" aria-label="Mes siguiente">›</button>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><i class="dot dot-confirmada"></i> Confirmada</span>
+          <span class="legend-item"><i class="dot dot-pendiente"></i> Pendiente</span>
+          <span class="legend-item"><i class="dot dot-completo"></i> Sin disponibilidad</span>
+        </div>
+      </div>
+      <div id="calendario-grid" class="calendario-grid"></div>
+    </section>
+
+    <!-- RESERVAS -->
+    <section id="view-reservas" class="view">
+      <div class="view-header">
+        <h2>Reservas</h2>
+        <div class="filters">
+          <input id="filtro-cliente" type="text" placeholder="Buscar cliente…" />
+          <select id="filtro-estado">
+            <option value="">Todos los estados</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl" id="tbl-reservas">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Habitación</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Huéspedes</th>
+              <th>Precio total</th>
+              <th>Pagado</th>
+              <th>Saldo</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbl-reservas-body"></tbody>
+        </table>
+      </div>
+      <p id="reservas-empty" class="empty-state hidden">Todavía no cargaste ninguna reserva. Usá "Nueva reserva" para empezar.</p>
+    </section>
+
+    <!-- PAGOS -->
+    <section id="view-pagos" class="view">
+      <div class="view-header">
+        <h2>Pagos</h2>
+      </div>
+      <div class="summary-cards" id="pagos-summary"></div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Habitación</th>
+              <th>Total reserva</th>
+              <th>Pagado</th>
+              <th>Saldo pendiente</th>
+              <th>Estado de pago</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbl-pagos-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- HABITACIONES -->
+    <section id="view-habitaciones" class="view">
+      <div class="view-header">
+        <h2>Habitaciones</h2>
+      </div>
+      <div class="hab-grid" id="hab-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL: Nueva/Editar reserva -->
+<div id="modal-reserva" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modal-reserva-title">Nueva reserva</h3>
+      <button class="icon-btn modal-close" data-close>&times;</button>
+    </div>
+    <form id="form-reserva">
+      <input type="hidden" id="f-res-id" />
+      <div class="form-row">
+        <label>Habitación
+          <select id="f-habitacion" required></select>
+        </label>
+        <label>Huéspedes
+          <input type="number" id="f-huespedes" min="1" value="1" required />
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Cliente
+          <input type="text" id="f-cliente" required placeholder="Nombre y apellido" />
+        </label>
+        <label>Teléfono
+          <input type="text" id="f-telefono" placeholder="+55 84 9..." />
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Email
+          <input type="email" id="f-email" />
+        </label>
+        <label>Estado
+          <select id="f-estado">
+            <option value="confirmada">Confirmada</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Check-in
+          <input type="date" id="f-checkin" required />
+        </label>
+        <label>Check-out
+          <input type="date" id="f-checkout" required />
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Precio total (BRL)
+          <input type="number" id="f-precio" min="0" step="0.01" required />
+        </label>
+        <label>&nbsp;
+          <span id="f-noches-info" class="hint-text">—</span>
+        </label>
+      </div>
+      <label>Notas
+        <textarea id="f-notas" rows="2" placeholder="Pedidos especiales, forma de llegada, etc."></textarea>
+      </label>
+      <div id="f-disponibilidad-warning" class="warning-box hidden"></div>
+      <div class="modal-actions">
+        <button type="button" id="btn-eliminar-reserva" class="btn btn-danger hidden">Eliminar reserva</button>
+        <div class="modal-actions-right">
+          <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar reserva</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: Registrar pago -->
+<div id="modal-pago" class="modal hidden">
+  <div class="modal-card modal-card-sm">
+    <div class="modal-header">
+      <h3>Registrar pago</h3>
+      <button class="icon-btn modal-close" data-close>&times;</button>
+    </div>
+    <form id="form-pago">
+      <input type="hidden" id="p-reserva-id" />
+      <p id="p-reserva-info" class="hint-text"></p>
+      <div class="form-row">
+        <label>Fecha
+          <input type="date" id="p-fecha" required />
+        </label>
+        <label>Monto (BRL)
+          <input type="number" id="p-monto" min="0" step="0.01" required />
+        </label>
+      </div>
+      <label>Método de pago
+        <select id="p-metodo">
+          <option value="Pix">Pix</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </label>
+      <label>Notas
+        <input type="text" id="p-notas" placeholder="Opcional" />
+      </label>
+      <div class="modal-actions">
+        <div class="modal-actions-right">
+          <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar pago</button>
+        </div>
+      </div>
+    </form>
+    <div id="pagos-historial" class="pagos-historial"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/api.js"></script>
+<script src="js/state.js"></script>
+<script src="js/calendario.js"></script>
+<script src="js/reservas.js"></script>
+<script src="js/pagos.js"></script>
+<script src="js/habitaciones.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

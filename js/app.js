@@ -11,14 +11,6 @@
 })();
 
 async function boot() {
-  if (!Api.hasUrl()) {
-    document.getElementById('setup-screen').classList.remove('hidden');
-    document.getElementById('app').classList.add('hidden');
-    return;
-  }
-  document.getElementById('setup-screen').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-
   Calendario.initNav();
   Reservas.initEvents();
   Pagos.initEvents();
@@ -31,17 +23,6 @@ async function boot() {
   Calendario.render();
   Reservas.render();
   Pagos.render();
-  Habitaciones.render();
 }
-
-document.getElementById('setup-save').addEventListener('click', () => {
-  const val = document.getElementById('setup-url').value.trim();
-  if (!val.startsWith('https://script.google.com/')) {
-    showToast('Pegá la URL completa que te dio Apps Script (empieza con https://script.google.com/)', true);
-    return;
-  }
-  Api.setUrl(val);
-  boot();
-});
 
 boot();

@@ -34,10 +34,12 @@ const Reservas = (() => {
           <td>${fmtMoney(pagado)}</td>
           <td>${fmtMoney(saldo)}</td>
           <td><span class="badge badge-${r.estado}">${capitaliza(r.estado)}</span></td>
-          <td><span class="badge-origen ${origenClass(r.origen)}">${r.origen || 'Directo'}</span></td>
+          <td><span class="badge-origen ${origenClass(r.origen)}">${origenLabel(r.origen)}</span></td>
           <td>
             <div class="estadia-cell">
-              <span class="badge badge-estadia-${estadia.cls}">${estadia.label}</span>
+              <span class="badge badge-estadia-${estadia.cls}">
+                <span class="estadia-dot dot-${estadia.cls}"></span>${estadia.label}
+              </span>
               <div class="estadia-mini">
                 <button class="chip chip-checkin ${r.checkin_hecho === 'SI' ? 'active' : ''}" data-toggle="checkin" data-id="${r.id}" ${r.estado === 'cancelada' ? 'disabled' : ''}>Check-in</button>
                 <button class="chip chip-checkout ${r.checkout_hecho === 'SI' ? 'active' : ''}" data-toggle="checkout" data-id="${r.id}" ${r.estado === 'cancelada' ? 'disabled' : ''}>Check-out</button>
@@ -107,7 +109,7 @@ const Reservas = (() => {
       document.getElementById('f-checkin').value = r.checkin || '';
       document.getElementById('f-checkout').value = r.checkout || '';
       document.getElementById('f-precio').value = r.precio_total || '';
-      document.getElementById('f-origen').value = r.origen || 'Directo';
+      document.getElementById('f-origen').value = r.origen === 'Booking' ? 'Booking' : 'Manual';
       document.getElementById('f-notas').value = r.notas || '';
       document.getElementById('btn-eliminar-reserva').classList.remove('hidden');
       document.getElementById('f-estadia-actions').classList.remove('hidden');
@@ -116,7 +118,7 @@ const Reservas = (() => {
     } else {
       document.getElementById('modal-reserva-title').textContent = 'Nueva reserva';
       document.getElementById('f-res-id').value = '';
-      document.getElementById('f-origen').value = 'Directo';
+      document.getElementById('f-origen').value = 'Manual';
       document.getElementById('f-pago-inicial').value = 'ninguno';
       document.getElementById('btn-eliminar-reserva').classList.add('hidden');
       document.getElementById('f-estadia-actions').classList.add('hidden');

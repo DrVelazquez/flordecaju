@@ -1,0 +1,156 @@
+/* ============================================================
+   Flor de Caju — estilos adicionales
+   Se cargan DESPUÉS de styles.css para poder sobreescribir lo que
+   haga falta (colores del gantt, indicadores nuevos, overlay de
+   carga). Si preferís tener todo en un solo archivo, pegá este
+   contenido al final de tu styles.css y borrá el <link> a este
+   archivo en el index.html; funciona igual.
+   ============================================================ */
+
+/* ---------- Overlay de carga global ----------
+   Se muestra cada vez que hay una petición al backend en curso,
+   así se evita poder tocar botones/clicks mientras se sincroniza. */
+#global-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 18, 15, 0.28);
+}
+#global-loading.hidden {
+  display: none;
+}
+#global-loading .spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.55);
+  border-top-color: var(--color-fruit, #d9534f);
+  animation: gc-spin 0.75s linear infinite;
+}
+@keyframes gc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Indicador de estadía (check-in / check-out) ----------
+   Blanco/gris = todavía no llegó · Verde = está en la pousada
+   Negro = ya se fue (check-out hecho) */
+.estadia-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid #aaa;
+  background: #f2f2f0;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.estadia-dot.dot-por-llegar {
+  background: #f2f2f0;
+  border-color: #aaa;
+}
+.estadia-dot.dot-en-pousada {
+  background: #2e9e4f;
+  border-color: #2e9e4f;
+}
+.estadia-dot.dot-finalizada {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.bar-estadia-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background: transparent;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+.bar-estadia-dot.estadia-por-llegar {
+  background: transparent;
+}
+.bar-estadia-dot.estadia-en-pousada {
+  background: #eaffef;
+  border-color: #eaffef;
+}
+.bar-estadia-dot.estadia-finalizada {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+/* ---------- Indicador de origen (Booking vs. Manual) ---------- */
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot.pago-pagado { background: #2e9e4f; }
+.dot.pago-parcial { background: #e6a817; }
+.dot.pago-adeuda { background: #c0392b; }
+.dot.origen-booking { background: #0071c2; }
+.dot.origen-manual { background: #8a8a8a; }
+
+.bar-origen-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.bar-origen-dot.origen-booking { background: #0071c2; }
+.bar-origen-dot.origen-manual { background: #ffffff; }
+
+.badge-origen {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-origen.origen-booking { background: #e6f1fb; color: #0071c2; }
+.badge-origen.origen-manual { background: #eee; color: #666; }
+
+.legend-sep {
+  width: 1px;
+  height: 16px;
+  background: #ddd;
+  margin: 0 6px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ---------- Barras del gantt coloreadas según estado de pago ----------
+   Antes el color indicaba el origen; ahora indica si la reserva está
+   pagada, parcial o adeudando. El origen pasa a mostrarse como un
+   punto chico a la izquierda del nombre. */
+.gantt-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+  border-radius: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.gantt-bar.pago-pagado { background: #2e9e4f; }
+.gantt-bar.pago-parcial { background: #e0a520; }
+.gantt-bar.pago-adeuda { background: #c0392b; }
+.gantt-bar.finalizada { opacity: 0.55; }
+
+.bar-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}

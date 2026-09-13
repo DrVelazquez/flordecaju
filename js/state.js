@@ -31,6 +31,27 @@ function setSync(state) {
   if (state === 'syncing') el.classList.add('syncing');
 }
 
+/**
+ * Overlay de carga global: se muestra cada vez que hay una petición al
+ * backend en curso (Api.getAll / Api.post), para que no se puedan
+ * disparar varios clicks mientras se está sincronizando con la planilla.
+ * Usa un contador porque puede haber más de una petición en simultáneo.
+ */
+let _loadingCount = 0;
+function beginLoading() {
+  _loadingCount++;
+  setGlobalLoading(true);
+}
+function endLoading() {
+  _loadingCount = Math.max(0, _loadingCount - 1);
+  if (_loadingCount === 0) setGlobalLoading(false);
+}
+function setGlobalLoading(isLoading) {
+  const overlay = document.getElementById('global-loading');
+  if (!overlay) return;
+  overlay.classList.toggle('hidden', !isLoading);
+}
+
 function showToast(msg, isError) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -45,11 +66,13 @@ function fmtMoney(n) {
   return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// Fechas siempre en formato DD-MM-AAAA (el valor interno sigue siendo
+// AAAA-MM-DD, que es lo que espera <input type="date"> y la planilla).
 function fmtDate(iso) {
   if (!iso) return '—';
   const [y, m, d] = String(iso).split('-');
   if (!y || !m || !d) return iso;
-  return `${d}/${m}/${y}`;
+  return `${d}-${m}-${y}`;
 }
 
 function nightsBetween(checkin, checkout) {
@@ -102,9 +125,13 @@ function habitacionesLibresEnRango(checkin, checkout, excluirReservaId) {
   return Store.habitaciones.filter(h => h.activa !== 'NO' && !ocupadasIds.has(h.id));
 }
 
+// El origen de la reserva ahora solo distingue Booking vs. todo lo demás
+// (carga manual: WhatsApp, directo, otras webs, etc.)
 function origenClass(origen) {
-  const map = { Web: 'origen-web', WhatsApp: 'origen-whatsapp', Directo: 'origen-directo' };
-  return map[origen] || 'origen-otro';
+  return origen === 'Booking' ? 'origen-booking' : 'origen-manual';
+}
+function origenLabel(origen) {
+  return origen === 'Booking' ? 'Booking' : 'Manual';
 }
 
 function estadiaInfo(r) {
@@ -112,4 +139,3 @@ function estadiaInfo(r) {
   if (r.checkin_hecho === 'SI') return { label: 'En la pousada', cls: 'en-pousada' };
   return { label: 'Por llegar', cls: 'por-llegar' };
 }
-

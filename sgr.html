@@ -9,20 +9,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/overrides.css" />
 </head>
 <body>
 
-<div id="setup-screen" class="setup-screen hidden">
-  <div class="setup-card">
-    <h1>Conectar con tu planilla</h1>
-    <p>Pegá la URL de la aplicación web de Apps Script (ver README) para conectar el sistema con tu Google Sheet.</p>
-    <input id="setup-url" type="text" placeholder="https://script.google.com/macros/s/.../exec" />
-    <button id="setup-save" class="btn btn-primary">Guardar y conectar</button>
-    <p class="setup-hint">Esto se guarda solo en este navegador (localStorage).</p>
-  </div>
+<!-- Overlay de carga global: se muestra mientras hay una petición al
+     backend en curso, para evitar dobles clicks mientras se sincroniza. -->
+<div id="global-loading" class="hidden">
+  <div class="spinner"></div>
 </div>
 
-<div id="app" class="app hidden">
+<div id="app" class="app">
 
   <header class="topbar">
     <div class="brand">
@@ -40,7 +37,6 @@
       <button class="tab active" data-tab="calendario">Calendario</button>
       <button class="tab" data-tab="reservas">Reservas</button>
       <button class="tab" data-tab="pagos">Pagos</button>
-      <button class="tab" data-tab="habitaciones">Habitaciones</button>
     </nav>
     <div class="topbar-actions">
       <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>
@@ -59,17 +55,19 @@
           <button id="mes-next" class="icon-btn" aria-label="Mes siguiente">›</button>
         </div>
         <div class="legend">
-          <span class="legend-item"><i class="dot origen-web"></i> Web</span>
-          <span class="legend-item"><i class="dot origen-whatsapp"></i> WhatsApp</span>
-          <span class="legend-item"><i class="dot origen-directo"></i> Directo</span>
-          <span class="legend-item"><i class="dot origen-otro"></i> Otro</span>
+          <span class="legend-item"><i class="dot pago-pagado"></i> Pagado</span>
+          <span class="legend-item"><i class="dot pago-parcial"></i> Parcial</span>
+          <span class="legend-item"><i class="dot pago-adeuda"></i> Adeuda</span>
           <span class="legend-sep"></span>
-          <span class="legend-item"><i class="dot dot-pagado"></i> Pagado</span>
-          <span class="legend-item"><i class="dot dot-parcial"></i> Parcial</span>
-          <span class="legend-item"><i class="dot dot-adeuda"></i> Adeuda</span>
+          <span class="legend-item"><i class="dot origen-booking"></i> Booking</span>
+          <span class="legend-item"><i class="dot origen-manual"></i> Manual</span>
+          <span class="legend-sep"></span>
+          <span class="legend-item"><i class="estadia-dot dot-por-llegar"></i> Por llegar</span>
+          <span class="legend-item"><i class="estadia-dot dot-en-pousada"></i> En la pousada</span>
+          <span class="legend-item"><i class="estadia-dot dot-finalizada"></i> Finalizada</span>
         </div>
       </div>
-      <p class="hint-text gantt-hint">Tocá un espacio vacío para crear una reserva en esa habitación y fecha, o tocá una reserva para editarla.</p>
+      <p class="hint-text gantt-hint">Tocá un espacio vacío para crear una reserva en esa habitación y fecha, o tocá una reserva para editarla. El color de la barra indica el estado de pago; el puntito de la izquierda indica el origen y el de la derecha si ya hizo check-in / check-out.</p>
       <div id="gantt-wrap" class="gantt-wrap"></div>
     </section>
 
@@ -135,14 +133,6 @@
       </div>
     </section>
 
-    <!-- HABITACIONES -->
-    <section id="view-habitaciones" class="view">
-      <div class="view-header">
-        <h2>Habitaciones</h2>
-      </div>
-      <div class="hab-grid" id="hab-grid"></div>
-    </section>
-
   </main>
 </div>
 
@@ -204,10 +194,8 @@
         </label>
         <label>Origen de la reserva
           <select id="f-origen">
-            <option value="Web">Web</option>
-            <option value="WhatsApp">WhatsApp</option>
-            <option value="Directo">Directo / en persona</option>
-            <option value="Otro">Otro</option>
+            <option value="Booking">Booking</option>
+            <option value="Manual">Manual (WhatsApp, directo, etc.)</option>
           </select>
         </label>
       </div>
@@ -303,7 +291,6 @@
 <script src="js/calendario.js"></script>
 <script src="js/reservas.js"></script>
 <script src="js/pagos.js"></script>
-<script src="js/habitaciones.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

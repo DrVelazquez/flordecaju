@@ -61,6 +61,8 @@ const Calendario = (() => {
         grid.appendChild(cell);
       }
 
+      // Las reservas canceladas no se muestran en el gantt (siguen
+      // apareciendo en la pestaña "Reservas", donde queda el registro).
       Store.reservas
         .filter(r => r.habitacion_id === hab.id && r.estado !== 'cancelada')
         .forEach(r => {
@@ -84,15 +86,16 @@ const Calendario = (() => {
 
     const bar = document.createElement('div');
     const estadia = estadiaInfo(r);
-    const pago = estadoPagoDe(r);
-    bar.className = `gantt-bar ${origenClass(r.origen)} ${estadia.cls === 'finalizada' ? 'finalizada' : ''}`;
+    const pago = estadoPagoDe(r); // 'pagado' | 'parcial' | 'adeuda' -> define el COLOR de la barra
+    bar.className = `gantt-bar pago-${pago}${estadia.cls === 'finalizada' ? ' finalizada' : ''}`;
     bar.style.gridColumn = `${diaInicio + 1} / ${diaFin + 1}`;
     bar.style.gridRow = String(fila);
-    bar.title = `${r.cliente_nombre} · ${fmtDate(r.checkin)} a ${fmtDate(r.checkout)} · ${estadia.label}`;
+    const pagoLabel = { pagado: 'Pagado', parcial: 'Pago parcial', adeuda: 'Adeuda todo' }[pago];
+    bar.title = `${r.cliente_nombre} · ${fmtDate(r.checkin)} a ${fmtDate(r.checkout)} · ${estadia.label} · ${origenLabel(r.origen)} · ${pagoLabel}`;
     bar.innerHTML = `
-      <span class="bar-pago-dot dot-${pago}"></span>
+      <span class="bar-origen-dot ${origenClass(r.origen)}" title="${origenLabel(r.origen)}"></span>
       <span class="bar-name">${r.cliente_nombre || 'Sin nombre'}</span>
-      ${estadia.cls === 'en-pousada' ? '<span class="bar-icon">●</span>' : ''}
+      <span class="bar-estadia-dot estadia-${estadia.cls}" title="${estadia.label}"></span>
     `;
     bar.addEventListener('click', (e) => {
       e.stopPropagation();

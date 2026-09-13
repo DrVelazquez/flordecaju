@@ -125,16 +125,33 @@ function habitacionesLibresEnRango(checkin, checkout, excluirReservaId) {
   return Store.habitaciones.filter(h => h.activa !== 'NO' && !ocupadasIds.has(h.id));
 }
 
-// El origen de la reserva ahora solo distingue Booking vs. todo lo demás
-// (carga manual: WhatsApp, directo, otras webs, etc.)
+// El color del badge sigue distinguiendo solo Booking vs. el resto (para
+// que el gantt y las tablas no se llenen de colores), pero el TEXTO ahora
+// muestra el origen específico (WhatsApp, Directo/Walk-in, Otro), útil
+// para los reportes. Los datos viejos que solo decían "Manual" se
+// muestran igual, como "Manual".
 function origenClass(origen) {
   return origen === 'Booking' ? 'origen-booking' : 'origen-manual';
 }
 function origenLabel(origen) {
-  return origen === 'Booking' ? 'Booking' : 'Manual';
+  return origen || 'Manual';
 }
 function origenInitial(origen) {
-  return origen === 'Booking' ? 'B' : 'M';
+  return (origenLabel(origen) || 'M').charAt(0).toUpperCase();
+}
+
+// ---------- Utilidades de fecha para Reportes ----------
+
+function isoDeDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+function sumarDias(iso, n) {
+  const d = new Date(iso + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return isoDeDate(d);
+}
+function diasEntre(isoDesde, isoHasta) {
+  return Math.round((new Date(isoHasta + 'T00:00:00') - new Date(isoDesde + 'T00:00:00')) / 86400000);
 }
 
 function estadiaInfo(r) {

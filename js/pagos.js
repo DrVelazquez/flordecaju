@@ -1,11 +1,31 @@
 const Pagos = (() => {
   function render() {
-    renderResumen();
-    renderTabla();
+    const filtradas = obtenerFiltradas();
+    renderResumen(filtradas);
+    renderTabla(filtradas);
   }
 
-  function renderResumen() {
-    const activas = Store.reservas.filter(r => r.estado !== 'cancelada');
+  // Mismo criterio de filtro (cliente + rango de fechas por superposición
+  // de estadía) usado tanto para la tabla como para las tarjetas de
+  // resumen, así los números de arriba siempre coinciden con lo que se
+  // ve filtrado abajo.
+  function obtenerFiltradas() {
+    const buscar = (document.getElementById('filtro-pagos-cliente').value || '').toLowerCase();
+    const desde = document.getElementById('filtro-pagos-desde').value;
+    const hasta = document.getElementById('filtro-pagos-hasta').value;
+
+    let activas = Store.reservas.filter(r => r.estado !== 'cancelada');
+    if (buscar) activas = activas.filter(r => (r.cliente_nombre || '').toLowerCase().includes(buscar));
+    if (desde || hasta) {
+      const rangoDesde = desde || '0000-01-01';
+      const rangoHasta = hasta || '9999-12-31';
+      activas = activas.filter(r => r.checkin <= rangoHasta && r.checkout >= rangoDesde);
+    }
+    return activas;
+  }
+
+  function renderResumen(filtradas) {
+    const activas = filtradas || obtenerFiltradas();
     const totalReservado = activas.reduce((s, r) => s + (Number(r.precio_total) || 0), 0);
     const totalPagado = activas.reduce((s, r) => s + totalPagadoDe(r.id), 0);
     const totalAdeudado = totalReservado - totalPagado;
@@ -31,27 +51,19 @@ const Pagos = (() => {
     `;
   }
 
-  function renderTabla() {
+  function renderTabla(filtradas) {
     const tbody = document.getElementById('tbl-pagos-body');
     const buscar = (document.getElementById('filtro-pagos-cliente').value || '').toLowerCase();
     const desde = document.getElementById('filtro-pagos-desde').value;
     const hasta = document.getElementById('filtro-pagos-hasta').value;
 
-    let activas = Store.reservas.filter(r => r.estado !== 'cancelada');
-    if (buscar) activas = activas.filter(r => (r.cliente_nombre || '').toLowerCase().includes(buscar));
-    // Mismo criterio que en Reservas: se filtra por superposición con el
-    // rango, para no dejar afuera estadías que cruzan el límite elegido.
-    if (desde || hasta) {
-      const rangoDesde = desde || '0000-01-01';
-      const rangoHasta = hasta || '9999-12-31';
-      activas = activas.filter(r => r.checkin <= rangoHasta && r.checkout >= rangoDesde);
-    }
-    activas = [...activas].sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+    let activas = [...(filtradas || obtenerFiltradas())]
+      .sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
 
     const totalActivas = Store.reservas.filter(r => r.estado !== 'cancelada').length;
     const infoEl = document.getElementById('pagos-filtro-info');
     if (buscar || desde || hasta) {
-      infoEl.textContent = `Mostrando ${activas.length} de ${totalActivas} reserva(s) — filtradas. Usá "Limpiar fechas" o vaciá el buscador para ver todo.`;
+      infoEl.textContent = `Mostrando ${activas.length} de ${totalActivas} reserva(s) — filtradas. Los totales de arriba también corresponden a este filtro. Usá "Limpiar fechas" o vaciá el buscador para ver todo.`;
     } else {
       infoEl.textContent = '';
     }
@@ -163,13 +175,13 @@ const Pagos = (() => {
     document.querySelectorAll('#modal-pago [data-close]').forEach(el => {
       el.addEventListener('click', cerrarModal);
     });
-    document.getElementById('filtro-pagos-cliente').addEventListener('input', renderTabla);
-    document.getElementById('filtro-pagos-desde').addEventListener('change', renderTabla);
-    document.getElementById('filtro-pagos-hasta').addEventListener('change', renderTabla);
+    document.getElementById('filtro-pagos-cliente').addEventListener('input', render);
+    document.getElementById('filtro-pagos-desde').addEventListener('change', render);
+    document.getElementById('filtro-pagos-hasta').addEventListener('change', render);
     document.getElementById('btn-filtro-pagos-limpiar').addEventListener('click', () => {
       document.getElementById('filtro-pagos-desde').value = '';
       document.getElementById('filtro-pagos-hasta').value = '';
-      renderTabla();
+      render();
     });
   }
 

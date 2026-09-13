@@ -127,7 +127,12 @@ const Reservas = (() => {
       document.getElementById('f-checkin').value = r.checkin || '';
       document.getElementById('f-checkout').value = r.checkout || '';
       document.getElementById('f-precio').value = r.precio_total || '';
-      document.getElementById('f-origen').value = r.origen === 'Booking' ? 'Booking' : 'Manual';
+      // Los datos históricos que solo decían "Manual" se muestran en la
+      // opción "Otro" del selector; las reservas nuevas ya guardan el
+      // origen específico (WhatsApp / Directo / Otro).
+      const origenSelect = document.getElementById('f-origen');
+      const valorOrigen = [...origenSelect.options].some(o => o.value === r.origen) ? r.origen : 'Otro';
+      origenSelect.value = valorOrigen;
       document.getElementById('f-notas').value = r.notas || '';
       document.getElementById('btn-eliminar-reserva').classList.remove('hidden');
       document.getElementById('f-estadia-actions').classList.remove('hidden');
@@ -138,7 +143,7 @@ const Reservas = (() => {
     } else {
       document.getElementById('modal-reserva-title').textContent = 'Nueva reserva';
       document.getElementById('f-res-id').value = '';
-      document.getElementById('f-origen').value = 'Manual';
+      document.getElementById('f-origen').value = 'Directo';
       document.getElementById('f-pago-inicial').value = 'ninguno';
       document.getElementById('btn-eliminar-reserva').classList.add('hidden');
       document.getElementById('f-estadia-actions').classList.add('hidden');

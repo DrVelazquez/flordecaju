@@ -38,6 +38,7 @@
       <button class="tab" data-tab="calendario">Calendario</button>
       <button class="tab" data-tab="reservas">Reservas</button>
       <button class="tab" data-tab="pagos">Pagos</button>
+      <button class="tab" data-tab="reportes">Reportes</button>
     </nav>
     <div class="topbar-actions">
       <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>
@@ -69,6 +70,32 @@
         <h3>Housekeeping — habitaciones a preparar</h3>
         <p class="hint-text">Se muestran las habitaciones con check-out de hoy o de días anteriores que todavía no marcaste como limpias. "Urgente" quiere decir que hoy mismo llega otro huésped a esa habitación.</p>
         <div id="hoy-housekeeping-list" class="hoy-list"></div>
+      </div>
+
+      <div class="hoy-mantenimiento">
+        <h3>Mantenimiento — tareas pendientes</h3>
+        <p class="hint-text">Registrá acá cualquier arreglo o tarea (ej: "Habitación 4 necesita reparación de canilla"). Estas tareas se guardan en este navegador, no en la planilla.</p>
+        <form id="form-mantenimiento" class="mant-form">
+          <div class="form-row">
+            <label>Habitación
+              <select id="m-habitacion"></select>
+            </label>
+            <label>Prioridad
+              <select id="m-prioridad">
+                <option value="normal">Normal</option>
+                <option value="urgente">Urgente</option>
+              </select>
+            </label>
+          </div>
+          <label>Descripción
+            <input type="text" id="m-descripcion" placeholder="¿Qué hay que arreglar o hacer?" required />
+          </label>
+          <div class="modal-actions">
+            <span id="mant-info" class="hint-text"></span>
+            <button type="submit" class="btn btn-primary">Agregar tarea</button>
+          </div>
+        </form>
+        <div id="mant-list" class="hoy-list mant-list"></div>
       </div>
     </section>
 
@@ -110,10 +137,10 @@
             <option value="cancelada">Cancelada</option>
           </select>
           <label class="filter-date-label">Desde
-            <input id="filtro-desde" type="date" />
+            <input id="filtro-desde" type="date" lang="pt-BR" />
           </label>
           <label class="filter-date-label">Hasta
-            <input id="filtro-hasta" type="date" />
+            <input id="filtro-hasta" type="date" lang="pt-BR" />
           </label>
           <button type="button" id="btn-filtro-fechas-limpiar" class="btn btn-ghost">Limpiar fechas</button>
         </div>
@@ -150,10 +177,10 @@
         <div class="filters">
           <input id="filtro-pagos-cliente" type="text" placeholder="Buscar cliente…" />
           <label class="filter-date-label">Desde
-            <input id="filtro-pagos-desde" type="date" />
+            <input id="filtro-pagos-desde" type="date" lang="pt-BR" />
           </label>
           <label class="filter-date-label">Hasta
-            <input id="filtro-pagos-hasta" type="date" />
+            <input id="filtro-pagos-hasta" type="date" lang="pt-BR" />
           </label>
           <button type="button" id="btn-filtro-pagos-limpiar" class="btn btn-ghost">Limpiar fechas</button>
         </div>
@@ -175,6 +202,74 @@
           </thead>
           <tbody id="tbl-pagos-body"></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section id="view-reportes" class="view">
+      <div class="view-header">
+        <div class="month-nav">
+          <button id="rep-prev" class="icon-btn" aria-label="Período anterior">‹</button>
+          <h2 id="rep-label">—</h2>
+          <button id="rep-next" class="icon-btn" aria-label="Período siguiente">›</button>
+        </div>
+        <div class="filters">
+          <select id="rep-periodo">
+            <option value="semana">Semanal</option>
+            <option value="mes" selected>Mensual</option>
+            <option value="anio">Anual</option>
+          </select>
+          <button type="button" id="rep-hoy" class="btn btn-ghost">Período actual</button>
+        </div>
+      </div>
+
+      <div class="summary-cards" id="rep-summary"></div>
+
+      <div class="rep-grid">
+        <div class="rep-block">
+          <h3>Tendencia</h3>
+          <p class="hint-text">Ingresos facturados en los últimos períodos comparables.</p>
+          <div id="rep-tendencia" class="rep-chart"></div>
+        </div>
+        <div class="rep-block">
+          <h3>Sugerencia de precios</h3>
+          <div id="rep-sugerencia" class="rep-suggestion"></div>
+        </div>
+      </div>
+
+      <div class="rep-block">
+        <h3>Desglose por habitación</h3>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Habitación</th>
+                <th>Noches ocupadas</th>
+                <th>Ocupación</th>
+                <th>Precio prom. / noche</th>
+                <th>Ingresos</th>
+              </tr>
+            </thead>
+            <tbody id="rep-habitaciones-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rep-block">
+        <h3>Reservas por origen</h3>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Origen</th>
+                <th>Reservas</th>
+                <th>%</th>
+                <th>Ingresos</th>
+              </tr>
+            </thead>
+            <tbody id="rep-origen-body"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -227,10 +322,10 @@
       </div>
       <div class="form-row">
         <label>Check-in
-          <input type="date" id="f-checkin" required />
+          <input type="date" id="f-checkin" lang="pt-BR" required />
         </label>
         <label>Check-out
-          <input type="date" id="f-checkout" required />
+          <input type="date" id="f-checkout" lang="pt-BR" required />
         </label>
       </div>
       <div class="form-row">
@@ -240,7 +335,9 @@
         <label>Origen de la reserva
           <select id="f-origen">
             <option value="Booking">Booking</option>
-            <option value="Manual">Manual (WhatsApp, directo, etc.)</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Directo">Directo / Walk-in</option>
+            <option value="Otro">Otro</option>
           </select>
         </label>
       </div>
@@ -307,7 +404,7 @@
       <p id="p-reserva-info" class="hint-text"></p>
       <div class="form-row">
         <label>Fecha
-          <input type="date" id="p-fecha" required />
+          <input type="date" id="p-fecha" lang="pt-BR" required />
         </label>
         <label>Monto (BRL)
           <input type="number" id="p-monto" min="0" step="0.01" required />
@@ -345,6 +442,8 @@
 <script src="js/pagos.js"></script>
 <script src="js/hoy.js"></script>
 <script src="js/habitaciones.js"></script>
+<script src="js/mantenimiento.js"></script>
+<script src="js/reportes.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

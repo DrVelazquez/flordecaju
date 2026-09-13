@@ -277,3 +277,97 @@
   font-size: 12.5px;
   color: var(--color-ink-soft);
 }
+
+/* ---------- Mantenimiento (panel Hoy) ---------- */
+.hoy-mantenimiento {
+  margin-top: 28px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 22px;
+}
+.mant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-m);
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.mant-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ---------- Reportes ---------- */
+.rep-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+  align-items: stretch;
+}
+@media (max-width: 900px) {
+  .rep-grid { grid-template-columns: 1fr; }
+}
+.rep-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+.rep-block h3 { font-size: 16px; margin-bottom: 8px; }
+
+.rep-chart { margin-top: 10px; }
+.rep-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 160px;
+  padding-top: 8px;
+}
+.rep-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 4px;
+}
+.rep-bar-value {
+  font-size: 10.5px;
+  color: var(--color-ink-soft);
+  white-space: nowrap;
+}
+.rep-bar {
+  width: 100%;
+  max-width: 40px;
+  background: var(--color-leaf-light);
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height .2s ease;
+}
+.rep-bar.actual { background: var(--color-fruit); }
+.rep-bar-label {
+  font-size: 11px;
+  color: var(--color-ink-soft);
+  text-transform: capitalize;
+}
+
+.rep-suggestion-box {
+  border-radius: var(--radius-s);
+  padding: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.rep-suggestion-box p { margin: 0; }
+.rep-suggestion-box.nivel-alta { background: #FBEEDA; color: #7A4E0B; border: 1px solid #EFCF9B; }
+.rep-suggestion-box.nivel-media-alta { background: #E7EFE3; color: var(--color-leaf); border: 1px solid #CFE1C8; }
+.rep-suggestion-box.nivel-media { background: var(--color-surface-2); color: var(--color-ink-soft); border: 1px solid var(--color-border); }
+.rep-suggestion-box.nivel-baja { background: #FBE6E1; color: var(--color-danger); border: 1px solid #F2C6BB; }

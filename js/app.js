@@ -14,6 +14,8 @@ async function boot() {
   Calendario.initNav();
   Reservas.initEvents();
   Pagos.initEvents();
+  Mantenimiento.initEvents();
+  Reportes.initEvents();
 
   try {
     await reloadData();
@@ -24,6 +26,8 @@ async function boot() {
   Reservas.render();
   Pagos.render();
   Hoy.render();
+  Mantenimiento.render();
+  Reportes.render();
 }
 
 boot();

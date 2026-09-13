@@ -59,12 +59,18 @@
           <button id="mes-next" class="icon-btn" aria-label="Mes siguiente">›</button>
         </div>
         <div class="legend">
-          <span class="legend-item"><i class="dot dot-confirmada"></i> Confirmada</span>
-          <span class="legend-item"><i class="dot dot-pendiente"></i> Pendiente</span>
-          <span class="legend-item"><i class="dot dot-completo"></i> Sin disponibilidad</span>
+          <span class="legend-item"><i class="dot origen-web"></i> Web</span>
+          <span class="legend-item"><i class="dot origen-whatsapp"></i> WhatsApp</span>
+          <span class="legend-item"><i class="dot origen-directo"></i> Directo</span>
+          <span class="legend-item"><i class="dot origen-otro"></i> Otro</span>
+          <span class="legend-sep"></span>
+          <span class="legend-item"><i class="dot dot-pagado"></i> Pagado</span>
+          <span class="legend-item"><i class="dot dot-parcial"></i> Parcial</span>
+          <span class="legend-item"><i class="dot dot-adeuda"></i> Adeuda</span>
         </div>
       </div>
-      <div id="calendario-grid" class="calendario-grid"></div>
+      <p class="hint-text gantt-hint">Tocá un espacio vacío para crear una reserva en esa habitación y fecha, o tocá una reserva para editarla.</p>
+      <div id="gantt-wrap" class="gantt-wrap"></div>
     </section>
 
     <!-- RESERVAS -->
@@ -94,6 +100,8 @@
               <th>Pagado</th>
               <th>Saldo</th>
               <th>Estado</th>
+              <th>Origen</th>
+              <th>Estadía</th>
               <th></th>
             </tr>
           </thead>
@@ -147,6 +155,13 @@
     </div>
     <form id="form-reserva">
       <input type="hidden" id="f-res-id" />
+
+      <div id="f-estadia-actions" class="estadia-actions hidden">
+        <button type="button" id="btn-toggle-checkin" class="chip chip-checkin">Check-in</button>
+        <button type="button" id="btn-toggle-checkout" class="chip chip-checkout">Check-out</button>
+        <span class="hint-text">Se guardan al toque, sin necesidad de tocar "Guardar reserva".</span>
+      </div>
+
       <div class="form-row">
         <label>Habitación
           <select id="f-habitacion" required></select>
@@ -167,7 +182,7 @@
         <label>Email
           <input type="email" id="f-email" />
         </label>
-        <label>Estado
+        <label>Estado de la reserva
           <select id="f-estado">
             <option value="confirmada">Confirmada</option>
             <option value="pendiente">Pendiente</option>
@@ -187,14 +202,48 @@
         <label>Precio total (BRL)
           <input type="number" id="f-precio" min="0" step="0.01" required />
         </label>
-        <label>&nbsp;
-          <span id="f-noches-info" class="hint-text">—</span>
+        <label>Origen de la reserva
+          <select id="f-origen">
+            <option value="Web">Web</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Directo">Directo / en persona</option>
+            <option value="Otro">Otro</option>
+          </select>
         </label>
       </div>
+      <p id="f-noches-info" class="hint-text">—</p>
+
+      <div id="f-disponibilidad-warning" class="warning-box hidden"></div>
+
+      <div id="f-pago-inicial-wrap" class="pago-inicial-box">
+        <span class="form-section-title">Pago</span>
+        <label>¿Ya pagó algo?
+          <select id="f-pago-inicial">
+            <option value="ninguno">Todavía no pagó nada</option>
+            <option value="parcial">Pagó una seña / parte</option>
+            <option value="completo">Pagó el total</option>
+          </select>
+        </label>
+        <div id="f-pago-inicial-detalle" class="form-row hidden">
+          <label>Monto pagado (BRL)
+            <input type="number" id="f-pago-inicial-monto" min="0" step="0.01" />
+          </label>
+          <label>Método
+            <select id="f-pago-inicial-metodo">
+              <option value="Pix">Pix</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
       <label>Notas
         <textarea id="f-notas" rows="2" placeholder="Pedidos especiales, forma de llegada, etc."></textarea>
       </label>
-      <div id="f-disponibilidad-warning" class="warning-box hidden"></div>
+
       <div class="modal-actions">
         <button type="button" id="btn-eliminar-reserva" class="btn btn-danger hidden">Eliminar reserva</button>
         <div class="modal-actions-right">

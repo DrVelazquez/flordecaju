@@ -101,3 +101,15 @@ function habitacionesLibresEnRango(checkin, checkout, excluirReservaId) {
   );
   return Store.habitaciones.filter(h => h.activa !== 'NO' && !ocupadasIds.has(h.id));
 }
+
+function origenClass(origen) {
+  const map = { Web: 'origen-web', WhatsApp: 'origen-whatsapp', Directo: 'origen-directo' };
+  return map[origen] || 'origen-otro';
+}
+
+function estadiaInfo(r) {
+  if (r.checkout_hecho === 'SI') return { label: 'Finalizada', cls: 'finalizada' };
+  if (r.checkin_hecho === 'SI') return { label: 'En la pousada', cls: 'en-pousada' };
+  return { label: 'Por llegar', cls: 'por-llegar' };
+}
+

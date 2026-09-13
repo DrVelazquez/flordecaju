@@ -1,31 +1,12 @@
 /**
  * Registro de tareas de mantenimiento (reparaciones, pendientes, etc.).
  *
- * No existe un endpoint en el backend (Apps Script) para esto, así que
- * se guardan en localStorage, en este navegador. Si más adelante se
- * agrega soporte del lado del backend, esta sección se puede migrar a
- * usar Api.* como el resto de los módulos.
+ * Antes esto se guardaba en localStorage (solo en el navegador donde se
+ * cargaba la tarea, y se perdía si se borraba la caché). Ahora usa la
+ * hoja "Mantenimiento" de la planilla, igual que reservas y pagos, así
+ * que se ve desde cualquier celular o computadora y no se pierde.
  */
 const Mantenimiento = (() => {
-  const STORAGE_KEY = 'florDeCaju_mantenimiento_v1';
-
-  function cargar() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function guardar(tareas) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tareas));
-    } catch (e) {
-      showToast('No se pudieron guardar las tareas en este navegador', true);
-    }
-  }
-
   function poblarSelectHabitaciones() {
     const sel = document.getElementById('m-habitacion');
     if (!sel) return;
@@ -40,7 +21,7 @@ const Mantenimiento = (() => {
   function render() {
     poblarSelectHabitaciones();
 
-    const tareas = cargar();
+    const tareas = Store.mantenimiento || [];
     const pendientes = tareas.filter(t => t.estado !== 'hecho');
     const urgentes = pendientes.filter(t => t.prioridad === 'urgente');
 
@@ -96,40 +77,55 @@ const Mantenimiento = (() => {
     });
   }
 
-  function agregarTarea(e) {
+  async function agregarTarea(e) {
     e.preventDefault();
     const descripcion = document.getElementById('m-descripcion').value.trim();
     if (!descripcion) return;
-    const tareas = cargar();
-    tareas.push({
-      id: 'mant_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    const payload = {
       habitacion_id: document.getElementById('m-habitacion').value || '',
       prioridad: document.getElementById('m-prioridad').value,
       descripcion,
       estado: 'pendiente',
       creado: hoyISO(),
-    });
-    guardar(tareas);
-    document.getElementById('m-descripcion').value = '';
-    document.getElementById('m-prioridad').value = 'normal';
-    render();
-    showToast('Tarea de mantenimiento agregada');
+    };
+    const btn = document.querySelector('#form-mantenimiento button[type=submit]');
+    if (btn) btn.disabled = true;
+    try {
+      await Api.addMantenimiento(payload);
+      await reloadData();
+      document.getElementById('m-descripcion').value = '';
+      document.getElementById('m-prioridad').value = 'normal';
+      render();
+      showToast('Tarea de mantenimiento agregada');
+    } catch (err) {
+      showToast('No se pudo guardar la tarea: ' + err.message, true);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   }
 
-  function toggleTarea(id) {
-    const tareas = cargar();
-    const t = tareas.find(t => t.id === id);
+  async function toggleTarea(id) {
+    const t = (Store.mantenimiento || []).find(t => t.id === id);
     if (!t) return;
-    t.estado = t.estado === 'hecho' ? 'pendiente' : 'hecho';
-    guardar(tareas);
-    render();
+    const nuevoEstado = t.estado === 'hecho' ? 'pendiente' : 'hecho';
+    try {
+      await Api.updateMantenimiento({ id, estado: nuevoEstado });
+      await reloadData();
+      render();
+    } catch (err) {
+      showToast('No se pudo actualizar la tarea: ' + err.message, true);
+    }
   }
 
-  function eliminarTarea(id) {
+  async function eliminarTarea(id) {
     if (!confirm('¿Eliminar esta tarea de mantenimiento?')) return;
-    const tareas = cargar().filter(t => t.id !== id);
-    guardar(tareas);
-    render();
+    try {
+      await Api.deleteMantenimiento(id);
+      await reloadData();
+      render();
+    } catch (err) {
+      showToast('No se pudo eliminar la tarea: ' + err.message, true);
+    }
   }
 
   function initEvents() {

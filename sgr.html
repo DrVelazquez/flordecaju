@@ -60,7 +60,7 @@
     <div class="topbar-actions">
       <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>
       <button id="btn-nueva-reserva" class="btn btn-primary">+ Nueva reserva</button>
-      <button id="btn-logout" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión">⏻</button>
+      <button id="btn-logout" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión">✕</button>
     </div>
   </header>
 
@@ -69,7 +69,12 @@
     <!-- HOY -->
     <section id="view-hoy" class="view active">
       <div class="view-header">
-        <h2>Hoy · <span id="hoy-fecha">—</span></h2>
+        <div class="month-nav">
+          <button id="hoy-prev" class="icon-btn" aria-label="Día anterior">‹</button>
+          <h2 id="hoy-fecha-label">Hoy · <span id="hoy-fecha">—</span></h2>
+          <button id="hoy-next" class="icon-btn" aria-label="Día siguiente">›</button>
+        </div>
+        <button id="hoy-volver" class="btn btn-ghost hidden">Volver a hoy</button>
       </div>
       <div class="summary-cards" id="hoy-summary"></div>
 
@@ -92,7 +97,7 @@
 
       <div class="hoy-mantenimiento">
         <h3>Mantenimiento — tareas pendientes</h3>
-        <p class="hint-text">Registrá acá cualquier arreglo o tarea (ej: "Habitación 4 necesita reparación de canilla"). Estas tareas se guardan en este navegador, no en la planilla.</p>
+        <p class="hint-text">Registrá acá cualquier arreglo o tarea (ej: "Habitación 4 necesita reparación de canilla"). Estas tareas se guardan en la planilla, junto con las reservas y los pagos, así se ven desde cualquier celular o computadora.</p>
         <form id="form-mantenimiento" class="mant-form">
           <div class="form-row">
             <label>Habitación
@@ -192,8 +197,12 @@
     <section id="view-pagos" class="view">
       <div class="view-header">
         <h2>Pagos</h2>
-        <div class="filters">
-          <input id="filtro-pagos-cliente" type="text" placeholder="Buscar cliente…" />
+      </div>
+
+      <div class="rep-block">
+        <h3>Dinero cobrado en un período</h3>
+        <p class="hint-text">El filtro usa la fecha en la que se registró cada pago, no las fechas de la estadía. Así, una reserva larga con un pago único no aparece sumada de nuevo en cada mes que dura la estadía.</p>
+        <div class="filters" style="margin-top: 12px;">
           <label class="filter-date-label">Desde
             <input id="filtro-pagos-desde" type="date" lang="pt-BR" />
           </label>
@@ -202,9 +211,33 @@
           </label>
           <button type="button" id="btn-filtro-pagos-limpiar" class="btn btn-ghost">Limpiar fechas</button>
         </div>
+        <p id="pagos-filtro-info" class="hint-text"></p>
+        <div class="summary-cards" id="pagos-summary"></div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Fecha de pago</th>
+                <th>Cliente</th>
+                <th>Habitación</th>
+                <th>Método</th>
+                <th>Monto</th>
+                <th>Notas</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbl-pagos-periodo-body"></tbody>
+          </table>
+        </div>
       </div>
-      <p id="pagos-filtro-info" class="hint-text"></p>
-      <div class="summary-cards" id="pagos-summary"></div>
+
+      <div class="view-header" style="margin-top: 8px;">
+        <h2>Estado de cuentas</h2>
+        <div class="filters">
+          <input id="filtro-pagos-cliente" type="text" placeholder="Buscar cliente…" />
+        </div>
+      </div>
+      <p class="hint-text">Saldo total por reserva activa, sin importar fechas — para ver quién debe y registrar un cobro nuevo.</p>
       <div class="table-wrap">
         <table class="tbl">
           <thead>

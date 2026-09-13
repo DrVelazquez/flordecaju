@@ -1,32 +1,51 @@
 const Hoy = (() => {
+  // Cuántos días de diferencia respecto de hoy se está mirando (0 = hoy,
+  // 1 = mañana, 2 = pasado mañana, también se puede retroceder).
+  let offsetDias = 0;
+
+  function fechaVista() {
+    return sumarDias(hoyISO(), offsetDias);
+  }
+
+  function etiquetaDia(offset) {
+    if (offset === 0) return 'Hoy';
+    if (offset === 1) return 'Mañana';
+    if (offset === 2) return 'Pasado mañana';
+    if (offset === -1) return 'Ayer';
+    return offset > 0 ? `Dentro de ${offset} días` : `Hace ${Math.abs(offset)} días`;
+  }
+
   function render() {
-    const hoy = hoyISO();
-    document.getElementById('hoy-fecha').textContent = fmtDate(hoy);
+    const fecha = fechaVista();
+    document.getElementById('hoy-fecha-label').innerHTML =
+      `${etiquetaDia(offsetDias)} · <span id="hoy-fecha">${fmtDate(fecha)}</span>`;
+    document.getElementById('hoy-volver').classList.toggle('hidden', offsetDias === 0);
 
     const activas = Store.reservas.filter(r => r.estado !== 'cancelada');
     const llegadas = activas
-      .filter(r => r.checkin === hoy)
+      .filter(r => r.checkin === fecha)
       .sort((a, b) => habitacionNombre(a.habitacion_id).localeCompare(habitacionNombre(b.habitacion_id)));
     const salidas = activas
-      .filter(r => r.checkout === hoy)
+      .filter(r => r.checkout === fecha)
       .sort((a, b) => habitacionNombre(a.habitacion_id).localeCompare(habitacionNombre(b.habitacion_id)));
-    const pendientesLimpieza = reservasQueNecesitanLimpieza();
-    const urgentes = pendientesLimpieza.filter(r => llegaHoyAHabitacion(r.habitacion_id, r.id));
+    const pendientesLimpieza = reservasQueNecesitanLimpieza(fecha);
+    const urgentes = pendientesLimpieza.filter(r => llegaHoyAHabitacion(r.habitacion_id, r.id, fecha));
 
     renderResumen(llegadas.length, salidas.length, urgentes.length, pendientesLimpieza.length);
     renderLlegadas(llegadas);
-    renderSalidas(salidas);
-    renderHousekeeping(pendientesLimpieza);
+    renderSalidas(salidas, fecha);
+    renderHousekeeping(pendientesLimpieza, fecha);
   }
 
   function renderResumen(nLlegadas, nSalidas, nUrgentes, nPendientes) {
+    const sufijo = offsetDias === 0 ? 'hoy' : etiquetaDia(offsetDias).toLowerCase();
     document.getElementById('hoy-summary').innerHTML = `
       <div class="summary-card accent-leaf">
-        <div class="label">Llegadas hoy</div>
+        <div class="label">Llegadas ${sufijo}</div>
         <div class="value">${nLlegadas}</div>
       </div>
       <div class="summary-card accent-leaf">
-        <div class="label">Salidas hoy</div>
+        <div class="label">Salidas ${sufijo}</div>
         <div class="value">${nSalidas}</div>
       </div>
       <div class="summary-card ${nUrgentes > 0 ? 'accent-fruit' : 'accent-leaf'}">
@@ -43,7 +62,7 @@ const Hoy = (() => {
   function renderLlegadas(lista) {
     const cont = document.getElementById('hoy-llegadas');
     if (lista.length === 0) {
-      cont.innerHTML = '<p class="hint-text">No hay llegadas programadas para hoy.</p>';
+      cont.innerHTML = '<p class="hint-text">No hay llegadas programadas para este día.</p>';
       return;
     }
     cont.innerHTML = lista.map(r => `
@@ -61,10 +80,10 @@ const Hoy = (() => {
     wireToggles(cont);
   }
 
-  function renderSalidas(lista) {
+  function renderSalidas(lista, fecha) {
     const cont = document.getElementById('hoy-salidas');
     if (lista.length === 0) {
-      cont.innerHTML = '<p class="hint-text">No hay salidas programadas para hoy.</p>';
+      cont.innerHTML = '<p class="hint-text">No hay salidas programadas para este día.</p>';
       return;
     }
     cont.innerHTML = lista.map(r => `
@@ -73,7 +92,7 @@ const Hoy = (() => {
           <span><strong>${habitacionNombre(r.habitacion_id)}</strong> · ${r.cliente_nombre || 'Sin nombre'}</span>
           ${estadoPagoDe(r) !== 'pagado' ? '<span class="hk-tag hk-urgente">Saldo pendiente</span>' : ''}
         </div>
-        <div class="hoy-item-sub">${llegaHoyAHabitacion(r.habitacion_id, r.id) ? 'Ojo: llega otro huésped hoy mismo a esta habitación' : 'Sin llegada inmediata a esta habitación'}</div>
+        <div class="hoy-item-sub">${llegaHoyAHabitacion(r.habitacion_id, r.id, fecha) ? 'Ojo: llega otro huésped ese mismo día a esta habitación' : 'Sin llegada inmediata a esta habitación'}</div>
         <button class="chip chip-checkout ${r.checkout_hecho === 'SI' ? 'active' : ''}" data-toggle-hoy="checkout" data-id="${r.id}">
           ${r.checkout_hecho === 'SI' ? '✓ Check-out hecho' : 'Marcar check-out'}
         </button>
@@ -82,26 +101,25 @@ const Hoy = (() => {
     wireToggles(cont);
   }
 
-  function renderHousekeeping(lista) {
+  function renderHousekeeping(lista, fecha) {
     const cont = document.getElementById('hoy-housekeeping-list');
     if (lista.length === 0) {
       cont.innerHTML = '<p class="hint-text">No hay habitaciones pendientes de limpieza. 🎉</p>';
       return;
     }
-    const hoy = hoyISO();
     const ordenada = [...lista].sort((a, b) => {
-      const aUrg = llegaHoyAHabitacion(a.habitacion_id, a.id) ? 0 : 1;
-      const bUrg = llegaHoyAHabitacion(b.habitacion_id, b.id) ? 0 : 1;
+      const aUrg = llegaHoyAHabitacion(a.habitacion_id, a.id, fecha) ? 0 : 1;
+      const bUrg = llegaHoyAHabitacion(b.habitacion_id, b.id, fecha) ? 0 : 1;
       return aUrg - bUrg;
     });
     cont.innerHTML = ordenada.map(r => {
-      const urgente = llegaHoyAHabitacion(r.habitacion_id, r.id);
+      const urgente = llegaHoyAHabitacion(r.habitacion_id, r.id, fecha);
       const yaSeFue = r.checkout_hecho === 'SI';
       let estadoTxt;
-      if (urgente && yaSeFue) estadoTxt = 'Ya se fue y llega otro huésped hoy: limpiar cuanto antes';
-      else if (urgente) estadoTxt = 'Sale hoy y llega otro huésped hoy: limpiar apenas se vaya';
-      else if (yaSeFue) estadoTxt = 'Ya hizo check-out; se puede limpiar sin apuro, no llega nadie hoy';
-      else if (r.checkout === hoy) estadoTxt = 'Sale hoy (check-out todavía no marcado)';
+      if (urgente && yaSeFue) estadoTxt = 'Ya se fue y llega otro huésped ese día: limpiar cuanto antes';
+      else if (urgente) estadoTxt = 'Sale ese día y llega otro huésped el mismo día: limpiar apenas se vaya';
+      else if (yaSeFue) estadoTxt = 'Ya hizo check-out; se puede limpiar sin apuro, no llega nadie ese día';
+      else if (r.checkout === fecha) estadoTxt = 'Sale ese día (check-out todavía no marcado)';
       else estadoTxt = 'Salida atrasada: revisar si ya se fue';
       return `
         <div class="hoy-item housekeeping-item ${urgente ? 'urgente' : ''}">
@@ -153,5 +171,20 @@ const Hoy = (() => {
     }
   }
 
-  return { render };
+  function initNav() {
+    document.getElementById('hoy-prev').addEventListener('click', () => {
+      offsetDias--;
+      render();
+    });
+    document.getElementById('hoy-next').addEventListener('click', () => {
+      offsetDias++;
+      render();
+    });
+    document.getElementById('hoy-volver').addEventListener('click', () => {
+      offsetDias = 0;
+      render();
+    });
+  }
+
+  return { render, initNav };
 })();

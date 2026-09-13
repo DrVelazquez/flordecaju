@@ -1,73 +1,115 @@
 const Pagos = (() => {
   function render() {
-    const filtradas = obtenerFiltradas();
-    renderResumen(filtradas);
-    renderTabla(filtradas);
+    renderPeriodo();
+    renderCuentas();
   }
 
-  // Mismo criterio de filtro (cliente + rango de fechas por superposición
-  // de estadía) usado tanto para la tabla como para las tarjetas de
-  // resumen, así los números de arriba siempre coinciden con lo que se
-  // ve filtrado abajo.
-  function obtenerFiltradas() {
-    const buscar = (document.getElementById('filtro-pagos-cliente').value || '').toLowerCase();
+  // ---------- Dinero cobrado en un período ----------
+  // OJO: esto se calcula a partir de la FECHA DEL PAGO (p.fecha), no de
+  // las fechas de check-in/check-out de la reserva. Antes se sumaba el
+  // total pagado de cada reserva que "tocaba" el rango elegido, así que
+  // una reserva larga (ej: del 1 de septiembre al 1 de enero) con un
+  // único pago hecho en septiembre aparecía sumada otra vez en octubre,
+  // noviembre, diciembre... aunque ese día no hubiera entrado plata
+  // nueva. Ahora cada pago solo cuenta en el día en que efectivamente
+  // se registró.
+  function obtenerPagosDelPeriodo() {
+    const desde = document.getElementById('filtro-pagos-desde').value;
+    const hasta = document.getElementById('filtro-pagos-hasta').value;
+    const rangoDesde = desde || '0000-01-01';
+    const rangoHasta = hasta || '9999-12-31';
+    return Store.pagos
+      .filter(p => (p.fecha || '') >= rangoDesde && (p.fecha || '') <= rangoHasta)
+      .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+  }
+
+  function renderPeriodo() {
+    const pagos = obtenerPagosDelPeriodo();
     const desde = document.getElementById('filtro-pagos-desde').value;
     const hasta = document.getElementById('filtro-pagos-hasta').value;
 
-    let activas = Store.reservas.filter(r => r.estado !== 'cancelada');
-    if (buscar) activas = activas.filter(r => (r.cliente_nombre || '').toLowerCase().includes(buscar));
-    if (desde || hasta) {
-      const rangoDesde = desde || '0000-01-01';
-      const rangoHasta = hasta || '9999-12-31';
-      activas = activas.filter(r => r.checkin <= rangoHasta && r.checkout >= rangoDesde);
-    }
-    return activas;
-  }
-
-  function renderResumen(filtradas) {
-    const activas = filtradas || obtenerFiltradas();
-    const totalReservado = activas.reduce((s, r) => s + (Number(r.precio_total) || 0), 0);
-    const totalPagado = activas.reduce((s, r) => s + totalPagadoDe(r.id), 0);
-    const totalAdeudado = totalReservado - totalPagado;
-    const cantAdeuda = activas.filter(r => estadoPagoDe(r) !== 'pagado').length;
-
+    const totalCobrado = pagos.reduce((s, p) => s + (Number(p.monto) || 0), 0);
     document.getElementById('pagos-summary').innerHTML = `
       <div class="summary-card accent-leaf">
-        <div class="label">Total reservado</div>
-        <div class="value">${fmtMoney(totalReservado)}</div>
+        <div class="label">Total cobrado en el período</div>
+        <div class="value">${fmtMoney(totalCobrado)}</div>
       </div>
-      <div class="summary-card accent-leaf">
-        <div class="label">Total cobrado</div>
-        <div class="value">${fmtMoney(totalPagado)}</div>
-      </div>
-      <div class="summary-card accent-fruit">
-        <div class="label">Saldo pendiente</div>
-        <div class="value">${fmtMoney(totalAdeudado)}</div>
-      </div>
-      <div class="summary-card accent-fruit">
-        <div class="label">Reservas con saldo</div>
-        <div class="value">${cantAdeuda}</div>
+      <div class="summary-card">
+        <div class="label">Cantidad de pagos</div>
+        <div class="value">${pagos.length}</div>
       </div>
     `;
-  }
 
-  function renderTabla(filtradas) {
-    const tbody = document.getElementById('tbl-pagos-body');
-    const buscar = (document.getElementById('filtro-pagos-cliente').value || '').toLowerCase();
-    const desde = document.getElementById('filtro-pagos-desde').value;
-    const hasta = document.getElementById('filtro-pagos-hasta').value;
-
-    let activas = [...(filtradas || obtenerFiltradas())]
-      .sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
-
-    const totalActivas = Store.reservas.filter(r => r.estado !== 'cancelada').length;
     const infoEl = document.getElementById('pagos-filtro-info');
-    if (buscar || desde || hasta) {
-      infoEl.textContent = `Mostrando ${activas.length} de ${totalActivas} reserva(s) — filtradas. Los totales de arriba también corresponden a este filtro. Usá "Limpiar fechas" o vaciá el buscador para ver todo.`;
+    if (desde || hasta) {
+      infoEl.textContent = `Mostrando pagos registrados entre ${desde ? fmtDate(desde) : 'el inicio'} y ${hasta ? fmtDate(hasta) : 'hoy'}.`;
     } else {
-      infoEl.textContent = '';
+      infoEl.textContent = 'Mostrando todos los pagos registrados. Elegí un rango de fechas para ver cuánto entró en un día, semana o mes puntual.';
     }
 
+    const tbody = document.getElementById('tbl-pagos-periodo-body');
+    if (pagos.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="hint-text">No hay pagos registrados en este período.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = pagos.map(p => {
+      const r = Store.reservas.find(res => res.id === p.reserva_id);
+      return `
+        <tr>
+          <td>${fmtDate(p.fecha)}</td>
+          <td>${r ? (r.cliente_nombre || '—') : '—'}</td>
+          <td>${r ? habitacionNombre(r.habitacion_id) : '—'}</td>
+          <td>${p.metodo || '—'}</td>
+          <td>${fmtMoney(p.monto)}</td>
+          <td>${p.notas || ''}</td>
+          <td>
+            ${r ? `<button class="btn btn-ghost" data-abrir-pago="${r.id}">Ver reserva</button>` : ''}
+            <button class="btn btn-danger" data-del-pago-periodo="${p.id}">Eliminar</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    tbody.querySelectorAll('[data-abrir-pago]').forEach(el => {
+      el.addEventListener('click', () => abrirModal(el.getAttribute('data-abrir-pago')));
+    });
+    tbody.querySelectorAll('[data-del-pago-periodo]').forEach(el => {
+      el.addEventListener('click', async () => {
+        if (!confirm('¿Eliminar este pago?')) return;
+        try {
+          await Api.deletePago(el.getAttribute('data-del-pago-periodo'));
+          await reloadData();
+          render();
+          Reservas.render();
+          Calendario.render();
+          Hoy.render();
+          showToast('Pago eliminado');
+        } catch (err) {
+          showToast('Error al eliminar el pago: ' + err.message, true);
+        }
+      });
+    });
+  }
+
+  // ---------- Estado de cuentas ----------
+  // Saldo total (histórico, no acotado a un rango) por reserva activa:
+  // esto es intencionalmente independiente del filtro de fecha de
+  // arriba, porque "cuánto debe todavía" no es algo que tenga sentido
+  // recortar por día — es un acumulado a hoy.
+  function obtenerReservasCuentas() {
+    const buscar = (document.getElementById('filtro-pagos-cliente').value || '').toLowerCase();
+    let activas = Store.reservas.filter(r => r.estado !== 'cancelada');
+    if (buscar) activas = activas.filter(r => (r.cliente_nombre || '').toLowerCase().includes(buscar));
+    return activas.sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+  }
+
+  function renderCuentas() {
+    const tbody = document.getElementById('tbl-pagos-body');
+    const activas = obtenerReservasCuentas();
+    if (activas.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="hint-text">No hay reservas para mostrar.</td></tr>';
+      return;
+    }
     tbody.innerHTML = activas.map(r => {
       const pagado = totalPagadoDe(r.id);
       const total = Number(r.precio_total) || 0;
@@ -175,13 +217,13 @@ const Pagos = (() => {
     document.querySelectorAll('#modal-pago [data-close]').forEach(el => {
       el.addEventListener('click', cerrarModal);
     });
-    document.getElementById('filtro-pagos-cliente').addEventListener('input', render);
-    document.getElementById('filtro-pagos-desde').addEventListener('change', render);
-    document.getElementById('filtro-pagos-hasta').addEventListener('change', render);
+    document.getElementById('filtro-pagos-cliente').addEventListener('input', renderCuentas);
+    document.getElementById('filtro-pagos-desde').addEventListener('change', renderPeriodo);
+    document.getElementById('filtro-pagos-hasta').addEventListener('change', renderPeriodo);
     document.getElementById('btn-filtro-pagos-limpiar').addEventListener('click', () => {
       document.getElementById('filtro-pagos-desde').value = '';
       document.getElementById('filtro-pagos-hasta').value = '';
-      render();
+      renderPeriodo();
     });
   }
 

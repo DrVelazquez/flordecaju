@@ -98,6 +98,7 @@ const Pagos = (() => {
           renderHistorial(reservaId);
           render();
           Reservas.render();
+          Calendario.render();
         } catch (err) {
           showToast('Error al eliminar el pago: ' + err.message, true);
         }
@@ -125,6 +126,7 @@ const Pagos = (() => {
       await reloadData();
       render();
       Reservas.render();
+      Calendario.render();
       renderHistorial(payload.reserva_id);
       document.getElementById('p-monto').value = '';
       showToast('Pago registrado');

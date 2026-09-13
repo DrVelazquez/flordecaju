@@ -93,7 +93,7 @@ const Calendario = (() => {
     const pagoLabel = { pagado: 'Pagado', parcial: 'Pago parcial', adeuda: 'Adeuda todo' }[pago];
     bar.title = `${r.cliente_nombre} · ${fmtDate(r.checkin)} a ${fmtDate(r.checkout)} · ${estadia.label} · ${origenLabel(r.origen)} · ${pagoLabel}`;
     bar.innerHTML = `
-      <span class="bar-origen-dot ${origenClass(r.origen)}" title="${origenLabel(r.origen)}"></span>
+      <span class="bar-origen-badge ${origenClass(r.origen)}" title="${origenLabel(r.origen)}">${origenInitial(r.origen)}</span>
       <span class="bar-name">${r.cliente_nombre || 'Sin nombre'}</span>
       <span class="bar-estadia-dot estadia-${estadia.cls}" title="${estadia.label}"></span>
     `;

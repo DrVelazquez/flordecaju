@@ -36,7 +36,9 @@
 
 /* ---------- Indicador de estadía (check-in / check-out) ----------
    Blanco/gris = todavía no llegó · Verde = está en la pousada
-   Negro = ya se fue (check-out hecho) */
+   Negro = ya se fue (check-out hecho).
+   Estos mismos 3 colores se usan tanto en la leyenda como en el
+   puntito de cada barra del gantt, para que coincidan siempre. */
 .estadia-dot {
   display: inline-block;
   width: 9px;
@@ -65,24 +67,23 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.8);
-  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
   flex-shrink: 0;
   margin-left: 4px;
 }
 .bar-estadia-dot.estadia-por-llegar {
-  background: transparent;
+  background: #f2f2f0;
 }
 .bar-estadia-dot.estadia-en-pousada {
-  background: #eaffef;
-  border-color: #eaffef;
+  background: #2e9e4f;
 }
 .bar-estadia-dot.estadia-finalizada {
   background: #1a1a1a;
-  border-color: #1a1a1a;
 }
 
-/* ---------- Indicador de origen (Booking vs. Manual) ---------- */
+/* ---------- Indicador de origen (Booking vs. Manual) ----------
+   Antes era un puntito de color; ahora es una letra (B / M) para que
+   no se confunda con los colores de pago o de estadía. */
 .dot {
   display: inline-block;
   width: 10px;
@@ -90,22 +91,39 @@
   border-radius: 50%;
 }
 .dot.pago-pagado { background: #2e9e4f; }
-.dot.pago-parcial { background: #e6a817; }
+.dot.pago-parcial { background: #e0a520; }
 .dot.pago-adeuda { background: #c0392b; }
-.dot.origen-booking { background: #0071c2; }
-.dot.origen-manual { background: #8a8a8a; }
 
-.bar-origen-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.origen-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  vertical-align: middle;
+}
+.origen-badge.origen-booking { background: #0071c2; }
+.origen-badge.origen-manual { background: #8a8a8a; }
+
+.bar-origen-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
   flex-shrink: 0;
   margin-right: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.92);
 }
-.bar-origen-dot.origen-booking { background: #0071c2; }
-.bar-origen-dot.origen-manual { background: #ffffff; }
+.bar-origen-badge.origen-booking { color: #0071c2; }
+.bar-origen-badge.origen-manual { color: #555; }
 
 .badge-origen {
   display: inline-block;
@@ -127,9 +145,9 @@
 }
 
 /* ---------- Barras del gantt coloreadas según estado de pago ----------
-   Antes el color indicaba el origen; ahora indica si la reserva está
-   pagada, parcial o adeudando. El origen pasa a mostrarse como un
-   punto chico a la izquierda del nombre. */
+   Mismos 3 colores exactos que los puntitos .dot.pago-* de la leyenda,
+   para que no haya diferencia entre lo que dice la referencia y lo que
+   se ve en el gantt. */
 .gantt-bar {
   display: flex;
   align-items: center;

@@ -133,6 +133,9 @@ function origenClass(origen) {
 function origenLabel(origen) {
   return origen === 'Booking' ? 'Booking' : 'Manual';
 }
+function origenInitial(origen) {
+  return origen === 'Booking' ? 'B' : 'M';
+}
 
 function estadiaInfo(r) {
   if (r.checkout_hecho === 'SI') return { label: 'Finalizada', cls: 'finalizada' };

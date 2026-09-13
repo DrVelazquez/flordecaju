@@ -19,7 +19,24 @@
   <div class="spinner"></div>
 </div>
 
-<div id="app" class="app">
+<!-- Pantalla de login: pide la contraseña compartida antes de cargar
+     cualquier dato. La validación real pasa en el backend (Apps Script);
+     ver la guía de seguridad para configurarla ahí. -->
+<div id="login-screen" class="setup-screen hidden">
+  <div class="setup-card">
+    <h1>🌺 Flor de Caju</h1>
+    <p class="setup-hint">Ingresá la contraseña del equipo para acceder al panel de gestión.</p>
+    <form id="form-login">
+      <label>Contraseña
+        <input type="password" id="login-password" required autocomplete="current-password" />
+      </label>
+      <p id="login-error" class="hint-text hidden" style="color: var(--color-danger);"></p>
+      <button type="submit" id="btn-login-submit" class="btn btn-primary" style="width:100%; margin-top: 6px;">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
 
   <header class="topbar">
     <div class="brand">
@@ -43,6 +60,7 @@
     <div class="topbar-actions">
       <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>
       <button id="btn-nueva-reserva" class="btn btn-primary">+ Nueva reserva</button>
+      <button id="btn-logout" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión">⏻</button>
     </div>
   </header>
 
@@ -435,6 +453,7 @@
 
 <div id="toast" class="toast hidden"></div>
 
+<script src="js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="js/state.js"></script>
 <script src="js/calendario.js"></script>

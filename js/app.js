@@ -10,24 +10,38 @@
   });
 })();
 
-async function boot() {
-  Calendario.initNav();
-  Reservas.initEvents();
-  Pagos.initEvents();
-  Mantenimiento.initEvents();
-  Reportes.initEvents();
-
+async function iniciarApp() {
   try {
     await reloadData();
   } catch (e) {
-    // el error ya se muestra en un toast; seguimos para no dejar la UI colgada
+    // Si fue un error de autorización, api.js ya mostró la pantalla de
+    // login de nuevo con el mensaje correspondiente; si fue otro error
+    // de red, el toast ya se disparó. En ambos casos no seguimos.
+    return;
   }
+  Auth.mostrarApp();
   Calendario.render();
   Reservas.render();
   Pagos.render();
   Hoy.render();
   Mantenimiento.render();
   Reportes.render();
+}
+window.iniciarApp = iniciarApp;
+
+function boot() {
+  Calendario.initNav();
+  Reservas.initEvents();
+  Pagos.initEvents();
+  Mantenimiento.initEvents();
+  Reportes.initEvents();
+  Auth.initEvents();
+
+  if (Auth.isLoggedIn()) {
+    iniciarApp();
+  } else {
+    Auth.mostrarLogin();
+  }
 }
 
 boot();

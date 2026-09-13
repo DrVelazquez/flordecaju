@@ -20,9 +20,14 @@ const Api = (() => {
   async function getAll() {
     beginLoading();
     try {
-      const res = await fetch(`${getUrl()}?action=getAll`);
+      const url = `${getUrl()}?action=getAll&token=${encodeURIComponent(Auth.getToken())}`;
+      const res = await fetch(url);
       if (!res.ok) throw new Error('Error de red al leer los datos');
       const json = await res.json();
+      if (json.unauthorized) {
+        Auth.sesionInvalida(json.error);
+        throw new Error(json.error || 'No autorizado');
+      }
       if (!json.ok) throw new Error(json.error || 'Error desconocido');
       return json;
     } finally {
@@ -39,10 +44,14 @@ const Api = (() => {
       const res = await fetch(getUrl(), {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action, data }),
+        body: JSON.stringify({ action, data, token: Auth.getToken() }),
       });
       if (!res.ok) throw new Error('Error de red al guardar los datos');
       const json = await res.json();
+      if (json.unauthorized) {
+        Auth.sesionInvalida(json.error);
+        throw new Error(json.error || 'No autorizado');
+      }
       if (!json.ok) throw new Error(json.error || 'Error desconocido');
       return json;
     } finally {

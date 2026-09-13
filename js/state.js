@@ -142,3 +142,34 @@ function estadiaInfo(r) {
   if (r.checkin_hecho === 'SI') return { label: 'En la pousada', cls: 'en-pousada' };
   return { label: 'Por llegar', cls: 'por-llegar' };
 }
+
+// ---------- Panel "Hoy" / Housekeeping ----------
+
+function hoyISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// Reservas activas cuyo check-out ya pasó (o es hoy) y todavía no se
+// marcó la habitación como limpia.
+function reservasQueNecesitanLimpieza() {
+  const hoy = hoyISO();
+  return Store.reservas.filter(r =>
+    r.estado !== 'cancelada' &&
+    r.checkout && r.checkout <= hoy &&
+    r.limpieza_hecha !== 'SI'
+  );
+}
+
+// true si esa habitación tiene otra reserva activa que llega justo hoy
+// (además de la reserva que se quiere excluir, típicamente la que se
+// acaba de ir).
+function llegaHoyAHabitacion(habitacionId, excluirReservaId) {
+  const hoy = hoyISO();
+  return Store.reservas.some(r =>
+    r.estado !== 'cancelada' &&
+    r.id !== excluirReservaId &&
+    r.habitacion_id === habitacionId &&
+    r.checkin === hoy
+  );
+}

@@ -34,7 +34,8 @@
       </div>
     </div>
     <nav class="tabs" id="tabs">
-      <button class="tab active" data-tab="calendario">Calendario</button>
+      <button class="tab active" data-tab="hoy">Hoy</button>
+      <button class="tab" data-tab="calendario">Calendario</button>
       <button class="tab" data-tab="reservas">Reservas</button>
       <button class="tab" data-tab="pagos">Pagos</button>
     </nav>
@@ -46,8 +47,33 @@
 
   <main class="content">
 
+    <!-- HOY -->
+    <section id="view-hoy" class="view active">
+      <div class="view-header">
+        <h2>Hoy · <span id="hoy-fecha">—</span></h2>
+      </div>
+      <div class="summary-cards" id="hoy-summary"></div>
+
+      <div class="hoy-columns">
+        <div class="hoy-col">
+          <h3>Llegadas de hoy</h3>
+          <div id="hoy-llegadas" class="hoy-list"></div>
+        </div>
+        <div class="hoy-col">
+          <h3>Salidas de hoy</h3>
+          <div id="hoy-salidas" class="hoy-list"></div>
+        </div>
+      </div>
+
+      <div class="hoy-housekeeping">
+        <h3>Housekeeping — habitaciones a preparar</h3>
+        <p class="hint-text">Se muestran las habitaciones con check-out de hoy o de días anteriores que todavía no marcaste como limpias. "Urgente" quiere decir que hoy mismo llega otro huésped a esa habitación.</p>
+        <div id="hoy-housekeeping-list" class="hoy-list"></div>
+      </div>
+    </section>
+
     <!-- CALENDARIO -->
-    <section id="view-calendario" class="view active">
+    <section id="view-calendario" class="view">
       <div class="view-header">
         <div class="month-nav">
           <button id="mes-prev" class="icon-btn" aria-label="Mes anterior">‹</button>
@@ -291,6 +317,7 @@
 <script src="js/calendario.js"></script>
 <script src="js/reservas.js"></script>
 <script src="js/pagos.js"></script>
+<script src="js/hoy.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -11,7 +11,6 @@
    Se muestra cada vez que hay una petición al backend en curso,
    así se evita poder tocar botones/clicks mientras se sincroniza. */
 #global-loading {
-   
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -172,4 +171,68 @@
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
+}
+
+/* ---------- Panel "Hoy" ---------- */
+.hoy-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 22px;
+}
+@media (max-width: 720px) {
+  .hoy-columns { grid-template-columns: 1fr; }
+}
+.hoy-col h3,
+.hoy-housekeeping h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+.hoy-housekeeping {
+  margin-top: 28px;
+}
+.hoy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hoy-item {
+  border: 1px solid #e8e4dc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+.hoy-item.hecho {
+  opacity: 0.55;
+}
+.hoy-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
+}
+.hoy-item-sub {
+  font-size: 12px;
+  color: #7a7a7a;
+  margin: 4px 0 8px;
+}
+.housekeeping-item.urgente {
+  border-color: #c0392b;
+  background: #fdf2f1;
+}
+.hk-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.hk-tag.hk-urgente {
+  background: #c0392b;
+  color: #fff;
+}
+.hk-tag.hk-normal {
+  background: #eee;
+  color: #666;
 }

@@ -23,6 +23,7 @@ async function boot() {
   Calendario.render();
   Reservas.render();
   Pagos.render();
+  Hoy.render();
 }
 
 boot();

@@ -71,6 +71,7 @@ const Reservas = (() => {
       await reloadData();
       render();
       Calendario.render();
+      Hoy.render();
       if (!document.getElementById('modal-reserva').classList.contains('hidden')
         && document.getElementById('f-res-id').value === id) {
         actualizarBotonesEstadia(id);
@@ -233,6 +234,7 @@ const Reservas = (() => {
       await reloadData();
       render();
       Calendario.render();
+      Hoy.render();
       Pagos.render();
       cerrarModal();
       showToast('Reserva guardada');
@@ -252,6 +254,7 @@ const Reservas = (() => {
       await reloadData();
       render();
       Calendario.render();
+      Hoy.render();
       Pagos.render();
       cerrarModal();
       showToast('Reserva eliminada');

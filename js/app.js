@@ -31,6 +31,7 @@ window.iniciarApp = iniciarApp;
 
 function boot() {
   Calendario.initNav();
+  Hoy.initNav();
   Reservas.initEvents();
   Pagos.initEvents();
   Mantenimiento.initEvents();

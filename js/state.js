@@ -5,6 +5,7 @@ const Store = {
   habitaciones: [],
   reservas: [],
   pagos: [],
+  mantenimiento: [],
   calMes: new Date().getMonth(),
   calAnio: new Date().getFullYear(),
 };
@@ -16,6 +17,7 @@ async function reloadData() {
     Store.habitaciones = data.habitaciones || [];
     Store.reservas = data.reservas || [];
     Store.pagos = data.pagos || [];
+    Store.mantenimiento = data.mantenimiento || [];
     setSync('ok');
   } catch (err) {
     setSync('error');
@@ -167,26 +169,28 @@ function hoyISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// Reservas activas cuyo check-out ya pasó (o es hoy) y todavía no se
-// marcó la habitación como limpia.
-function reservasQueNecesitanLimpieza() {
-  const hoy = hoyISO();
+// Reservas activas cuyo check-out ya pasó (o es la fecha de referencia)
+// y todavía no se marcó la habitación como limpia. Por defecto usa hoy,
+// pero el panel "Hoy" puede pasar una fecha futura (mañana, pasado
+// mañana) para anticipar qué hay que tener listo.
+function reservasQueNecesitanLimpieza(fechaRef) {
+  const ref = fechaRef || hoyISO();
   return Store.reservas.filter(r =>
     r.estado !== 'cancelada' &&
-    r.checkout && r.checkout <= hoy &&
+    r.checkout && r.checkout <= ref &&
     r.limpieza_hecha !== 'SI'
   );
 }
 
-// true si esa habitación tiene otra reserva activa que llega justo hoy
-// (además de la reserva que se quiere excluir, típicamente la que se
-// acaba de ir).
-function llegaHoyAHabitacion(habitacionId, excluirReservaId) {
-  const hoy = hoyISO();
+// true si esa habitación tiene otra reserva activa que llega justo en
+// la fecha de referencia (además de la reserva que se quiere excluir,
+// típicamente la que se acaba de ir). Por defecto usa hoy.
+function llegaHoyAHabitacion(habitacionId, excluirReservaId, fechaRef) {
+  const ref = fechaRef || hoyISO();
   return Store.reservas.some(r =>
     r.estado !== 'cancelada' &&
     r.id !== excluirReservaId &&
     r.habitacion_id === habitacionId &&
-    r.checkin === hoy
+    r.checkin === ref
   );
 }

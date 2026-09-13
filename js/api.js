@@ -68,5 +68,8 @@ const Api = (() => {
     updatePago: (data) => post('updatePago', data),
     deletePago: (id) => post('deletePago', { id }),
     updateHabitacion: (data) => post('updateHabitacion', data),
+    addMantenimiento: (data) => post('addMantenimiento', data),
+    updateMantenimiento: (data) => post('updateMantenimiento', data),
+    deleteMantenimiento: (id) => post('deleteMantenimiento', { id }),
   };
 })();

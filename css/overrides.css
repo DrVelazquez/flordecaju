@@ -236,3 +236,44 @@
   background: #eee;
   color: #666;
 }
+
+/* ---------- Filtros de fecha (Reservas / Pagos) ---------- */
+.filter-date-label {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.filter-date-label input[type="date"] {
+  width: auto;
+}
+
+/* ---------- Información adicional dentro del modal de reserva ---------- */
+.info-adicional-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-m);
+  padding: 14px;
+}
+.pagos-historial-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pagos-historial-mini .pago-row-mini {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+.pagos-historial-mini .pago-row-mini:last-child {
+  border-bottom: none;
+}
+.pagos-historial-mini .pago-row-mini-empty {
+  font-size: 12.5px;
+  color: var(--color-ink-soft);
+}

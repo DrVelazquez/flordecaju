@@ -11,11 +11,28 @@ const Reservas = (() => {
     const tbody = document.getElementById('tbl-reservas-body');
     const buscar = (document.getElementById('filtro-cliente').value || '').toLowerCase();
     const estadoFiltro = document.getElementById('filtro-estado').value;
+    const desde = document.getElementById('filtro-desde').value;
+    const hasta = document.getElementById('filtro-hasta').value;
 
     let lista = [...Store.reservas];
     if (buscar) lista = lista.filter(r => (r.cliente_nombre || '').toLowerCase().includes(buscar));
     if (estadoFiltro) lista = lista.filter(r => r.estado === estadoFiltro);
+    // El rango de fechas filtra por superposición: se muestran las reservas
+    // cuya estadía toca en algún punto el rango elegido (no solo las que
+    // empiezan justo adentro), así no se pierden estadías que cruzan el límite.
+    if (desde || hasta) {
+      const rangoDesde = desde || '0000-01-01';
+      const rangoHasta = hasta || '9999-12-31';
+      lista = lista.filter(r => r.checkin <= rangoHasta && r.checkout >= rangoDesde);
+    }
     lista.sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+
+    const infoEl = document.getElementById('reservas-filtro-info');
+    if (desde || hasta) {
+      infoEl.textContent = `Mostrando ${lista.length} de ${Store.reservas.length} reserva(s) — filtradas por fecha. Usá "Limpiar fechas" para ver todo el historial.`;
+    } else {
+      infoEl.textContent = '';
+    }
 
     document.getElementById('reservas-empty').classList.toggle('hidden', Store.reservas.length !== 0);
 
@@ -116,6 +133,8 @@ const Reservas = (() => {
       document.getElementById('f-estadia-actions').classList.remove('hidden');
       document.getElementById('f-pago-inicial-wrap').classList.add('hidden');
       actualizarBotonesEstadia(id);
+      renderInfoAdicional(id);
+      document.getElementById('f-info-adicional').classList.remove('hidden');
     } else {
       document.getElementById('modal-reserva-title').textContent = 'Nueva reserva';
       document.getElementById('f-res-id').value = '';
@@ -124,9 +143,39 @@ const Reservas = (() => {
       document.getElementById('btn-eliminar-reserva').classList.add('hidden');
       document.getElementById('f-estadia-actions').classList.add('hidden');
       document.getElementById('f-pago-inicial-wrap').classList.remove('hidden');
+      document.getElementById('f-info-adicional').classList.add('hidden');
     }
     actualizarInfoNoches();
     modal.classList.remove('hidden');
+  }
+
+  // Resumen de pagos y estadía que se muestra al final del modal al
+  // editar una reserva existente, para tener toda la info a mano sin
+  // tener que ir a buscarla a la pestaña de Pagos.
+  function renderInfoAdicional(id) {
+    const r = Store.reservas.find(r => r.id === id);
+    if (!r) return;
+    const pagado = totalPagadoDe(id);
+    const total = Number(r.precio_total) || 0;
+    const saldo = total - pagado;
+    const estadoPago = estadoPagoDe(r);
+    const labels = { pagado: 'Pagado', parcial: 'Pago parcial', adeuda: 'Adeuda todo' };
+    document.getElementById('f-info-resumen').textContent =
+      `Total ${fmtMoney(total)} · Pagado ${fmtMoney(pagado)} · Saldo ${fmtMoney(saldo)} · ${labels[estadoPago]}`;
+
+    const historial = Store.pagos
+      .filter(p => p.reserva_id === id)
+      .sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
+    const cont = document.getElementById('f-info-pagos-historial');
+    if (historial.length === 0) {
+      cont.innerHTML = '<div class="pago-row-mini-empty">Todavía no se registró ningún pago para esta reserva.</div>';
+    } else {
+      cont.innerHTML = historial.map(p => `
+        <div class="pago-row-mini">
+          <span>${fmtDate(p.fecha)} · ${p.metodo} · ${fmtMoney(p.monto)}${p.notas ? ' · ' + p.notas : ''}</span>
+        </div>
+      `).join('');
+    }
   }
 
   function abrirModalConDatos(habitacionId, fechaCheckin) {
@@ -269,9 +318,22 @@ const Reservas = (() => {
     document.getElementById('btn-eliminar-reserva').addEventListener('click', eliminar);
     document.getElementById('filtro-cliente').addEventListener('input', render);
     document.getElementById('filtro-estado').addEventListener('change', render);
+    document.getElementById('filtro-desde').addEventListener('change', render);
+    document.getElementById('filtro-hasta').addEventListener('change', render);
+    document.getElementById('btn-filtro-fechas-limpiar').addEventListener('click', () => {
+      document.getElementById('filtro-desde').value = '';
+      document.getElementById('filtro-hasta').value = '';
+      render();
+    });
     document.getElementById('f-pago-inicial').addEventListener('change', actualizarPagoInicialUI);
     document.getElementById('btn-toggle-checkin').addEventListener('click', () => toggleEstadia(document.getElementById('f-res-id').value, 'checkin'));
     document.getElementById('btn-toggle-checkout').addEventListener('click', () => toggleEstadia(document.getElementById('f-res-id').value, 'checkout'));
+    document.getElementById('btn-ir-a-pago').addEventListener('click', () => {
+      const id = document.getElementById('f-res-id').value;
+      if (!id) return;
+      cerrarModal();
+      Pagos.abrirModal(id);
+    });
     ['f-checkin', 'f-checkout', 'f-habitacion'].forEach(id => {
       document.getElementById(id).addEventListener('change', actualizarInfoNoches);
     });

@@ -261,8 +261,9 @@ label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color:
   padding: 14px;
 }
 
-.filters { display: flex; gap: 8px; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .filters input, .filters select { width: auto; }
+.filters input[type="date"] { min-width: 140px; }
 
 .empty-state { text-align: center; padding: 40px 20px; color: var(--color-ink-soft); font-size: 14px; }
 

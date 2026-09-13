@@ -1,6 +1,7 @@
 const Habitaciones = (() => {
   function render() {
     const cont = document.getElementById('hab-grid');
+    if (!cont) return;
     cont.innerHTML = Store.habitaciones.map(h => `
       <div class="hab-card">
         <h3 contenteditable="true" data-hab-field="nombre" data-hab-id="${h.id}">${h.nombre}</h3>

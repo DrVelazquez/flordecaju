@@ -33,9 +33,28 @@ const Pagos = (() => {
 
   function renderTabla() {
     const tbody = document.getElementById('tbl-pagos-body');
-    const activas = [...Store.reservas]
-      .filter(r => r.estado !== 'cancelada')
-      .sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+    const buscar = (document.getElementById('filtro-pagos-cliente').value || '').toLowerCase();
+    const desde = document.getElementById('filtro-pagos-desde').value;
+    const hasta = document.getElementById('filtro-pagos-hasta').value;
+
+    let activas = Store.reservas.filter(r => r.estado !== 'cancelada');
+    if (buscar) activas = activas.filter(r => (r.cliente_nombre || '').toLowerCase().includes(buscar));
+    // Mismo criterio que en Reservas: se filtra por superposición con el
+    // rango, para no dejar afuera estadías que cruzan el límite elegido.
+    if (desde || hasta) {
+      const rangoDesde = desde || '0000-01-01';
+      const rangoHasta = hasta || '9999-12-31';
+      activas = activas.filter(r => r.checkin <= rangoHasta && r.checkout >= rangoDesde);
+    }
+    activas = [...activas].sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+
+    const totalActivas = Store.reservas.filter(r => r.estado !== 'cancelada').length;
+    const infoEl = document.getElementById('pagos-filtro-info');
+    if (buscar || desde || hasta) {
+      infoEl.textContent = `Mostrando ${activas.length} de ${totalActivas} reserva(s) — filtradas. Usá "Limpiar fechas" o vaciá el buscador para ver todo.`;
+    } else {
+      infoEl.textContent = '';
+    }
 
     tbody.innerHTML = activas.map(r => {
       const pagado = totalPagadoDe(r.id);
@@ -143,6 +162,14 @@ const Pagos = (() => {
     document.getElementById('form-pago').addEventListener('submit', guardar);
     document.querySelectorAll('#modal-pago [data-close]').forEach(el => {
       el.addEventListener('click', cerrarModal);
+    });
+    document.getElementById('filtro-pagos-cliente').addEventListener('input', renderTabla);
+    document.getElementById('filtro-pagos-desde').addEventListener('change', renderTabla);
+    document.getElementById('filtro-pagos-hasta').addEventListener('change', renderTabla);
+    document.getElementById('btn-filtro-pagos-limpiar').addEventListener('click', () => {
+      document.getElementById('filtro-pagos-desde').value = '';
+      document.getElementById('filtro-pagos-hasta').value = '';
+      renderTabla();
     });
   }
 

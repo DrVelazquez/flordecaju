@@ -109,8 +109,16 @@
             <option value="pendiente">Pendiente</option>
             <option value="cancelada">Cancelada</option>
           </select>
+          <label class="filter-date-label">Desde
+            <input id="filtro-desde" type="date" />
+          </label>
+          <label class="filter-date-label">Hasta
+            <input id="filtro-hasta" type="date" />
+          </label>
+          <button type="button" id="btn-filtro-fechas-limpiar" class="btn btn-ghost">Limpiar fechas</button>
         </div>
       </div>
+      <p id="reservas-filtro-info" class="hint-text"></p>
       <div class="table-wrap">
         <table class="tbl" id="tbl-reservas">
           <thead>
@@ -139,7 +147,18 @@
     <section id="view-pagos" class="view">
       <div class="view-header">
         <h2>Pagos</h2>
+        <div class="filters">
+          <input id="filtro-pagos-cliente" type="text" placeholder="Buscar cliente…" />
+          <label class="filter-date-label">Desde
+            <input id="filtro-pagos-desde" type="date" />
+          </label>
+          <label class="filter-date-label">Hasta
+            <input id="filtro-pagos-hasta" type="date" />
+          </label>
+          <button type="button" id="btn-filtro-pagos-limpiar" class="btn btn-ghost">Limpiar fechas</button>
+        </div>
       </div>
+      <p id="pagos-filtro-info" class="hint-text"></p>
       <div class="summary-cards" id="pagos-summary"></div>
       <div class="table-wrap">
         <table class="tbl">
@@ -258,6 +277,13 @@
         <textarea id="f-notas" rows="2" placeholder="Pedidos especiales, forma de llegada, etc."></textarea>
       </label>
 
+      <div id="f-info-adicional" class="info-adicional-box hidden">
+        <span class="form-section-title">Información de la reserva</span>
+        <div id="f-info-resumen" class="hint-text"></div>
+        <div id="f-info-pagos-historial" class="pagos-historial-mini"></div>
+        <button type="button" id="btn-ir-a-pago" class="btn btn-ghost">Ver / registrar pagos</button>
+      </div>
+
       <div class="modal-actions">
         <button type="button" id="btn-eliminar-reserva" class="btn btn-danger hidden">Eliminar reserva</button>
         <div class="modal-actions-right">
@@ -318,6 +344,7 @@
 <script src="js/reservas.js"></script>
 <script src="js/pagos.js"></script>
 <script src="js/hoy.js"></script>
+<script src="js/habitaciones.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

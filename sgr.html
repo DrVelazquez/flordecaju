@@ -371,7 +371,42 @@
           </div>
         </div>
       </div>
-
+<form id="form-movimiento-contable" class="mant-form">
+  <input type="hidden" id="mc-id" />
+  <div class="form-row">
+    <label>Fecha
+      <input type="date" id="mc-fecha" lang="pt-BR" required />
+    </label>
+    <label>Tipo
+      <select id="mc-tipo">
+        <option value="ingreso">Ingreso</option>
+        <option value="gasto">Gasto</option>
+      </select>
+    </label>
+    <label>Monto (BRL)
+      <input type="number" id="mc-monto" min="0" step="0.01" required />
+    </label>
+  </div>
+  <div class="form-row">
+    <label>Categoría
+      <input type="text" id="mc-categoria" placeholder="Ej: Limpieza, Insumos, Alojamiento…" />
+    </label>
+    <label>Método de pago
+      <input type="text" id="mc-metodo" placeholder="Ej: Pix, Efectivo…" />
+    </label>
+  </div>
+  <label>Concepto
+    <input type="text" id="mc-concepto" placeholder="Descripción breve" required />
+  </label>
+  <label>Anotaciones
+    <input type="text" id="mc-anotaciones" placeholder="Opcional" />
+  </label>
+  <div class="modal-actions">
+    <span id="mc-info" class="hint-text"></span>
+    <button type="button" id="btn-mc-cancelar" class="btn btn-ghost hidden">Cancelar edición</button>
+    <button type="submit" class="btn btn-primary">Agregar movimiento</button>
+  </div>
+</form>
       <div class="view-header" style="margin-top: 8px;">
         <h2>Movimientos</h2>
         <div class="filters">
@@ -389,6 +424,7 @@
               <th>Ingreso</th>
               <th>Gasto</th>
               <th>Anotaciones</th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="cont-movimientos-body"></tbody>

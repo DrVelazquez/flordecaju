@@ -81,16 +81,19 @@ const Api = (() => {
   }
 
   return {
-    getUrl, hasUrl, getAll, getContabilidad,
-    addReserva: (data) => post('addReserva', data),
-    updateReserva: (data) => post('updateReserva', data),
-    deleteReserva: (id) => post('deleteReserva', { id }),
-    addPago: (data) => post('addPago', data),
-    updatePago: (data) => post('updatePago', data),
-    deletePago: (id) => post('deletePago', { id }),
-    updateHabitacion: (data) => post('updateHabitacion', data),
-    addMantenimiento: (data) => post('addMantenimiento', data),
-    updateMantenimiento: (data) => post('updateMantenimiento', data),
-    deleteMantenimiento: (id) => post('deleteMantenimiento', { id }),
-  };
+  getUrl, hasUrl, getAll, getContabilidad,
+  addReserva: (data) => post('addReserva', data),
+  updateReserva: (data) => post('updateReserva', data),
+  deleteReserva: (id) => post('deleteReserva', { id }),
+  addPago: (data) => post('addPago', data),
+  updatePago: (data) => post('updatePago', data),
+  deletePago: (id) => post('deletePago', { id }),
+  updateHabitacion: (data) => post('updateHabitacion', data),
+  addMantenimiento: (data) => post('addMantenimiento', data),
+  updateMantenimiento: (data) => post('updateMantenimiento', data),
+  deleteMantenimiento: (id) => post('deleteMantenimiento', { id }),
+  addMovimientoContable: (data) => post('addMovimientoContable', data),
+  updateMovimientoContable: (data) => post('updateMovimientoContable', data),
+  deleteMovimientoContable: (id) => post('deleteMovimientoContable', { id }),
+};
 })();

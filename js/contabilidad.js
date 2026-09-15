@@ -1,13 +1,3 @@
-/**
- * Contabilidad: lee los ingresos/gastos de la planilla "Contabilidad
- * Flor de Caju" (una hoja por mes) vía Api.getContabilidad(), y permite
- * verlos por mes, por año, o el histórico completo.
- *
- * A diferencia de Reservas/Pagos/Hoy, estos datos NO se recargan en
- * cada reloadData(): se piden una sola vez la primera vez que se abre
- * la pestaña (quedan en Store.contabilidad) y después se puede forzar
- * un refresco manual con el botón "Actualizar".
- */
 const Contabilidad = (() => {
   const MESES_NOMBRE = {
     '01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril',
@@ -25,6 +15,7 @@ const Contabilidad = (() => {
 
   async function abrirPestana() {
     if (Store.contabilidad.cargado) {
+      posicionarEnMesActual();
       render();
       return;
     }
@@ -37,21 +28,40 @@ const Contabilidad = (() => {
     try {
       await reloadContabilidad();
       if (!iniciado) {
-        poblarSelectAnio();
         document.getElementById('cont-anio').addEventListener('change', () => {
           poblarSelectMes();
           render();
         });
         iniciado = true;
       }
-      poblarSelectAnio(document.getElementById('cont-anio').value);
-      poblarSelectMes();
+      posicionarEnMesActual();
       render();
     } catch (err) {
       mostrarError('No se pudo cargar la contabilidad: ' + err.message);
     } finally {
       setCargando(false);
     }
+  }
+
+  // Al abrir (o refrescar) la pestaña, arranca siempre en modo "Mensual"
+  // mirando el mes actual. Si todavía no hay datos cargados para el mes
+  // actual, cae al año/mes más reciente con movimientos.
+  function posicionarEnMesActual() {
+    const hoy = new Date();
+    const anioActual = String(hoy.getFullYear());
+    const mesActual = String(hoy.getMonth() + 1).padStart(2, '0');
+
+    document.getElementById('cont-tipo-periodo').value = 'mes';
+
+    const anios = aniosDisponibles();
+    poblarSelectAnio(anios.includes(anioActual) ? anioActual : undefined);
+    poblarSelectMes();
+
+    const selMes = document.getElementById('cont-mes');
+    const anioSeleccionado = document.getElementById('cont-anio').value;
+    const hayMesActual = anioSeleccionado === anioActual &&
+      [...selMes.options].some(o => o.value === mesActual);
+    if (hayMesActual) selMes.value = mesActual;
   }
 
   function setCargando(v) {
@@ -83,7 +93,7 @@ const Contabilidad = (() => {
     if (valorPrevio && anios.includes(valorPrevio)) {
       sel.value = valorPrevio;
     } else if (anios.length) {
-      sel.value = anios[anios.length - 1]; // último año con datos por defecto
+      sel.value = anios[anios.length - 1];
     }
   }
 
@@ -101,7 +111,7 @@ const Contabilidad = (() => {
   }
 
   function tipoPeriodo() {
-    return document.getElementById('cont-tipo-periodo').value; // 'mes' | 'anio' | 'todo'
+    return document.getElementById('cont-tipo-periodo').value;
   }
 
   // ---------- Filtrado ----------
@@ -162,9 +172,6 @@ const Contabilidad = (() => {
     `;
   }
 
-  // Un par de barras (ingreso/gasto) por cada mes del rango elegido —
-  // si el período es "Mensual" muestra igual los últimos meses
-  // alrededor, para dar contexto de tendencia.
   function renderTendencia() {
     const meses = [...mesesFiltrados()].sort((a, b) => (a.anio + a.mes).localeCompare(b.anio + b.mes));
     const cont = document.getElementById('cont-tendencia');
@@ -230,7 +237,7 @@ const Contabilidad = (() => {
 
     const tbody = document.getElementById('cont-movimientos-body');
     if (lista.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="hint-text">No hay movimientos para mostrar.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="hint-text">No hay movimientos para mostrar.</td></tr>';
       return;
     }
     tbody.innerHTML = lista.map(m => `
@@ -242,8 +249,96 @@ const Contabilidad = (() => {
         <td>${m.ingreso ? fmtMoney(m.ingreso) : ''}</td>
         <td>${m.gasto ? fmtMoney(m.gasto) : ''}</td>
         <td>${m.anotaciones || ''}</td>
+        <td>
+          <button class="icon-btn" data-mc-editar="${m.id}" aria-label="Editar">✎</button>
+          <button class="icon-btn" data-mc-eliminar="${m.id}" aria-label="Eliminar">🗑</button>
+        </td>
       </tr>
     `).join('');
+
+    tbody.querySelectorAll('[data-mc-editar]').forEach(el => {
+      el.addEventListener('click', () => editarMovimiento(el.getAttribute('data-mc-editar')));
+    });
+    tbody.querySelectorAll('[data-mc-eliminar]').forEach(el => {
+      el.addEventListener('click', () => eliminarMovimiento(el.getAttribute('data-mc-eliminar')));
+    });
+  }
+
+  // ---------- Alta / edición / borrado de movimientos ----------
+
+  async function guardarMovimiento(e) {
+    e.preventDefault();
+    const id = document.getElementById('mc-id').value;
+    const tipo = document.getElementById('mc-tipo').value;
+    const monto = Number(document.getElementById('mc-monto').value) || 0;
+    const payload = {
+      fecha: document.getElementById('mc-fecha').value,
+      categoria: document.getElementById('mc-categoria').value.trim(),
+      concepto: document.getElementById('mc-concepto').value.trim(),
+      metodo_pago: document.getElementById('mc-metodo').value.trim(),
+      ingreso: tipo === 'ingreso' ? monto : 0,
+      gasto: tipo === 'gasto' ? monto : 0,
+      anotaciones: document.getElementById('mc-anotaciones').value.trim(),
+    };
+    if (!payload.fecha) {
+      showToast('Elegí una fecha', true);
+      return;
+    }
+    const btn = document.querySelector('#form-movimiento-contable button[type=submit]');
+    btn.disabled = true;
+    try {
+      if (id) {
+        await Api.updateMovimientoContable({ id, ...payload });
+        showToast('Movimiento actualizado');
+      } else {
+        await Api.addMovimientoContable(payload);
+        showToast('Movimiento agregado');
+      }
+      await reloadContabilidad();
+      cancelarEdicionMovimiento();
+      render();
+    } catch (err) {
+      showToast('Error al guardar el movimiento: ' + err.message, true);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function editarMovimiento(id) {
+    const m = Store.contabilidad.movimientos.find(m => m.id === id);
+    if (!m) return;
+    document.getElementById('mc-id').value = m.id;
+    document.getElementById('mc-fecha').value = m.fecha;
+    document.getElementById('mc-tipo').value = m.gasto > 0 ? 'gasto' : 'ingreso';
+    document.getElementById('mc-monto').value = m.gasto > 0 ? m.gasto : m.ingreso;
+    document.getElementById('mc-categoria').value = m.categoria || '';
+    document.getElementById('mc-metodo').value = m.metodo_pago || '';
+    document.getElementById('mc-concepto').value = m.concepto || '';
+    document.getElementById('mc-anotaciones').value = m.anotaciones || '';
+    document.getElementById('mc-info').textContent = 'Editando movimiento del ' + fmtDate(m.fecha);
+    document.getElementById('btn-mc-cancelar').classList.remove('hidden');
+    document.querySelector('#form-movimiento-contable button[type=submit]').textContent = 'Guardar cambios';
+    document.getElementById('form-movimiento-contable').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function cancelarEdicionMovimiento() {
+    document.getElementById('form-movimiento-contable').reset();
+    document.getElementById('mc-id').value = '';
+    document.getElementById('mc-info').textContent = '';
+    document.getElementById('btn-mc-cancelar').classList.add('hidden');
+    document.querySelector('#form-movimiento-contable button[type=submit]').textContent = 'Agregar movimiento';
+  }
+
+  async function eliminarMovimiento(id) {
+    if (!confirm('¿Eliminar este movimiento? Esta acción no se puede deshacer. Si viene de un pago de huésped, esto no borra el pago en la pestaña "Pagos", solo su registro contable.')) return;
+    try {
+      await Api.deleteMovimientoContable(id);
+      await reloadContabilidad();
+      render();
+      showToast('Movimiento eliminado');
+    } catch (err) {
+      showToast('Error al eliminar: ' + err.message, true);
+    }
   }
 
   // ---------- Eventos ----------
@@ -253,6 +348,8 @@ const Contabilidad = (() => {
     document.getElementById('cont-mes').addEventListener('change', render);
     document.getElementById('filtro-cont-texto').addEventListener('input', () => renderMovimientos(movimientosFiltrados()));
     document.getElementById('cont-refrescar').addEventListener('click', cargar);
+    document.getElementById('form-movimiento-contable').addEventListener('submit', guardarMovimiento);
+    document.getElementById('btn-mc-cancelar').addEventListener('click', cancelarEdicionMovimiento);
   }
 
   return { abrirPestana, initEvents };

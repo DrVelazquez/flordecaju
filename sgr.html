@@ -56,6 +56,7 @@
       <button class="tab" data-tab="reservas">Reservas</button>
       <button class="tab" data-tab="pagos">Pagos</button>
       <button class="tab" data-tab="reportes">Reportes</button>
+      <button class="tab" data-tab="contabilidad">Contabilidad</button>
     </nav>
     <div class="topbar-actions">
       <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>
@@ -321,6 +322,77 @@
             <tbody id="rep-origen-body"></tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <!-- CONTABILIDAD -->
+    <section id="view-contabilidad" class="view">
+      <div class="view-header">
+        <h2>Contabilidad</h2>
+        <div class="filters">
+          <select id="cont-tipo-periodo">
+            <option value="mes">Mensual</option>
+            <option value="anio" selected>Anual</option>
+            <option value="todo">Todo el histórico</option>
+          </select>
+          <label class="filter-date-label" id="cont-anio-wrap">Año
+            <select id="cont-anio"></select>
+          </label>
+          <label class="filter-date-label" id="cont-mes-wrap">Mes
+            <select id="cont-mes"></select>
+          </label>
+          <button type="button" id="cont-refrescar" class="btn btn-ghost">Actualizar desde la planilla</button>
+        </div>
+      </div>
+      <p class="hint-text">Datos leídos directamente de tu planilla "Contabilidad Flor de Caju" (una hoja por mes). Usá "Actualizar desde la planilla" si acabás de cargar movimientos ahí y todavía no los ves acá.</p>
+      <p id="cont-error" class="hint-text hidden" style="color: var(--color-danger);"></p>
+
+      <div class="summary-cards" id="cont-summary"></div>
+
+      <div class="rep-grid">
+        <div class="rep-block">
+          <h3>Ingresos vs. gastos por mes</h3>
+          <div id="cont-tendencia" class="rep-chart"></div>
+        </div>
+        <div class="rep-block">
+          <h3>Por categoría</h3>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Ingresos</th>
+                  <th>Gastos</th>
+                  <th>Saldo</th>
+                </tr>
+              </thead>
+              <tbody id="cont-categorias-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-header" style="margin-top: 8px;">
+        <h2>Movimientos</h2>
+        <div class="filters">
+          <input id="filtro-cont-texto" type="text" placeholder="Buscar categoría, concepto o anotación…" />
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Categoría</th>
+              <th>Concepto</th>
+              <th>Método de pago</th>
+              <th>Ingreso</th>
+              <th>Gasto</th>
+              <th>Anotaciones</th>
+            </tr>
+          </thead>
+          <tbody id="cont-movimientos-body"></tbody>
+        </table>
       </div>
     </section>
 

@@ -8,7 +8,18 @@ const Store = {
   mantenimiento: [],
   calMes: new Date().getMonth(),
   calAnio: new Date().getFullYear(),
+  contabilidad: { movimientos: [], meses: [], cargado: false },
 };
+
+// La contabilidad se carga aparte (recién cuando se abre esa pestaña),
+// no en cada reloadData(), porque vive en otra planilla y no cambia con
+// cada acción del sistema (reservas, pagos, etc.).
+async function reloadContabilidad() {
+  const data = await Api.getContabilidad();
+  Store.contabilidad.movimientos = data.movimientos || [];
+  Store.contabilidad.meses = data.meses || [];
+  Store.contabilidad.cargado = true;
+}
 
 async function reloadData() {
   setSync('syncing');

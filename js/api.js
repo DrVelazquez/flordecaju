@@ -59,8 +59,29 @@ const Api = (() => {
     }
   }
 
+  // La contabilidad vive en otra planilla y se lee mucho menos seguido
+  // que reservas/pagos, así que se pide aparte (no en cada getAll) para
+  // no pagar ese costo en cada acción del sistema.
+  async function getContabilidad() {
+    beginLoading();
+    try {
+      const url = `${getUrl()}?action=getContabilidad&token=${encodeURIComponent(Auth.getToken())}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Error de red al leer la contabilidad');
+      const json = await res.json();
+      if (json.unauthorized) {
+        Auth.sesionInvalida(json.error);
+        throw new Error(json.error || 'No autorizado');
+      }
+      if (!json.ok) throw new Error(json.error || 'Error desconocido');
+      return json;
+    } finally {
+      endLoading();
+    }
+  }
+
   return {
-    getUrl, hasUrl, getAll,
+    getUrl, hasUrl, getAll, getContabilidad,
     addReserva: (data) => post('addReserva', data),
     updateReserva: (data) => post('updateReserva', data),
     deleteReserva: (id) => post('deleteReserva', { id }),

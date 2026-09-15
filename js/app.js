@@ -7,6 +7,9 @@
     const target = btn.getAttribute('data-tab');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + target).classList.add('active');
+    // Contabilidad vive en otra planilla: se carga recién la primera vez
+    // que se abre esta pestaña, no en cada login, para no hacerlo más lento.
+    if (target === 'contabilidad') Contabilidad.abrirPestana();
   });
 })();
 
@@ -36,6 +39,7 @@ function boot() {
   Pagos.initEvents();
   Mantenimiento.initEvents();
   Reportes.initEvents();
+  Contabilidad.initEvents();
   Auth.initEvents();
 
   if (Auth.isLoggedIn()) {

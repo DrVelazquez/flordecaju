@@ -6,6 +6,7 @@ const Store = {
   reservas: [],
   pagos: [],
   mantenimiento: [],
+  consumos: [],
   calMes: new Date().getMonth(),
   calAnio: new Date().getFullYear(),
   contabilidad: { movimientos: [], meses: [], cargado: false },
@@ -21,6 +22,14 @@ async function reloadContabilidad() {
   Store.contabilidad.cargado = true;
 }
 
+// Marca la contabilidad como "desactualizada": la próxima vez que se abra
+// esa pestaña se vuelve a leer de la planilla. Se llama después de
+// cualquier acción que el backend refleja en Contabilidad (pagos y
+// consumos), para no mostrar números viejos.
+function invalidarContabilidad() {
+  Store.contabilidad.cargado = false;
+}
+
 async function reloadData() {
   setSync('syncing');
   try {
@@ -29,6 +38,7 @@ async function reloadData() {
     Store.reservas = data.reservas || [];
     Store.pagos = data.pagos || [];
     Store.mantenimiento = data.mantenimiento || [];
+    Store.consumos = data.consumos || [];
     setSync('ok');
   } catch (err) {
     setSync('error');
@@ -106,12 +116,47 @@ function totalPagadoDe(reservaId) {
     .reduce((sum, p) => sum + (Number(p.monto) || 0), 0);
 }
 
+// ---------- Consumos / extras por reserva ----------
+// Un consumo con metodo_pago vacío todavía NO se cobró: se suma al saldo
+// de la reserva. Uno con metodo_pago se cobró en el momento: no suma al
+// saldo (igual queda como ingreso en Contabilidad, lo hace el backend).
+
+function consumosDe(reservaId) {
+  return Store.consumos.filter(c => c.reserva_id === reservaId);
+}
+function consumoCobrado(c) {
+  return String(c.metodo_pago || '').trim() !== '';
+}
+function totalConsumosDe(reservaId) {
+  return consumosDe(reservaId).reduce((s, c) => s + (Number(c.monto) || 0), 0);
+}
+function totalConsumosPendientesDe(reservaId) {
+  return consumosDe(reservaId)
+    .filter(c => !consumoCobrado(c))
+    .reduce((s, c) => s + (Number(c.monto) || 0), 0);
+}
+
+// Lo que hay que cobrarle a la reserva en total: hospedaje + extras que
+// todavía no se cobraron. Esta es la base de estadoPagoDe / saldo.
+function totalACobrarDe(reserva) {
+  return (Number(reserva.precio_total) || 0) + totalConsumosPendientesDe(reserva.id);
+}
+function saldoPendienteDe(reserva) {
+  return totalACobrarDe(reserva) - totalPagadoDe(reserva.id);
+}
+
 function estadoPagoDe(reserva) {
   const pagado = totalPagadoDe(reserva.id);
-  const total = Number(reserva.precio_total) || 0;
+  const total = totalACobrarDe(reserva);
   if (pagado <= 0) return 'adeuda';
   if (pagado >= total) return 'pagado';
   return 'parcial';
+}
+
+function escapeHtml(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 /**

@@ -79,6 +79,7 @@ const Pagos = (() => {
         try {
           await Api.deletePago(el.getAttribute('data-del-pago-periodo'));
           await reloadData();
+          invalidarContabilidad();
           render();
           Reservas.render();
           Calendario.render();
@@ -112,15 +113,16 @@ const Pagos = (() => {
     }
     tbody.innerHTML = activas.map(r => {
       const pagado = totalPagadoDe(r.id);
-      const total = Number(r.precio_total) || 0;
-      const saldo = total - pagado;
+      const total = totalACobrarDe(r);
+      const saldo = saldoPendienteDe(r);
+      const extrasPend = totalConsumosPendientesDe(r.id);
       const estado = estadoPagoDe(r);
       const labels = { pagado: 'Pagado', parcial: 'Pago parcial', adeuda: 'Adeuda todo' };
       return `
         <tr>
           <td>${r.cliente_nombre || '—'}</td>
           <td>${habitacionNombre(r.habitacion_id)}</td>
-          <td>${fmtMoney(total)}</td>
+          <td>${fmtMoney(total)}${extrasPend > 0 ? `<div class="hint-text" style="padding-top:2px;">incl. ${fmtMoney(extrasPend)} en extras</div>` : ''}</td>
           <td>${fmtMoney(pagado)}</td>
           <td>${fmtMoney(saldo)}</td>
           <td><span class="badge badge-${estado}">${labels[estado]}</span></td>
@@ -138,8 +140,12 @@ const Pagos = (() => {
     const r = Store.reservas.find(r => r.id === reservaId);
     if (!r) return;
     document.getElementById('p-reserva-id').value = reservaId;
+    const extrasPend = totalConsumosPendientesDe(reservaId);
     document.getElementById('p-reserva-info').textContent =
-      `${r.cliente_nombre} · ${habitacionNombre(r.habitacion_id)} · Total ${fmtMoney(r.precio_total)} · Saldo ${fmtMoney((Number(r.precio_total) || 0) - totalPagadoDe(reservaId))}`;
+      `${r.cliente_nombre} · ${habitacionNombre(r.habitacion_id)} · Total ${fmtMoney(totalACobrarDe(r))} · Saldo ${fmtMoney(saldoPendienteDe(r))}` +
+      (extrasPend > 0
+        ? ` · Ojo: incluye ${fmtMoney(extrasPend)} de extras sin cobrar. Para no duplicarlos en Contabilidad, cobralos desde la reserva (sección "Consumos / extras") y acá registrá solo el pago del hospedaje.`
+        : '');
     document.getElementById('p-fecha').value = new Date().toISOString().slice(0, 10);
     document.getElementById('p-monto').value = '';
     document.getElementById('p-metodo').value = 'Pix';
@@ -168,6 +174,7 @@ const Pagos = (() => {
         try {
           await Api.deletePago(el.getAttribute('data-del-pago'));
           await reloadData();
+          invalidarContabilidad();
           renderHistorial(reservaId);
           render();
           Reservas.render();
@@ -198,6 +205,7 @@ const Pagos = (() => {
     try {
       await Api.addPago(payload);
       await reloadData();
+      invalidarContabilidad();
       render();
       Reservas.render();
       Calendario.render();

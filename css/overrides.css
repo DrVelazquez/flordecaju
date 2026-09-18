@@ -371,3 +371,59 @@
 .rep-suggestion-box.nivel-media-alta { background: #E7EFE3; color: var(--color-leaf); border: 1px solid #CFE1C8; }
 .rep-suggestion-box.nivel-media { background: var(--color-surface-2); color: var(--color-ink-soft); border: 1px solid var(--color-border); }
 .rep-suggestion-box.nivel-baja { background: #FBE6E1; color: var(--color-danger); border: 1px solid #F2C6BB; }
+
+/* ---------- Contabilidad: barras ingreso/gasto agrupadas ----------
+   El markup de renderTendencia() en contabilidad.js mete un
+   div.cont-bar-group con dos .rep-bar adentro (ingreso y gasto). Sin
+   estas reglas ese contenedor no tiene altura definida, así que los
+   height:% de sus hijos se resuelven contra 0 y las barras no se ven.
+   El flex:1 es lo que soluciona eso; los otros dos selectores solo
+   dan colores distintos a ingreso vs. gasto. */
+.cont-bar-group {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  flex: 1;
+}
+.cont-bar-ingreso { background: var(--color-leaf-light); max-width: 16px; }
+.cont-bar-gasto   { background: var(--color-fruit); max-width: 16px; }
+
+/* ---------- Agrupamiento de tabs: Ocupación vs. Contabilidad ----------
+   Hoy/Calendario/Reservas/Pagos/Reporte de ocupación son todos datos de
+   ocupación de la pousada; Contabilidad los incluye pero abarca más
+   (cualquier ingreso o gasto, como vender una bebida suelta). Se separan
+   visualmente para que quede claro que no es "una pestaña más". */
+.tabs {
+  align-items: center;
+  gap: 8px;
+}
+.tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.tabs-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--color-ink-soft);
+  padding: 0 8px 0 10px;
+  white-space: nowrap;
+}
+.tabs-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+.tab-contabilidad {
+  color: var(--color-leaf);
+}
+.tab-contabilidad.active {
+  background: var(--color-leaf);
+  color: #fff;
+}

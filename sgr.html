@@ -51,12 +51,16 @@
       </div>
     </div>
     <nav class="tabs" id="tabs">
-      <button class="tab active" data-tab="hoy">Hoy</button>
-      <button class="tab" data-tab="calendario">Calendario</button>
-      <button class="tab" data-tab="reservas">Reservas</button>
-      <button class="tab" data-tab="pagos">Pagos</button>
-      <button class="tab" data-tab="reportes">Reportes</button>
-      <button class="tab" data-tab="contabilidad">Contabilidad</button>
+      <div class="tabs-group">
+        <span class="tabs-group-label">Ocupación</span>
+        <button class="tab active" data-tab="hoy">Hoy</button>
+        <button class="tab" data-tab="calendario">Calendario</button>
+        <button class="tab" data-tab="reservas">Reservas</button>
+        <button class="tab" data-tab="pagos">Pagos</button>
+        <button class="tab" data-tab="reportes">Reporte de ocupación</button>
+      </div>
+      <span class="tabs-sep"></span>
+      <button class="tab tab-contabilidad" data-tab="contabilidad" title="Incluye la ocupación de la pousada + cualquier otro ingreso o gasto (ventas sueltas, insumos, etc.)">Contabilidad</button>
     </nav>
     <div class="topbar-actions">
       <span id="sync-indicator" class="sync-indicator" title="Estado de conexión">●</span>

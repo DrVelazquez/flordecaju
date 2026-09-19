@@ -144,7 +144,7 @@ const Pagos = (() => {
     document.getElementById('p-reserva-info').textContent =
       `${r.cliente_nombre} · ${habitacionNombre(r.habitacion_id)} · Total ${fmtMoney(totalACobrarDe(r))} · Saldo ${fmtMoney(saldoPendienteDe(r))}` +
       (extrasPend > 0
-        ? ` · Ojo: incluye ${fmtMoney(extrasPend)} de extras sin cobrar. Para no duplicarlos en Contabilidad, cobralos desde la reserva (sección "Consumos / extras") y acá registrá solo el pago del hospedaje.`
+        ? ` · Ojo: incluye ${fmtMoney(extrasPend)} de extras sin cobrar. Si el huésped los paga en este mismo pago, NO los marques además como "cobrados" en la reserva: se contarían dos veces en Contabilidad. Si preferís cobrarlos aparte, usá "Marcar cobrado" en la reserva y acá registrá solo el hospedaje.`
         : '');
     document.getElementById('p-fecha').value = new Date().toISOString().slice(0, 10);
     document.getElementById('p-monto').value = '';

@@ -297,7 +297,7 @@ const Reservas = (() => {
   async function eliminarConsumo(consumoId) {
     const c = Store.consumos.find(c => c.id === consumoId);
     if (!c) return;
-    if (!confirm('¿Eliminar este consumo? También se borra su ingreso en Contabilidad.')) return;
+    if (!confirm('¿Eliminar este consumo? Si ya estaba cobrado, también se borra su ingreso en Contabilidad.')) return;
     try {
       await Api.deleteConsumo(consumoId);
       await reloadData();

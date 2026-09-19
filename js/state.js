@@ -118,8 +118,9 @@ function totalPagadoDe(reservaId) {
 
 // ---------- Consumos / extras por reserva ----------
 // Un consumo con metodo_pago vacío todavía NO se cobró: se suma al saldo
-// de la reserva. Uno con metodo_pago se cobró en el momento: no suma al
-// saldo (igual queda como ingreso en Contabilidad, lo hace el backend).
+// de la reserva y todavía NO es ingreso en Contabilidad. Uno con
+// metodo_pago ya se cobró: no suma al saldo y el backend lo registra
+// como ingreso en Contabilidad (con la fecha del cobro).
 
 function consumosDe(reservaId) {
   return Store.consumos.filter(c => c.reserva_id === reservaId);

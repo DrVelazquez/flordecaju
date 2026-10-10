@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo llegar y guía de Pipa — Pousada Flor de Caju</title>
+<meta name="description" content="Cómo llegar a Pousada Flor de Caju, playas, comida, pagos, SIM y consejos para estar en Pipa, Rio Grande do Norte.">
+<style>
+:root{--c1:#e8742c;--c2:#2f6b4f;--sand:#fbf5ea;--ink:#2b2a27;--mut:#6d675c;--card:#fff;--line:#eadfca}
+@media (prefers-color-scheme:dark){:root{--sand:#1d1c19;--ink:#f1ebe0;--mut:#b4ad9f;--card:#27251f;--line:#3a372f}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font:17px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--sand);color:var(--ink)}
+a{color:var(--c1)}
+header.top{position:sticky;top:0;z-index:10;background:var(--c2);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px}
+header.top a{color:#fff;text-decoration:none;font-weight:600}
+nav.toc{display:flex;gap:14px;overflow-x:auto;white-space:nowrap;font-size:.9rem}
+.hero{padding:48px 20px 28px;text-align:center;background:linear-gradient(160deg,var(--c1),#f2a65a);color:#fff}
+.hero h1{margin:0 0 8px;font-size:clamp(1.8rem,5vw,2.8rem)}
+.hero p{max-width:640px;margin:0 auto}
+main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+section{margin:36px 0}
+h2{font-size:1.6rem;margin:0 0 6px;color:var(--c2)}
+h2 .n{display:inline-block;background:var(--c1);color:#fff;border-radius:50%;width:34px;height:34px;line-height:34px;text-align:center;font-size:1rem;margin-right:8px}
+.lead{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.map{width:100%;height:320px;border-radius:12px;overflow:hidden;background:var(--line);margin:10px 0}
+.map iframe{width:100%;height:100%;border:0}
+.photo{width:100%;aspect-ratio:16/9;border-radius:12px;background:repeating-linear-gradient(45deg,var(--line),var(--line) 12px,transparent 12px,transparent 24px);border:2px dashed var(--c1);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;color:var(--mut);font-size:.9rem;overflow:hidden;margin:10px 0}
+.photo img{width:100%;height:100%;object-fit:cover}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.btn{display:inline-block;background:var(--c2);color:#fff;text-decoration:none;padding:9px 16px;border-radius:999px;font-weight:600;font-size:.92rem;margin:8px 8px 0 0}
+.btn.alt{background:var(--c1)}
+.tag{display:inline-block;font-size:.78rem;background:var(--line);padding:2px 10px;border-radius:999px;margin:0 4px 0 0;font-weight:500}
+.warn{background:#fde8e4;color:#7a1f10;border-left:5px solid #d9381e;padding:12px 16px;border-radius:8px;margin:12px 0}
+@media (prefers-color-scheme:dark){.warn{background:#4a211a;color:#ffd9d1}}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden}
+summary{cursor:pointer;padding:16px 18px;font-weight:700;font-size:1.1rem;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--c1);font-size:1.4rem;line-height:1}
+details[open] summary::after{content:"–"}
+.body{padding:0 18px 18px}
+table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid var(--line);text-align:left}
+.cta{background:var(--c2);color:#fff;border-radius:14px;padding:22px;text-align:center}
+footer{text-align:center;color:var(--mut);padding:24px;font-size:.9rem}
+.todo{background:#fff3cd;color:#664d03;padding:1px 6px;border-radius:4px;font-size:.85em}
+</style>
+</head>
+<body id="top">
+
+<header class="top">
+  <a href="index.html">← Flor de Caju</a>
+  <nav class="toc">
+    <a href="#como-llegar">Cómo llegar</a><a href="#playas">Playas</a><a href="#atardecer">Atardecer</a><a href="#comer">Comer</a><a href="#noche">Noche</a><a href="#practico">Práctico</a><a href="#vivir">Vivir en Pipa</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h1>Guía para estar en Pipa</h1>
+  <p>Todo lo que nos hubiera gustado saber antes de llegar: cómo llegar a la posada, dónde comer, qué playas elegir y cómo manejarte sin vueltas.</p>
+</div>
+
+<main>
+
+<!-- ============ 1. CÓMO LLEGAR ============ -->
+<section id="como-llegar">
+  <h2><span class="n">1</span>Cómo llegar a la posada</h2>
+  <p class="lead">Estamos en la Rua do Céu, la calle de adoquines de colores, justo a la mitad de la Rua dos Golfinhos.</p>
+  <div class="map" data-q="-6.2294255,-35.050723" data-zoom="17"></div>
+  <a class="btn" href="https://maps.app.goo.gl/joUQLnKx33frjnSt7" target="_blank" rel="noopener">Abrir Flor de Caju en Google Maps</a>
+  <div class="photo" data-photo="frente-posada.jpg" data-alt="Frente de la Pousada Flor de Caju">📷 Foto del frente de la posada (frente-posada.jpg)</div>
+
+  <details open>
+    <summary>✈️ Desde el aeropuerto de Natal</summary>
+    <div class="body">
+      <p><b>Transfer con nosotros:</b> ofrecemos traslado desde el aeropuerto. <a href="https://wa.me/55XXXXXXXXXXX" target="_blank" rel="noopener">Consultanos por WhatsApp</a>.</p>
+      <p><b>Transporte público:</b> podés tomar el bus a Pipa desde la terminal de ómnibus (rodoviária) de Natal.</p>
+      <p><b>Uber:</b> no está mal si son más de una persona, porque se reparte el costo.</p>
+      <p><b>BlaBlaCar:</b> buena opción, pero tenés que reservar y organizar con anticipación.</p>
+    </div>
+  </details>
+
+  <details open>
+    <summary>🚗 ¿Dónde estaciono si vengo en auto?</summary>
+    <div class="body">
+      <p>La posada <b>no tiene estacionamiento</b>, pero se puede dejar el auto en la esquina frente a la heladería <b>Coco da Morena</b>. Cualquiera de las dos calles de ahí suele estar bastante deshabitada.</p>
+      <p>Desde ahí cruzás por el <b>Beco do Céu</b> (uno de los varios becos de Pipa) y en <b>3 minutos caminando</b> salís justo en nuestra puerta.</p>
+      <div class="map" data-q="Coco da Morena, Pipa, Tibau do Sul" data-zoom="17"></div>
+      <div class="card" style="background:var(--sand)">🥥 <b>Recomendación:</b> probá el helado de Coco da Morena. Es helado de coco servido dentro de un coco. Espectacular.</div>
+      <div class="photo" data-photo="coco-da-morena.jpg" data-alt="Helado en coco de Coco da Morena">📷 Foto del helado (coco-da-morena.jpg)</div>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 2. CALLE PRINCIPAL ============ -->
+<section id="calle">
+  <h2><span class="n">2</span>La calle principal: Rua dos Golfinhos</h2>
+  <p class="lead">Acá está todo: restaurantes, tiendas, bares, cajeros.</p>
+  <div class="map" data-q="-6.228477,-35.050586" data-zoom="16"></div>
+  <div class="card">
+    <p>Es la calle principal de Pipa y se recorre <b>caminando de punta a punta</b>. Acá salís a comer, a comprar y a pasear. Nosotros estamos justo <b>a la mitad</b>, en la calle de los <b>adoquines de colores</b> (Rua do Céu), a pasos de todo.</p>
+    <div class="photo" data-photo="adoquines.jpg" data-alt="Calle de adoquines de colores, Rua do Céu">📷 Foto de los adoquines de colores (adoquines.jpg)</div>
+  </div>
+</section>
+
+<!-- ============ 3. PLAYAS ============ -->
+<section id="playas">
+  <h2><span class="n">3</span>Playas de Pipa</h2>
+  <p class="lead">Tocá cada una para ver el mapa y la ruta desde la posada.</p>
+
+  <details open>
+    <summary><span>🏖️ Praia do Centro</span> <span class="tag">10 min a pie</span></summary>
+    <div class="body">
+      <p>Siendo sinceros, es la menos linda. Pero es de acceso fácil, se llega caminando a unos 10 minutos de la posada. <b>Tortugas marinas 🐢:</b> si te quedás 5 minutitos mirando el agua, seguro las ves asomar la cabeza.</p>
+      <div class="map" data-q="-6.227351,-35.0458717" data-zoom="16"></div>
+      <a class="btn" data-dir="-6.227351,-35.0458717" data-mode="walking" href="#">Ruta a pie desde la posada</a>
+    </div>
+  </details>
+
+  <details>
+    <summary><span>🌊 Praia do Amor</span> <span class="tag">Las mejores olas</span></summary>
+    <div class="body">
+      <p>Se llega bajando por una escalera, accesible desde el final de la Rua dos Golfinhos. Hay muchísimos puestitos, sombrillas y reposeras en los paradores. Se alquilan tablas de surf y hay clases. Tiene las mejores olas y es donde surfean los locales, así que si sos principiante total conviene tomar clase o elegir otra playa.</p>
+      <div class="map" data-q="-6.234357,-35.040176" data-zoom="16"></div>
+      <a class="btn" data-dir="-6.234357,-35.040176" data-mode="walking" href="#">Ruta a pie desde la posada</a>
+    </div>
+  </details>
+
+  <details>
+    <summary><span>🐬 Baía dos Golfinhos</span> <span class="tag">La estrella de Pipa</span></summary>
+    <div class="body">
+      <div class="warn">⚠️ <b>Mirá la tabla de mareas antes de ir.</b> Es clave: si te agarra la marea alta, el agua sube y tapa las rocas, y cruzar es muy peligroso. Cuando empieza a bajar la marea vas a ver a toda la gente yendo para allá.</div>
+      <a class="btn alt" href="https://tabuademares.com/br/rio-grande-do-norte/tibau-do-sul" target="_blank" rel="noopener">Ver tabla de mareas de Pipa</a>
+      <p style="margin-top:14px">Queda <b>entre Praia do Centro y Praia do Madeiro</b>. Se llega:</p>
+      <ul>
+        <li>Desde <b>Praia do Centro</b>, caminando hacia el norte (con el mar a tu derecha).</li>
+        <li>Desde <b>Praia do Madeiro</b>, caminando hacia el sur (con el mar a tu izquierda).</li>
+      </ul>
+      <p>Golfinho es delfín: los vas a ver muy cerca, todos los días. También hay excursiones en barco para verlos, pero honestamente se los puede ver tranquilamente desde la playa.</p>
+      <div class="map" data-q="-6.2266141,-35.061908" data-zoom="16"></div>
+      <a class="btn" data-dir="-6.2266141,-35.061908" data-mode="walking" href="#">Ruta a pie desde la posada</a>
+    </div>
+  </details>
+
+  <details>
+    <summary><span>🏄 Praia do Madeiro</span> <span class="tag">Ideal para aprender</span></summary>
+    <div class="body">
+      <p>Más alejada. Si te gusta caminar se puede ir a pie, aunque es un poco caluroso. En <b>Uber</b> te sale entre <b>R$ 5 y 15</b> según la demanda. También en bici o transporte público.</p>
+      <p>El surf es más tranquilo, ideal para aprender y para hacer longboard. El primer tercio de la playa está lleno de sombrillas y reposeras, pero si caminás un poco tenés la playa toda para vos.</p>
+      <div class="map" data-q="-6.2223972,-35.0708927" data-zoom="16"></div>
+      <a class="btn" data-dir="-6.2223972,-35.0708927" data-mode="walking" href="#">Ruta desde la posada</a>
+    </div>
+  </details>
+
+  <details>
+    <summary>🌴 Menos turísticas: Praia das Minas y más al norte</summary>
+    <div class="body">
+      <p>Si querés algo más tranquilo, andá hacia el norte de Madeiro, casi llegando a Minas. Playas más salvajes y con mucha menos gente.</p>
+      <div class="map" data-q="Praia das Minas, Tibau do Sul" data-zoom="14"></div>
+      <a class="btn" data-dir="Praia das Minas, Tibau do Sul" data-mode="driving" href="#">Ruta desde la posada</a>
+    </div>
+  </details>
+</section>
+
+<!-- ============ ATARDECER ============ -->
+<section id="atardecer">
+  <h2><span class="n">4</span>Atardecer</h2>
+  <p class="lead">No te lo pierdas. Tres lugares para verlo.</p>
+
+  <details open>
+    <summary>🌅 Dunas de Cacimbinhas <span class="tag">Imperdible</span></summary>
+    <div class="body">
+      <p>Ver el atardecer en las dunas, arriba de Cacimbinhas, es clave.</p>
+      <div class="map" data-q="-6.2038886,-35.0825486" data-zoom="15"></div>
+      <a class="btn" data-dir="-6.2038886,-35.0825486" data-mode="driving" href="#">Ruta desde la posada</a>
+    </div>
+  </details>
+  <details>
+    <summary>🌇 Chapadão</summary>
+    <div class="body">
+      <p>Otro muy buen mirador para ver el atardecer.</p>
+      <div class="map" data-q="-6.236496,-35.0379504" data-zoom="15"></div>
+      <a class="btn" data-dir="-6.236496,-35.0379504" data-mode="driving" href="#">Ruta desde la posada</a>
+    </div>
+  </details>
+  <details>
+    <summary>🍹 Con una caipirinha en Orishas</summary>
+    <div class="body">
+      <p>¿Por qué no? Atardecer con caipirinha en el Orishas Resto Bar.</p>
+      <div class="map" data-q="-6.2270371,-35.0451911" data-zoom="17"></div>
+      <a class="btn" data-dir="-6.2270371,-35.0451911" data-mode="walking" href="#">Ruta a pie desde la posada</a>
+    </div>
+  </details>
+</section>
+
+<!-- ============ COMER ============ -->
+<section id="comer">
+  <h2><span class="n">5</span>Comer y cuánto cuesta</h2>
+  <div class="card">
+    <table>
+      <tr><th>Estilo</th><th>Por persona</th></tr>
+      <tr><td>Restaurante sin pensar demasiado (ves uno, te sentás)</td><td><b>R$ 70–120</b></td></tr>
+      <tr><td>Cuidando un poco el bolsillo (hay menos opciones)</td><td><b>R$ 40–70</b></td></tr>
+      <tr><td>Como los locales</td><td><b>desde R$ 30</b></td></tr>
+    </table>
+  </div>
+
+  <details open>
+    <summary>🍴 Nuestras recomendaciones</summary>
+    <div class="body">
+      <p><b>Barato como local:</b> <b>Panificadora Canaã</b>, frente al supermercado Pai e Filho. Tiene buffet por kilo bastante económico.</p>
+      <p><b>Helado:</b> Coco da Morena (helado de coco dentro de un coco).</p>
+      <p><b>Mejor pizza:</b> <span class="todo">NOMBRE</span> · <a href="#">Maps</a></p>
+      <p><b>Mejor hamburguesa:</b> <span class="todo">NOMBRE</span> · <a href="#">Maps</a></p>
+      <p><b>Mejor cerveza artesanal:</b> <span class="todo">NOMBRE</span> · <a href="#">Maps</a></p>
+      <p><b>Desayuno:</b> en Flor de Caju está incluido ☕</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>🛒 Supermercados</summary>
+    <div class="body">
+      <p>Los dos más baratos de Pipa:</p>
+      <ul>
+        <li><b>Pai e Filho:</b> el más grande, pero un poco más desordenado.</li>
+        <li><b>São José:</b> un poquito más de variedad.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary>🧉 Yerba mate</summary>
+    <div class="body">
+      <p>Recomendamos la yerba <b>As de Bastos</b>, que se vende acá en Pipa. Instagram del lugar: <a href="https://instagram.com/USUARIO" target="_blank" rel="noopener">@USUARIO</a> <span class="todo">completar</span></p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ NOCHE ============ -->
+<section id="noche">
+  <h2><span class="n">6</span>Vida nocturna</h2>
+  <div class="card">
+    <p>La mayor movida de noche está en <b>Taipa</b>: un barcito donde todo el mundo se reúne a comer y tomar, con bandas y jazz en vivo. Al lado hay un boliche donde sale la gente a bailar.</p>
+    <p><span class="todo">Sumá tus consejos: qué noches son mejores, horarios, etc.</span></p>
+  </div>
+</section>
+
+<!-- ============ PRÁCTICO ============ -->
+<section id="practico">
+  <h2><span class="n">7</span>Cosas prácticas</h2>
+
+  <details>
+    <summary>👥 Comunidad: grupos de argentinos en Pipa</summary>
+    <div class="body">
+      <p>Hay grupos de argentinos y de la comunidad de Pipa que se usan muchísimo para consultar alquileres, trabajo, recomendaciones y eventos.</p>
+      <a class="btn" href="LINK_WHATSAPP" target="_blank" rel="noopener">Grupo de WhatsApp</a>
+      <a class="btn" href="LINK_FACEBOOK" target="_blank" rel="noopener">Grupo de Facebook</a>
+      <a class="btn alt" href="LINK_CLASS_PIPA" target="_blank" rel="noopener">Class Pipa</a>
+    </div>
+  </details>
+
+  <details>
+    <summary>📱 Telefonía: chip recomendado</summary>
+    <div class="body">
+      <p>Recomendamos <b>TIM</b>: es buena y barata. <span class="todo">Podés agregar plan/precio y dónde conseguirlo.</span></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>💸 Pagos: Pix</summary>
+    <div class="body">
+      <p><b>Pix</b> es el sistema de pagos instantáneos de Brasil: escaneás un QR o usás una clave y la plata llega al toque. Se usa en todos lados, hasta en el transporte público. Nosotros desde que llegamos <b>nunca usamos un billete</b>.</p>
+      <p>Con las apps <b>Belo</b> o <b>Moretta Pay</b> es muy fácil pasar pesos desde Mercado Pago, o dólares desde Revolut o Wise, y pagar por Pix.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>🤝 Excursiones, paseos y traslados</summary>
+    <div class="body">
+      <p><span class="todo">Espacio reservado para tus parcerias: excursiones, paseos, traslados, clases de surf, etc.</span></p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ VIVIR ============ -->
+<section id="vivir">
+  <h2><span class="n">8</span>¿Te querés quedar a vivir?</h2>
+  <details open>
+    <summary>🪪 CPF: el "CUIT" brasileño</summary>
+    <div class="body">
+      <p>Apenas llegues a Natal, andá a la <b>Receita Federal</b> (en el shopping de Natal) a hacer el <b>CPF</b>. Es <b>gratis</b> y con el pasaporte lo tenés al toque, en unos 20 minutos. Con ese número podés hacer un montón de trámites.</p>
+      <div class="map" data-q="-5.8666218,-35.185477" data-zoom="16"></div>
+      <a class="btn" href="https://maps.app.goo.gl/7XEQkCKBZwjB3x8M7" target="_blank" rel="noopener">Abrir en Google Maps</a>
+    </div>
+  </details>
+</section>
+
+<section>
+  <div class="cta">
+    <h2 style="color:#fff;margin-bottom:6px">Alojate en Flor de Caju</h2>
+    <p>Desayuno incluido, a pasos de la playa y en la calle más linda de Pipa.</p>
+    <a class="btn alt" href="index.html#reservar">Reservar</a>
+    <a class="btn" style="background:#fff;color:var(--c2)" href="https://wa.me/55XXXXXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</section>
+</main>
+
+<footer>© Pousada Flor de Caju · Pipa, Tibau do Sul, Rio Grande do Norte</footer>
+
+<script>
+const ORIGIN="-6.2294255,-35.050723";
+document.querySelectorAll(".map[data-q]").forEach(el=>{
+  const f=document.createElement("iframe");
+  f.loading="lazy";f.referrerPolicy="no-referrer-when-downgrade";
+  f.title="Mapa: "+el.dataset.q;
+  f.src="https://maps.google.com/maps?q="+encodeURIComponent(el.dataset.q)+"&z="+(el.dataset.zoom||15)+"&output=embed";
+  el.appendChild(f);
+});
+document.querySelectorAll("[data-dir]").forEach(a=>{
+  a.href="https://www.google.com/maps/dir/?api=1&origin="+ORIGIN+"&destination="+encodeURIComponent(a.dataset.dir)+"&travelmode="+(a.dataset.mode||"walking");
+  a.target="_blank";a.rel="noopener";
+});
+document.querySelectorAll(".photo[data-photo]").forEach(el=>{
+  const i=new Image();i.alt=el.dataset.alt||"";
+  i.onload=()=>{el.innerHTML="";el.style.border="0";el.appendChild(i)};
+  i.src=el.dataset.photo;
+});
+</script>
+</body>
+</html>

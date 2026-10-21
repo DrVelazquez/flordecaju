@@ -12,8 +12,8 @@
     direccion: 'Rua do Céu, Pipa',
     ciudad: 'Tibau do Sul — RN, Brasil',
     telefono: '',                               // ej: '+55 84 9 XXXX-XXXX' (vacío = no se muestra)
-    email: 'reservas@flordecaju.com.br',
-    web: 'Instagram: @flordecaju.pipa'
+  email: 'pousadaflordecaju@gmail.com',
+  web: 'Instagram: @pousadaflordecaju'
   };
 
   const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';

@@ -376,6 +376,8 @@
   .modal-gallery img.m-photo{width:100%; height:150px; object-fit:cover; border-radius:var(--radius); cursor:zoom-in; background:var(--sand-2);}
   .modal-gallery img.m-photo:first-child{grid-column:span 2; height:260px;}
   .modal-gallery img.m-photo.zoom{grid-column:span 2; height:auto; max-height:70vh; object-fit:contain; cursor:zoom-out;}
+  .hc-slide.has-photo{background-size:cover; background-position:center;}
+  .hc-slide.has-photo span, .hc-slide.has-photo svg{display:none;}
   .g-tile.has-photo{background-size:cover; background-position:center;}
   .g-tile.has-photo span, .g-tile.has-photo svg, .g-tile.has-photo::after{display:none;}
   .rv-slide.rv-img{width:100%; height:auto; min-height:0; max-height:none; aspect-ratio:auto; object-fit:contain; padding:18px 22px; background:var(--white); box-sizing:border-box;}
@@ -426,7 +428,7 @@
     </a>
     <nav class="mainnav" aria-label="Navegação principal">
       <a href="#quartos" data-i18n="nav.rooms">Quartos</a>
-      <a href="#galeria" data-i18n="nav.gallery">Galeria</a>
+      <a href="#galeria" data-i18n="nav.gallery">A pousada</a>
       <a href="#reservar" data-i18n="nav.book">Reservar</a>
       <a href="guia.html" data-i18n="nav.guide">Guia de Pipa</a>
       <a href="#contato" data-i18n="nav.contact">Contato</a>
@@ -801,7 +803,7 @@ const CONFIG = {
    ============================================================ */
 const T = {
   pt: {
-    "nav.rooms":"Quartos","nav.gallery":"Galeria","nav.book":"Reservar","nav.guide":"Guia de Pipa","nav.contact":"Contato","nav.bookBtn":"Reservar",
+    "nav.rooms":"Quartos","nav.gallery":"A pousada","nav.book":"Reservar","nav.guide":"Guia de Pipa","nav.contact":"Contato","nav.bookBtn":"Reservar",
     "hero.headline":"Seu pedacinho de paraíso em Pipa",
     "hero.sub":"A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Sua casa longe de casa, em Pipa.",
     "hero.cta1":"Reservar agora","hero.cta2":"Chamar no WhatsApp","hero.cta3":"Enviar e-mail","hero.guide":"Ver guia de Pipa",
@@ -841,7 +843,7 @@ const T = {
     mailSubject:"Reserva — Pousada Flor de Caju", localeCode:"pt-BR"
   },
   es: {
-    "nav.rooms":"Habitaciones","nav.gallery":"Galería","nav.book":"Reservar","nav.guide":"Guía de Pipa","nav.contact":"Contacto","nav.bookBtn":"Reservar",
+    "nav.rooms":"Habitaciones","nav.gallery":"La pousada","nav.book":"Reservar","nav.guide":"Guía de Pipa","nav.contact":"Contacto","nav.bookBtn":"Reservar",
     "hero.headline":"Tu pedacito de paraíso en Pipa",
     "hero.sub":"A pocos pasos del mar, con sol y calor todo el año. La típica pousada brasileña que imaginás: simple, cálida y hecha para que relajes y disfrutes tus vacaciones de verdad. Tu hogar lejos de casa, en Pipa.",
     "hero.cta1":"Reservar ahora","hero.cta2":"Escribir por WhatsApp","hero.cta3":"Enviar email","hero.guide":"Ver guía de Pipa",
@@ -881,7 +883,7 @@ const T = {
     mailSubject:"Reserva — Pousada Flor de Caju", localeCode:"es-AR"
   },
   en: {
-    "nav.rooms":"Rooms","nav.gallery":"Gallery","nav.book":"Book","nav.guide":"Pipa guide","nav.contact":"Contact","nav.bookBtn":"Book now",
+    "nav.rooms":"Rooms","nav.gallery":"The pousada","nav.book":"Book","nav.guide":"Pipa guide","nav.contact":"Contact","nav.bookBtn":"Book now",
     "hero.headline":"Your little piece of paradise in Pipa",
     "hero.sub":"Just steps from the sea, with sun and warmth all year round. A real Brazilian pousada — simple, cozy, made for you to truly unwind and enjoy your vacation. Your home away from home in Pipa.",
     "hero.cta1":"Book now","hero.cta2":"Message on WhatsApp","hero.cta3":"Send an email","hero.guide":"See the Pipa guide",
@@ -1247,24 +1249,20 @@ function openRoomGallery(roomKey){
   gallery.innerHTML = "";
   const myToken = ++modalToken;
   (async ()=>{
-    // descobre pasta + extensão com a foto 1; as demais usam a mesma
-    const first = await findPhoto(["fotos/habitaciones/","fotos/"], [`${roomKey}-1`]);
-    if(myToken !== modalToken) return;
-    if(!first){ gallery.innerHTML = `<p class="modal-note" style="grid-column:1/-1">${dict["gallery.note"]}</p>`; return; }
-    const m = first.match(/^(.*\/)[^/]+-1\.(\w+)$/);
-    const dir = m[1], ext = m[2];
-    for(let n = 1; n <= 40; n++){
-      const src = n === 1 ? first : `${dir}${roomKey}-${n}.${ext}`;
-      if(n > 1 && !(await probeImage(src))){
-        // aceita falha de extensão em fotos soltas
-        const alt = await findPhoto([dir], [`${roomKey}-${n}`]);
-        if(!alt) break;
-        if(myToken !== modalToken) return;
-        addPhoto(alt, n); continue;
+    // procura -1 ... -40 em paralelo (aceita buracos na numeração) e mostra em ordem
+    let found = [];
+    for(const dir of ["fotos/habitaciones/","fotos/"]){
+      for(const ext of ["jpg","jpeg","png","webp","JPG","JPEG","PNG"]){
+        const nums = Array.from({length:40}, (_, i)=> i+1);
+        const ok = await Promise.all(nums.map(n=> probeImage(`${dir}${roomKey}-${n}.${ext}`)));
+        nums.forEach((n,i)=>{ if(ok[i]) found.push({n, src:`${dir}${roomKey}-${n}.${ext}`}); });
+        if(found.length) break;
       }
-      if(myToken !== modalToken) return;
-      addPhoto(src, n);
+      if(found.length) break;
     }
+    if(myToken !== modalToken) return;
+    if(!found.length){ gallery.innerHTML = `<p class="modal-note" style="grid-column:1/-1">${dict["gallery.note"]}</p>`; return; }
+    found.sort((x,y)=> x.n - y.n).forEach(f=> addPhoto(f.src, f.n));
   })();
   function addPhoto(src, n){
     const img = document.createElement("img");
@@ -1300,6 +1298,12 @@ document.getElementById("roomModal").addEventListener("click", (e)=>{
 });
 
 /* ============ FOTOS REAIS (galeria, "Isso é Pipa", avaliações) ============ */
+// Hero (carrossel do topo): fotos/hero-1.jpg ... hero-3.jpg; se não existirem, usa outras fotos do site
+const heroFallbacks = [["frente-posada"],["galeria-quartos","galeria-1"],["galeria-praia","galeria-4"]];
+hcSlides.forEach(async (slide, i)=>{
+  const src = await findPhoto(["fotos/"], [`hero-${i+1}`, ...heroFallbacks[i]]);
+  if(src){ slide.style.backgroundImage = `url('${src}')`; slide.classList.add("has-photo"); }
+});
 // Galeria: fotos/galeria-1.jpg ... galeria-4.jpg (também aceita galeria-quartos/terraco/bairro/praia)
 ["quartos","terraco","bairro","praia"].forEach(async (name, i)=>{
   const src = await findPhoto(["fotos/"], [`galeria-${i+1}`, `galeria-${name}`]);

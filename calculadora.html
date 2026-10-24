@@ -122,6 +122,9 @@ td.r, th.r { text-align: right; padding-right: 0; }
 .total .amt { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .warn { margin: 10px 0 0; padding: 8px 10px; border-radius: 6px; background: var(--feriado-t); font-size: .88rem; }
 .empty { color: var(--muted); padding: 18px 0 6px; margin: 0; }
+.sums { margin-top: 12px; display: flex; flex-direction: column; gap: 4px; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.sums div { display: flex; justify-content: space-between; gap: 12px; }
+.room small { color: var(--muted); margin-left: 4px; }
 textarea { width: 100%; font: inherit; font-size: .88rem; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; resize: vertical; }
 .primary { background: var(--accent); color: var(--accent-fg); border: 0; border-radius: 8px; padding: 10px 16px; font-weight: 600; }
 .ghost { background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
@@ -174,7 +177,7 @@ body{margin:0}
 
   <details class="panel" id="specials-box">
     <summary>Feriados y fechas especiales</summary>
-    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. Navidad y Año Nuevo (24, 25, 26, 30, 31 dic y 1, 2 ene) y la temporada alta (24 dic al 28 feb) se repiten todos los años. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
+    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. La temporada alta (20 dic al 28 feb) se repite todos los años. Navidad y Año Nuevo están cargados para 2026 y 2027: noches del 24, 25 y 26 dic, y del 30 dic al 2 ene. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
     <ul class="sp-list" id="sp-list"></ul>
     <form class="addrow" id="sp-form">
       <label for="sp-name">Nombre<input id="sp-name" type="text" placeholder="Ej: Fiesta local"></label>
@@ -190,6 +193,9 @@ body{margin:0}
   <details class="panel" id="rates-box">
     <summary>Tarifas por noche</summary>
     <div class="tbl-wrap rates"><table id="rates"></table></div>
+    <div class="addrow" id="settings">
+      <label for="set-extra">Persona extra (R$ por noche)<input id="set-extra" type="number" min="0" step="5" inputmode="numeric"></label>
+    </div>
     <p class="note">Los cambios se guardan en este navegador. Si dejás una tarifa vacía, esa unidad figura sin precio para esas fechas.</p>
   </details>
 </div>
@@ -207,7 +213,6 @@ var ROOMS = [
   { id: 'mezanino', name: 'Mezanino', max: 1 },
   { id: 'apto', name: 'Apartamento', max: 1 }
 ];
-var PICO_MD = ['12-24', '12-25', '12-26', '12-30', '12-31', '01-01', '01-02'];
 function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return y + '-' + pad(m) + '-' + pad(d); }
 function toUTC(s) { var p = s.split('-').map(Number); return Date.UTC(p[0], p[1] - 1, p[2]); }
@@ -216,8 +221,7 @@ function addDays(s, n) { return fromUTC(toUTC(s) + n * 864e5); }
 function dow(s) { return new Date(toUTC(s)).getUTCDay(); }
 function categoryOf(s, specials) {
   var md = s.slice(5), found = {};
-  if (PICO_MD.indexOf(md) >= 0) found.pico = 1;
-  if (md >= '12-24' || md <= '02-28') found.alta = 1;
+  if (md >= '12-20' || md <= '02-28') found.alta = 1;
   for (var i = 0; i < specials.length; i++) {
     var sp = specials[i];
     if (s >= sp.from && s <= sp.to) found[sp.cat] = 1;
@@ -230,7 +234,8 @@ function nightsOf(inn, out) {
   while (s < out) { list.push(s); s = addDays(s, 1); }
   return list;
 }
-function computeQuote(inn, out, qty, rates, specials) {
+function computeQuote(inn, out, qty, rates, specials, opts) {
+  opts = opts || {};
   var nights = nightsOf(inn, out), counts = {};
   nights.forEach(function (s) { var c = categoryOf(s, specials); counts[c] = (counts[c] || 0) + 1; });
   var rooms = [], total = 0, missing = false;
@@ -249,19 +254,23 @@ function computeQuote(inn, out, qty, rates, specials) {
     rooms.push({ id: r.id, name: r.name, qty: q, lines: lines, unit: unit, total: unit * q, missing: miss });
     total += unit * q;
   });
-  return { nights: nights.length, counts: counts, rooms: rooms, total: total, missing: missing };
+  var lodging = total, extraTotal = 0;
+  if (rooms.length) {
+    extraTotal = (opts.extra || 0) * (opts.extraFee || 0) * nights.length;
+  }
+  return { nights: nights.length, counts: counts, rooms: rooms, lodging: lodging, extraTotal: extraTotal, total: lodging + extraTotal, missing: missing };
 }
 /*LOGIC-END*/
 
 var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 var MES3 = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 var DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
-var KEY = 'flor-de-caju-cotizador-v3';
+var KEY = 'flor-de-caju-cotizador-v5';
 
 var DEF_RATES = {
-  suite:    { baja: 250, feriado: 330, alta: 600, pico: 900,  carnaval: 750 },
-  studio:   { baja: 300, feriado: 390, alta: 720, pico: 1050, carnaval: 870 },
-  mezanino: { baja: 300, feriado: 390, alta: 720, pico: 1050, carnaval: 870 },
+  suite:    { baja: 220, feriado: 290, alta: 500, pico: 700,  carnaval: 630 },
+  studio:   { baja: 270, feriado: 350, alta: 650, pico: 850,  carnaval: 700 },
+  mezanino: { baja: 270, feriado: 350, alta: 650, pico: 850,  carnaval: 700 },
   apto:     { baja: 440, feriado: 550, alta: 900, pico: 1500, carnaval: 1400 }
 };
 var DEF_SPECIALS = [
@@ -274,7 +283,11 @@ var DEF_SPECIALS = [
   { id: 'd7', name: 'Independência (martes 7 sep)', from: '2027-09-03', to: '2027-09-06', cat: 'feriado' },
   { id: 'd8', name: 'Aparecida (martes 12 oct)', from: '2027-10-08', to: '2027-10-11', cat: 'feriado' },
   { id: 'd9', name: 'Finados (martes 2 nov)', from: '2027-10-29', to: '2027-11-01', cat: 'feriado' },
-  { id: 'd10', name: 'Proclamação da República (lunes 15 nov)', from: '2027-11-12', to: '2027-11-14', cat: 'feriado' }
+  { id: 'd10', name: 'Proclamação da República (lunes 15 nov)', from: '2027-11-12', to: '2027-11-14', cat: 'feriado' },
+  { id: 'd11', name: 'Navidad 2026 (noches del 24, 25 y 26)', from: '2026-12-24', to: '2026-12-26', cat: 'pico' },
+  { id: 'd12', name: 'Año Nuevo 2026/27 (noches del 30 dic al 2 ene)', from: '2026-12-30', to: '2027-01-02', cat: 'pico' },
+  { id: 'd13', name: 'Navidad 2027 (noches del 24, 25 y 26)', from: '2027-12-24', to: '2027-12-26', cat: 'pico' },
+  { id: 'd14', name: 'Año Nuevo 2027/28 (noches del 30 dic al 2 ene)', from: '2027-12-30', to: '2028-01-02', cat: 'pico' }
 ];
 
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -291,13 +304,19 @@ if (saved.rates && typeof saved.rates === 'object') {
 var specials = Array.isArray(saved.specials) ? saved.specials : clone(DEF_SPECIALS);
 var qty = { suite: 1, studio: 0, mezanino: 0, apto: 0 };
 if (saved.qty) ROOMS.forEach(function (r) { var v = Number(saved.qty[r.id]); if (v >= 0 && v <= r.max) qty[r.id] = v; });
-function save() { try { localStorage.setItem(KEY, JSON.stringify({ rates: rates, specials: specials, qty: qty })); } catch (e) {} }
+var extra = Math.max(0, Math.min(4, Number(saved.extra) || 0));
+var settings = { extraFee: 50 };
+if (saved.settings) ['extraFee'].forEach(function (k) {
+  var v = Number(saved.settings[k]);
+  if (!isNaN(v) && v >= 0 && saved.settings[k] !== null && saved.settings[k] !== '') settings[k] = v;
+});
+function save() { try { localStorage.setItem(KEY, JSON.stringify({ rates: rates, specials: specials, qty: qty, extra: extra, settings: settings })); } catch (e) {} }
 
 var now = new Date();
 var today = iso(now.getFullYear(), now.getMonth() + 1, now.getDate());
 var sel = { inn: null, out: null };
 var example = false;
-if (today <= '2026-12-23') { sel.inn = '2026-12-23'; sel.out = '2026-12-27'; example = true; }
+if (today <= '2026-12-19') { sel.inn = '2026-12-19'; sel.out = '2026-12-28'; example = true; }
 var view = sel.inn ? { y: 2026, m: 12 } : { y: now.getFullYear(), m: now.getMonth() + 1 };
 var curMonth = { y: now.getFullYear(), m: now.getMonth() + 1 };
 
@@ -352,6 +371,7 @@ function messageText(q) {
     r.lines.forEach(function (l) { t += '  ' + l.n + (l.n === 1 ? ' noche' : ' noches') + ' ' + CAT_NAME[l.cat].toLowerCase() + ' a ' + money(l.rate) + '\n'; });
     t += '  Subtotal: ' + money(r.total) + '\n';
   });
+  if (q.extraTotal) t += '\nPersona extra x' + extra + ': ' + money(q.extraTotal);
   return t + '\nTotal: ' + money(q.total);
 }
 function renderQuote() {
@@ -359,12 +379,12 @@ function renderQuote() {
   h += '<div class="rooms">' + ROOMS.map(function (r) {
     var v = qty[r.id];
     return '<div class="room"><span>' + r.name + '</span><span class="step"><button type="button" data-act="dec" data-room="' + r.id + '" aria-label="Menos ' + r.name + '"' + (v <= 0 ? ' disabled' : '') + '>&minus;</button><output>' + v + '</output><button type="button" data-act="inc" data-room="' + r.id + '" aria-label="Más ' + r.name + '"' + (v >= r.max ? ' disabled' : '') + '>+</button></span></div>';
-  }).join('') + '</div>';
+  }).join('') + '<div class="room"><span>Persona extra <small>R$ ' + settings.extraFee + ' por noche</small></span><span class="step"><button type="button" data-act="xdec" aria-label="Menos personas extra"' + (extra <= 0 ? ' disabled' : '') + '>&minus;</button><output>' + extra + '</output><button type="button" data-act="xinc" aria-label="Más personas extra"' + (extra >= 4 ? ' disabled' : '') + '>+</button></span></div></div>';
   if (!sel.inn || !sel.out) {
     h += '<p class="empty">' + (sel.inn ? 'Falta elegir el día de salida en el calendario.' : 'Elegí las fechas en el calendario para ver el total.') + '</p>';
     $('#quote').innerHTML = h; return;
   }
-  var q = computeQuote(sel.inn, sel.out, qty, rates, specials);
+  var q = computeQuote(sel.inn, sel.out, qty, rates, specials, { extra: extra, extraFee: settings.extraFee });
   h = '<div class="stay"><div><small>Entrada</small><strong>' + fmtShort(sel.inn) + '</strong></div><div><small>Salida</small><strong>' + fmtShort(sel.out) + '</strong></div><span class="nights">' + q.nights + (q.nights === 1 ? ' noche' : ' noches') + '</span></div>' + h;
   if (!q.rooms.length) {
     h += '<p class="empty">Sumá al menos una unidad para calcular.</p>';
@@ -377,6 +397,11 @@ function renderQuote() {
       h += '</tbody></table></div></div>';
     });
     if (q.missing) h += '<p class="warn">Falta cargar tarifas de alguna unidad para estas fechas. Completalas en «Tarifas por noche».</p>';
+    if (q.extraTotal) {
+      h += '<div class="sums">';
+      if (q.extraTotal) h += '<div><span>Persona extra &times; ' + extra + ' · ' + q.nights + ' noches &times; ' + money(settings.extraFee) + '</span><span>' + money(q.extraTotal) + '</span></div>';
+      h += '</div>';
+    }
     h += '<div class="total"><span>Total</span><span class="amt">' + money(q.total) + '</span></div>';
     if (!q.missing) {
       h += '<div class="block"><h3>Mensaje para enviar</h3><textarea id="msg" rows="9" readonly>' + esc(messageText(q)) + '</textarea><div class="msg-row"><button class="primary" type="button" data-act="copy">Copiar mensaje</button><span class="ok" id="copied" role="status"></span></div></div>';
@@ -420,6 +445,7 @@ document.addEventListener('click', function (e) {
   var b = e.target.closest('[data-act]');
   if (!b) return;
   var act = b.getAttribute('data-act');
+  if (act === 'xinc' || act === 'xdec') { extra = Math.max(0, Math.min(4, extra + (act === 'xinc' ? 1 : -1))); save(); renderQuote(); return; }
   if (act === 'inc' || act === 'dec') {
     var id = b.getAttribute('data-room'), r = ROOMS.filter(function (x) { return x.id === id; })[0];
     qty[id] = Math.max(0, Math.min(r.max, qty[id] + (act === 'inc' ? 1 : -1)));
@@ -457,6 +483,14 @@ $('#sp-reset').addEventListener('click', function () {
   specials = clone(DEF_SPECIALS); save(); renderSpecials(); renderCal(); renderQuote();
 });
 
+$('#set-extra').value = settings.extraFee;
+$('#settings').addEventListener('input', function (e) {
+  var map = { 'set-extra': 'extraFee' }, k = map[e.target.id];
+  if (!k) return;
+  var v = Number(e.target.value);
+  settings[k] = (e.target.value === '' || isNaN(v) || v < 0) ? 0 : v;
+  save(); renderQuote();
+});
 renderLegend(); renderCal(); renderQuote(); renderSpecials(); renderRates();
 })();
 </script>

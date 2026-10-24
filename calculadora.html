@@ -174,7 +174,7 @@ body{margin:0}
 
   <details class="panel" id="specials-box">
     <summary>Feriados y fechas especiales</summary>
-    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. Navidad y Año Nuevo (24, 25, 26, 30, 31 dic y 1, 2 ene) y la temporada alta (20 dic al 28 feb) se repiten todos los años. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
+    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. Navidad y Año Nuevo (24, 25, 26, 30, 31 dic y 1, 2 ene) y la temporada alta (24 dic al 28 feb) se repiten todos los años. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
     <ul class="sp-list" id="sp-list"></ul>
     <form class="addrow" id="sp-form">
       <label for="sp-name">Nombre<input id="sp-name" type="text" placeholder="Ej: Fiesta local"></label>
@@ -217,7 +217,7 @@ function dow(s) { return new Date(toUTC(s)).getUTCDay(); }
 function categoryOf(s, specials) {
   var md = s.slice(5), found = {};
   if (PICO_MD.indexOf(md) >= 0) found.pico = 1;
-  if (md >= '12-20' || md <= '02-28') found.alta = 1;
+  if (md >= '12-24' || md <= '02-28') found.alta = 1;
   for (var i = 0; i < specials.length; i++) {
     var sp = specials[i];
     if (s >= sp.from && s <= sp.to) found[sp.cat] = 1;

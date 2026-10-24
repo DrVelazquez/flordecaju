@@ -381,6 +381,8 @@
   .modal-gallery img.m-photo{width:100%; height:150px; object-fit:cover; border-radius:var(--radius); cursor:zoom-in; background:var(--sand-2);}
   .modal-gallery img.m-photo:first-child{grid-column:span 2; height:260px;}
   .modal-gallery img.m-photo.zoom{grid-column:span 2; height:auto; max-height:70vh; object-fit:contain; cursor:zoom-out;}
+  .price-pill{display:inline-flex; align-items:center; gap:10px; margin:2px 0 22px; padding:10px 18px; border-radius:999px; background:var(--white); border:1px solid var(--line); color:var(--green-deep); font-weight:600; font-size:1rem; box-shadow:var(--shadow);}
+  .price-pill svg{width:20px; height:20px; color:var(--coral); flex:none;}
   .hc-slide.has-photo{background-size:cover; background-position:center;}
   .hc-slide.has-photo span, .hc-slide.has-photo svg{display:none;}
   .g-tile.has-photo{background-size:cover; background-position:center;}
@@ -460,6 +462,7 @@
       <div>
         <h1 data-i18n="hero.headline">Seu pedacinho de paraíso em Pipa</h1>
         <p class="lede" data-i18n="hero.sub">A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Sua casa longe de casa, em Pipa.</p>
+        <p class="price-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg><span data-i18n="hero.price">Quartos a partir de {price} por noite</span></p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#reservar" data-i18n="hero.cta1">Reservar agora</a>
           <a class="btn btn-outline" id="heroWaBtn" href="#" target="_blank" rel="noopener">
@@ -786,7 +789,8 @@
 const CONFIG = {
   whatsappNumber: "558498297312",      // formato: 55 + DDD + número, sem espaços ou símbolos
   email: "pousadaflordecaju@gmail.com",
-  instagramHandle: "pousadaflordecaju"    // sem o @
+  instagramHandle: "pousadaflordecaju",   // sem o @
+  priceFrom: 220                          // preço "a partir de" por noite, em reais (R$)
 };
 
 /* ============================================================
@@ -796,6 +800,7 @@ const T = {
   pt: {
     "nav.rooms":"Quartos","nav.gallery":"A pousada","nav.book":"Reservar","nav.guide":"Guia de Pipa","nav.contact":"Contato","nav.bookBtn":"Reservar",
     "hero.headline":"Seu pedacinho de paraíso em Pipa",
+    "hero.price":"Quartos a partir de {price} por noite",
     "hero.sub":"A poucos passos do mar, com sol e calor o ano inteiro. Aquela pousada brasileira de verdade: simples, acolhedora e feita para você relaxar e aproveitar as férias de verdade. Sua casa longe de casa, em Pipa.",
     "hero.cta1":"Reservar agora","hero.cta2":"Chamar no WhatsApp","hero.cta3":"Enviar e-mail","hero.guide":"Ver guia de Pipa",
     "hero.mapLabel":"Onde estamos","hero.mapLink":"Ver no mapa",
@@ -836,6 +841,7 @@ const T = {
   es: {
     "nav.rooms":"Habitaciones","nav.gallery":"La pousada","nav.book":"Reservar","nav.guide":"Guía de Pipa","nav.contact":"Contacto","nav.bookBtn":"Reservar",
     "hero.headline":"Tu pedacito de paraíso en Pipa",
+    "hero.price":"Habitaciones desde {price} por noche",
     "hero.sub":"A pocos pasos del mar, con sol y calor todo el año. La típica pousada brasileña que imaginás: simple, cálida y hecha para que relajes y disfrutes tus vacaciones de verdad. Tu hogar lejos de casa, en Pipa.",
     "hero.cta1":"Reservar ahora","hero.cta2":"Escribir por WhatsApp","hero.cta3":"Enviar email","hero.guide":"Ver guía de Pipa",
     "hero.mapLabel":"Dónde estamos","hero.mapLink":"Ver mapa completo",
@@ -876,6 +882,7 @@ const T = {
   en: {
     "nav.rooms":"Rooms","nav.gallery":"The pousada","nav.book":"Book","nav.guide":"Pipa guide","nav.contact":"Contact","nav.bookBtn":"Book now",
     "hero.headline":"Your little piece of paradise in Pipa",
+    "hero.price":"Rooms from {price} per night",
     "hero.sub":"Just steps from the sea, with sun and warmth all year round. A real Brazilian pousada — simple, cozy, made for you to truly unwind and enjoy your vacation. Your home away from home in Pipa.",
     "hero.cta1":"Book now","hero.cta2":"Message on WhatsApp","hero.cta3":"Send an email","hero.guide":"See the Pipa guide",
     "hero.mapLabel":"Where we are","hero.mapLink":"View full map",
@@ -927,6 +934,12 @@ function mailUrl(subject, body){
   return `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body||"")}`;
 }
 
+function formatPrice(lang){
+  const n = new Intl.NumberFormat(lang === "pt" ? "pt-BR" : lang === "es" ? "es-AR" : "en-US").format(CONFIG.priceFrom);
+  if(lang === "es") return `${n} reales`;          // 220 reales
+  if(lang === "en") return `R$ ${n} (BRL)`;         // R$ 220 (BRL)
+  return `R$ ${n}`;                                 // R$ 220
+}
 function applyLang(lang){
   currentLang = lang;
   try{ localStorage.setItem("lang", lang); }catch(e){}
@@ -934,7 +947,7 @@ function applyLang(lang){
   document.documentElement.lang = lang === "pt" ? "pt-BR" : lang;
   document.querySelectorAll("[data-i18n]").forEach(el=>{
     const key = el.dataset.i18n;
-    if(dict[key] !== undefined) el.textContent = dict[key];
+    if(dict[key] !== undefined) el.textContent = dict[key].replace("{price}", formatPrice(lang));
   });
   document.querySelectorAll(".langswitch button").forEach(b=>{
     b.setAttribute("aria-current", b.dataset.lang === lang ? "true" : "false");

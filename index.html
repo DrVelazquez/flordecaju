@@ -246,6 +246,11 @@
   .g-2{background:linear-gradient(135deg,#1F5C63,#164349);}
   .g-3{background:linear-gradient(135deg,#2F5233,#1C3620);}
   .g-4{background:linear-gradient(135deg,#EFA93B,#C97F1E);}
+  .pousada-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .p-photo{aspect-ratio:4/3; border-radius:var(--radius); background-size:cover; background-position:center; box-shadow:var(--shadow);}
+  .p-1{background-color:#2F5233; background-image:linear-gradient(135deg,#DB5A34,#B8452A);}
+  .p-2{background-color:#1F5C63; background-image:linear-gradient(135deg,#1F5C63,#164349);}
+  @media (max-width:700px){ .pousada-grid{grid-template-columns:1fr;} }
   .gallery-note{margin-top:18px; font-size:.95rem; font-weight:600;}
   .gallery-note a{color:var(--coral-deep); text-decoration:none;}
   .gallery-note a:hover{text-decoration:underline;}
@@ -637,23 +642,9 @@
       <div class="section-head">
         <h2 data-i18n="gallery.title">A pousada</h2>
       </div>
-      <div class="gallery-grid">
-        <div class="g-tile g-1 big">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-8h6v8"/></svg>
-          <span data-i18n="gallery.rooms">Quartos</span>
-        </div>
-        <div class="g-tile g-2">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="5" r="2.5"/><path d="M4 21c0-5 3.5-9 8-9s8 4 8 9"/></svg>
-          <span data-i18n="gallery.terrace">Terraço</span>
-        </div>
-        <div class="g-tile g-3">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V10l8-6 8 6v11"/><path d="M4 21h16"/></svg>
-          <span data-i18n="gallery.neighborhood">Bairro</span>
-        </div>
-        <div class="g-tile g-4 big">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
-          <span data-i18n="gallery.beach">Praia da Pipa</span>
-        </div>
+      <div class="pousada-grid">
+        <div class="p-photo p-1" id="pousadaPhoto1" role="img" aria-label="Pousada Flor de Caju"></div>
+        <div class="p-photo p-2" id="pousadaPhoto2" role="img" aria-label="Pousada Flor de Caju"></div>
       </div>
       <p class="gallery-note"><a id="galleryInstaLink" href="#" target="_blank" rel="noopener" data-i18n="gallery.note">Siga-nos no Instagram</a></p>
     </div>
@@ -1304,13 +1295,10 @@ hcSlides.forEach(async (slide, i)=>{
   const src = await findPhoto(["fotos/"], [`hero-${i+1}`, ...heroFallbacks[i]]);
   if(src){ slide.style.backgroundImage = `url('${src}')`; slide.classList.add("has-photo"); }
 });
-// Galeria: fotos/galeria-1.jpg ... galeria-4.jpg (também aceita galeria-quartos/terraco/bairro/praia)
-["quartos","terraco","bairro","praia"].forEach(async (name, i)=>{
-  const src = await findPhoto(["fotos/"], [`galeria-${i+1}`, `galeria-${name}`]);
-  if(src){
-    const tile = document.querySelector(`.gallery-grid .g-${i+1}`);
-    if(tile){ tile.style.backgroundImage = `url('${src}')`; tile.classList.add("has-photo"); }
-  }
+// Seção "A pousada": fotos/pousada-1.jpg e fotos/pousada-2.jpg (troque pelas que quiser, mesmo nome)
+["pousadaPhoto1","pousadaPhoto2"].forEach(async (id, i)=>{
+  const src = await findPhoto(["fotos/"], [`pousada-${i+1}`, `galeria-${i+1}`, ["galeria-quartos","galeria-terraco"][i]]);
+  if(src) document.getElementById(id).style.backgroundImage = `url('${src}')`;
 });
 // Fundo "Isso é Pipa": fotos/sobre-1.jpg, sobre-2.jpg, sobre-3.jpg
 acSlides.forEach(async (slide, i)=>{

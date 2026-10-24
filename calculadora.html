@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotizador Flor de Caju</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: calendario de noches a la izquierda, presupuesto fijo a la derecha; tarifas y fechas especiales editables abajo. */
+:root {
+  --bg: #eef4f4;
+  --surface: #ffffff;
+  --fg: #13262b;
+  --muted: #53686e;
+  --line: #d3dfe1;
+  --accent: #0b6e73;
+  --accent-fg: #ffffff;
+  --accent-soft: #d8eded;
+  --baja: #4f8a92;     --baja-t: #e4f0f1;
+  --feriado: #b97c0a;  --feriado-t: #faefd2;
+  --alta: #cf5428;     --alta-t: #fae2d7;
+  --pico: #ae1f50;     --pico-t: #f7dce5;
+  --carnaval: #6b3db3; --carnaval-t: #eadff7;
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1b1e; --surface: #15272b; --fg: #e4eff0; --muted: #8fa7ab; --line: #2a4247;
+    --accent: #4cc3c8; --accent-fg: #06282a; --accent-soft: #16393c;
+    --baja: #6fa3ab;     --baja-t: #1b3236;
+    --feriado: #e0a83a;  --feriado-t: #3a2f13;
+    --alta: #ec7e55;     --alta-t: #3d2218;
+    --pico: #e56a93;     --pico-t: #3d1a28;
+    --carnaval: #a584e6; --carnaval-t: #2c2142;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1b1e; --surface: #15272b; --fg: #e4eff0; --muted: #8fa7ab; --line: #2a4247;
+  --accent: #4cc3c8; --accent-fg: #06282a; --accent-soft: #16393c;
+  --baja: #6fa3ab;     --baja-t: #1b3236;
+  --feriado: #e0a83a;  --feriado-t: #3a2f13;
+  --alta: #ec7e55;     --alta-t: #3d2218;
+  --pico: #e56a93;     --pico-t: #3d1a28;
+  --carnaval: #a584e6; --carnaval-t: #2c2142;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.15; }
+h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.2rem; font-weight: 700; }
+h3 { font-size: 1rem; font-weight: 700; }
+.sub { margin: 6px 0 0; color: var(--muted); max-width: 62ch; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (min-width: 880px) { .grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); } .quote { position: sticky; top: 16px; } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; min-width: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* calendario */
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.navbtn { width: 40px; height: 40px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; font-size: 1.1rem; }
+.navbtn:disabled { opacity: .35; cursor: default; }
+.hint { color: var(--muted); font-size: .88rem; margin: 0; }
+.months-box { container-type: inline-size; }
+.months { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@container (max-width: 560px) { .months { grid-template-columns: 1fr; } .m2 { display: none; } }
+.month h3 { margin-bottom: 8px; text-transform: capitalize; }
+.dows, .days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.dows span { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: center; padding-bottom: 4px; }
+.day {
+  position: relative; height: 44px; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px;
+  font-variant-numeric: tabular-nums; font-size: .92rem;
+}
+.day .bar { position: absolute; left: 6px; right: 6px; bottom: 5px; height: 4px; border-radius: 2px; background: var(--c); }
+.day:hover:not(:disabled) { border-color: var(--c); }
+.day:disabled { opacity: .3; cursor: default; }
+.day.in { background: var(--t); }
+.day.edge { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.day.edge .bar { background: var(--accent-fg); opacity: .8; }
+.c-baja { --c: var(--baja); --t: var(--baja-t); }
+.c-feriado { --c: var(--feriado); --t: var(--feriado-t); }
+.c-alta { --c: var(--alta); --t: var(--alta-t); }
+.c-pico { --c: var(--pico); --t: var(--pico-t); }
+.c-carnaval { --c: var(--carnaval); --t: var(--carnaval-t); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .85rem; }
+.legend span, .pill { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+
+/* presupuesto */
+.stay { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; margin: 12px 0 4px; }
+.stay small { display: block; color: var(--muted); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
+.stay strong { font-family: var(--font-display); font-size: 1.05rem; }
+.nights { background: var(--accent-soft); border-radius: 999px; padding: 4px 12px; font-weight: 600; white-space: nowrap; }
+.rooms { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; }
+.room { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.room:last-child { border-bottom: 0; }
+.step { display: inline-flex; align-items: center; gap: 4px; }
+.step button { width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.step button:disabled { opacity: .35; cursor: default; }
+.step output { min-width: 24px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
+.block { margin-top: 14px; }
+.block h3 { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); font-size: .9rem; }
+th { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.r, th.r { text-align: right; padding-right: 0; }
+.total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 2px solid var(--fg); }
+.total span:first-child { font-family: var(--font-display); font-weight: 700; }
+.total .amt { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.warn { margin: 10px 0 0; padding: 8px 10px; border-radius: 6px; background: var(--feriado-t); font-size: .88rem; }
+.empty { color: var(--muted); padding: 18px 0 6px; margin: 0; }
+textarea { width: 100%; font: inherit; font-size: .88rem; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; resize: vertical; }
+.primary { background: var(--accent); color: var(--accent-fg); border: 0; border-radius: 8px; padding: 10px 16px; font-weight: 600; }
+.ghost { background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.msg-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.msg-row .ok { color: var(--muted); font-size: .85rem; }
+
+/* secciones editables */
+details.panel > summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; list-style-position: inside; }
+details.panel[open] > summary { margin-bottom: 12px; }
+.rates input, .addrow input, .addrow select {
+  font: inherit; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; width: 100%; min-width: 0;
+}
+.rates input { min-width: 78px; font-variant-numeric: tabular-nums; }
+.rates th:first-child, .rates td:first-child { white-space: nowrap; padding-right: 12px; }
+.sp-list { list-style: none; margin: 0; padding: 0; }
+.sp-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.sp-list .nm { flex: 1 1 180px; min-width: 0; font-weight: 500; }
+.sp-list .rg { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; flex: 1 1 200px; }
+.addrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 14px; align-items: end; }
+.addrow label { display: flex; flex-direction: column; gap: 4px; font-size: .75rem; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.note { color: var(--muted); font-size: .85rem; margin: 10px 0 0; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+body{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Flor de Caju · Cotizador</h1>
+    <p class="sub">Elegí la entrada y la salida en el calendario. El total se calcula noche por noche según la temporada, los feriados y el Carnaval. Valores en reales (R$) por noche y por unidad.</p>
+  </header>
+
+  <div class="grid">
+    <section class="panel" aria-label="Calendario">
+      <div class="cal-head">
+        <button class="navbtn" id="prev" aria-label="Mes anterior">&#8249;</button>
+        <p class="hint" id="cal-hint"></p>
+        <button class="navbtn" id="next" aria-label="Mes siguiente">&#8250;</button>
+      </div>
+      <div class="months-box"><div class="months" id="months"></div></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside class="panel quote" aria-label="Presupuesto">
+      <h2>Presupuesto</h2>
+      <div id="quote"></div>
+    </aside>
+  </div>
+
+  <details class="panel" id="specials-box">
+    <summary>Feriados y fechas especiales</summary>
+    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. Navidad y Año Nuevo (24, 25, 26, 30, 31 dic y 1, 2 ene) y la temporada alta (20 dic al 28 feb) se repiten todos los años. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
+    <ul class="sp-list" id="sp-list"></ul>
+    <form class="addrow" id="sp-form">
+      <label for="sp-name">Nombre<input id="sp-name" type="text" placeholder="Ej: Fiesta local"></label>
+      <label for="sp-from">Primera noche<input id="sp-from" type="date" required></label>
+      <label for="sp-to">Última noche<input id="sp-to" type="date" required></label>
+      <label for="sp-cat">Tarifa<select id="sp-cat"></select></label>
+      <button class="primary" type="submit">Agregar</button>
+    </form>
+    <p class="note" id="sp-err" role="alert"></p>
+    <p class="note">Sin efecto en baja porque caen en fin de semana: 15 nov 2026 (domingo), 1 may 2027 y 20 nov 2027 (sábados). Los feriados de mitad de semana se cobran solo en la víspera. <button class="ghost" id="sp-reset" type="button">Restaurar lista sugerida</button></p>
+  </details>
+
+  <details class="panel" id="rates-box">
+    <summary>Tarifas por noche</summary>
+    <div class="tbl-wrap rates"><table id="rates"></table></div>
+    <p class="note">Los cambios se guardan en este navegador. Si dejás una tarifa vacía, esa unidad figura sin precio para esas fechas.</p>
+  </details>
+</div>
+
+<script>
+(function () {
+'use strict';
+/*LOGIC-START*/
+var PRI = ['pico', 'carnaval', 'alta', 'feriado', 'baja'];
+var ORDER = ['baja', 'feriado', 'alta', 'pico', 'carnaval'];
+var CAT_NAME = { baja: 'Temporada baja', feriado: 'Feriado en baja', alta: 'Temporada alta', pico: 'Navidad y Año Nuevo', carnaval: 'Carnaval' };
+var ROOMS = [
+  { id: 'suite', name: 'Suite estándar', max: 3 },
+  { id: 'studio', name: 'Studio', max: 1 },
+  { id: 'mezanino', name: 'Mezanino', max: 1 },
+  { id: 'apto', name: 'Apartamento', max: 1 }
+];
+var PICO_MD = ['12-24', '12-25', '12-26', '12-30', '12-31', '01-01', '01-02'];
+function pad(n) { return String(n).padStart(2, '0'); }
+function iso(y, m, d) { return y + '-' + pad(m) + '-' + pad(d); }
+function toUTC(s) { var p = s.split('-').map(Number); return Date.UTC(p[0], p[1] - 1, p[2]); }
+function fromUTC(t) { var d = new Date(t); return iso(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); }
+function addDays(s, n) { return fromUTC(toUTC(s) + n * 864e5); }
+function dow(s) { return new Date(toUTC(s)).getUTCDay(); }
+function categoryOf(s, specials) {
+  var md = s.slice(5), found = {};
+  if (PICO_MD.indexOf(md) >= 0) found.pico = 1;
+  if (md >= '12-20' || md <= '02-28') found.alta = 1;
+  for (var i = 0; i < specials.length; i++) {
+    var sp = specials[i];
+    if (s >= sp.from && s <= sp.to) found[sp.cat] = 1;
+  }
+  for (var j = 0; j < PRI.length; j++) if (found[PRI[j]]) return PRI[j];
+  return 'baja';
+}
+function nightsOf(inn, out) {
+  var list = [], s = inn;
+  while (s < out) { list.push(s); s = addDays(s, 1); }
+  return list;
+}
+function computeQuote(inn, out, qty, rates, specials) {
+  var nights = nightsOf(inn, out), counts = {};
+  nights.forEach(function (s) { var c = categoryOf(s, specials); counts[c] = (counts[c] || 0) + 1; });
+  var rooms = [], total = 0, missing = false;
+  ROOMS.forEach(function (r) {
+    var q = qty[r.id] || 0;
+    if (!q) return;
+    var lines = [], unit = 0, miss = false;
+    ORDER.forEach(function (c) {
+      if (!counts[c]) return;
+      var rate = rates[r.id] && rates[r.id][c];
+      if (!rate) miss = true;
+      lines.push({ cat: c, n: counts[c], rate: rate || 0 });
+      unit += counts[c] * (rate || 0);
+    });
+    if (miss) missing = true;
+    rooms.push({ id: r.id, name: r.name, qty: q, lines: lines, unit: unit, total: unit * q, missing: miss });
+    total += unit * q;
+  });
+  return { nights: nights.length, counts: counts, rooms: rooms, total: total, missing: missing };
+}
+/*LOGIC-END*/
+
+var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+var MES3 = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+var DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+var KEY = 'flor-de-caju-cotizador-v3';
+
+var DEF_RATES = {
+  suite:    { baja: 250, feriado: 330, alta: 600, pico: 900,  carnaval: 750 },
+  studio:   { baja: 300, feriado: 390, alta: 720, pico: 1050, carnaval: 870 },
+  mezanino: { baja: 300, feriado: 390, alta: 720, pico: 1050, carnaval: 870 },
+  apto:     { baja: 440, feriado: 550, alta: 900, pico: 1500, carnaval: 1400 }
+};
+var DEF_SPECIALS = [
+  { id: 'd1', name: 'Finados (lunes 2 nov)', from: '2026-10-30', to: '2026-11-01', cat: 'feriado' },
+  { id: 'd2', name: 'Consciência Negra (viernes 20 nov)', from: '2026-11-19', to: '2026-11-21', cat: 'feriado' },
+  { id: 'd3', name: 'Carnaval 2027 (sáb 6 a mar 9 feb)', from: '2027-02-05', to: '2027-02-09', cat: 'carnaval' },
+  { id: 'd4', name: 'Semana Santa (viernes 26 mar)', from: '2027-03-25', to: '2027-03-27', cat: 'feriado' },
+  { id: 'd5', name: 'Tiradentes (miércoles 21 abr)', from: '2027-04-20', to: '2027-04-20', cat: 'feriado' },
+  { id: 'd6', name: 'Corpus Christi (jueves 27 may)', from: '2027-05-26', to: '2027-05-29', cat: 'feriado' },
+  { id: 'd7', name: 'Independência (martes 7 sep)', from: '2027-09-03', to: '2027-09-06', cat: 'feriado' },
+  { id: 'd8', name: 'Aparecida (martes 12 oct)', from: '2027-10-08', to: '2027-10-11', cat: 'feriado' },
+  { id: 'd9', name: 'Finados (martes 2 nov)', from: '2027-10-29', to: '2027-11-01', cat: 'feriado' },
+  { id: 'd10', name: 'Proclamação da República (lunes 15 nov)', from: '2027-11-12', to: '2027-11-14', cat: 'feriado' }
+];
+
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+var rates = clone(DEF_RATES);
+if (saved.rates && typeof saved.rates === 'object') {
+  ROOMS.forEach(function (r) { ORDER.forEach(function (c) {
+    var v = saved.rates[r.id] && saved.rates[r.id][c];
+    if (typeof v === 'number' && v >= 0) rates[r.id][c] = v;
+    else if (saved.rates[r.id] && saved.rates[r.id][c] === null) rates[r.id][c] = null;
+  }); });
+}
+var specials = Array.isArray(saved.specials) ? saved.specials : clone(DEF_SPECIALS);
+var qty = { suite: 1, studio: 0, mezanino: 0, apto: 0 };
+if (saved.qty) ROOMS.forEach(function (r) { var v = Number(saved.qty[r.id]); if (v >= 0 && v <= r.max) qty[r.id] = v; });
+function save() { try { localStorage.setItem(KEY, JSON.stringify({ rates: rates, specials: specials, qty: qty })); } catch (e) {} }
+
+var now = new Date();
+var today = iso(now.getFullYear(), now.getMonth() + 1, now.getDate());
+var sel = { inn: null, out: null };
+var example = false;
+if (today <= '2026-12-23') { sel.inn = '2026-12-23'; sel.out = '2026-12-27'; example = true; }
+var view = sel.inn ? { y: 2026, m: 12 } : { y: now.getFullYear(), m: now.getMonth() + 1 };
+var curMonth = { y: now.getFullYear(), m: now.getMonth() + 1 };
+
+function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function money(n) { return 'R$ ' + Number(n).toLocaleString('es-AR'); }
+function fmtShort(s) { var p = s.split('-').map(Number); return DIAS[dow(s)] + ' ' + p[2] + ' ' + MES3[p[1] - 1]; }
+function fmtFull(s) { return fmtShort(s) + ' ' + s.slice(0, 4); }
+function fmtRange(a, b) {
+  var pa = a.split('-').map(Number), pb = b.split('-').map(Number);
+  var left = pa[2] + ' ' + MES3[pa[1] - 1] + (pa[0] !== pb[0] ? ' ' + pa[0] : '');
+  var right = pb[2] + ' ' + MES3[pb[1] - 1] + ' ' + pb[0];
+  if (a === b) return right;
+  return left + ' al ' + right;
+}
+function $(s) { return document.querySelector(s); }
+
+/* calendario */
+function monthHTML(y, m, cls) {
+  var first = iso(y, m, 1), start = dow(first), dim = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  var h = '<div class="month ' + cls + '"><h3>' + MESES[m - 1] + ' ' + y + '</h3><div class="dows">';
+  DIAS.forEach(function (d) { h += '<span>' + d + '</span>'; });
+  h += '</div><div class="days">';
+  for (var i = 0; i < start; i++) h += '<span></span>';
+  for (var d = 1; d <= dim; d++) {
+    var s = iso(y, m, d), c = categoryOf(s, specials), k = 'day c-' + c;
+    var inRange = sel.inn && sel.out && s >= sel.inn && s < sel.out;
+    if (inRange) k += ' in';
+    if (s === sel.inn || s === sel.out) k += ' edge';
+    var dis = s < today ? ' disabled' : '';
+    h += '<button type="button" class="' + k + '" data-d="' + s + '"' + dis + ' aria-label="' + fmtFull(s) + ', ' + CAT_NAME[c] + '"><span>' + d + '</span><i class="bar"></i></button>';
+  }
+  return h + '</div></div>';
+}
+function renderCal() {
+  var y2 = view.m === 12 ? view.y + 1 : view.y, m2 = view.m === 12 ? 1 : view.m + 1;
+  $('#months').innerHTML = monthHTML(view.y, view.m, 'm1') + monthHTML(y2, m2, 'm2');
+  $('#prev').disabled = view.y === curMonth.y && view.m === curMonth.m;
+  var hint = !sel.inn ? 'Tocá el día de entrada' : (!sel.out ? 'Ahora tocá el día de salida' : (example ? 'Ejemplo cargado. Tocá otra fecha para empezar.' : 'Tocá otra fecha para cambiar'));
+  $('#cal-hint').textContent = hint;
+}
+function renderLegend() {
+  $('#legend').innerHTML = ORDER.map(function (c) { return '<span class="c-' + c + '"><i class="dot"></i>' + CAT_NAME[c] + '</span>'; }).join('');
+  $('#sp-cat').innerHTML = ORDER.map(function (c) { return '<option value="' + c + '">' + CAT_NAME[c] + '</option>'; }).join('');
+  $('#sp-cat').value = 'feriado';
+}
+
+/* presupuesto */
+function messageText(q) {
+  var t = 'Presupuesto de estadía\nEntrada: ' + fmtFull(sel.inn) + '\nSalida: ' + fmtFull(sel.out) + '\nNoches: ' + q.nights + '\n';
+  q.rooms.forEach(function (r) {
+    t += '\n' + r.name + (r.qty > 1 ? ' x' + r.qty : '') + '\n';
+    r.lines.forEach(function (l) { t += '  ' + l.n + (l.n === 1 ? ' noche' : ' noches') + ' ' + CAT_NAME[l.cat].toLowerCase() + ' a ' + money(l.rate) + '\n'; });
+    t += '  Subtotal: ' + money(r.total) + '\n';
+  });
+  return t + '\nTotal: ' + money(q.total);
+}
+function renderQuote() {
+  var h = '';
+  h += '<div class="rooms">' + ROOMS.map(function (r) {
+    var v = qty[r.id];
+    return '<div class="room"><span>' + r.name + '</span><span class="step"><button type="button" data-act="dec" data-room="' + r.id + '" aria-label="Menos ' + r.name + '"' + (v <= 0 ? ' disabled' : '') + '>&minus;</button><output>' + v + '</output><button type="button" data-act="inc" data-room="' + r.id + '" aria-label="Más ' + r.name + '"' + (v >= r.max ? ' disabled' : '') + '>+</button></span></div>';
+  }).join('') + '</div>';
+  if (!sel.inn || !sel.out) {
+    h += '<p class="empty">' + (sel.inn ? 'Falta elegir el día de salida en el calendario.' : 'Elegí las fechas en el calendario para ver el total.') + '</p>';
+    $('#quote').innerHTML = h; return;
+  }
+  var q = computeQuote(sel.inn, sel.out, qty, rates, specials);
+  h = '<div class="stay"><div><small>Entrada</small><strong>' + fmtShort(sel.inn) + '</strong></div><div><small>Salida</small><strong>' + fmtShort(sel.out) + '</strong></div><span class="nights">' + q.nights + (q.nights === 1 ? ' noche' : ' noches') + '</span></div>' + h;
+  if (!q.rooms.length) {
+    h += '<p class="empty">Sumá al menos una unidad para calcular.</p>';
+  } else {
+    q.rooms.forEach(function (r) {
+      h += '<div class="block"><h3><span>' + r.name + (r.qty > 1 ? ' &times; ' + r.qty : '') + '</span><span>' + (r.missing ? 'sin tarifa' : money(r.total)) + '</span></h3><div class="tbl-wrap"><table><thead><tr><th>Tarifa</th><th class="r">Noches</th><th class="r">Por noche</th><th class="r">Subtotal</th></tr></thead><tbody>';
+      r.lines.forEach(function (l) {
+        h += '<tr class="c-' + l.cat + '"><td><span class="pill"><i class="dot"></i>' + CAT_NAME[l.cat] + '</span></td><td class="r">' + l.n + '</td><td class="r">' + (l.rate ? money(l.rate) : '—') + '</td><td class="r">' + (l.rate ? money(l.n * l.rate) : '—') + '</td></tr>';
+      });
+      h += '</tbody></table></div></div>';
+    });
+    if (q.missing) h += '<p class="warn">Falta cargar tarifas de alguna unidad para estas fechas. Completalas en «Tarifas por noche».</p>';
+    h += '<div class="total"><span>Total</span><span class="amt">' + money(q.total) + '</span></div>';
+    if (!q.missing) {
+      h += '<div class="block"><h3>Mensaje para enviar</h3><textarea id="msg" rows="9" readonly>' + esc(messageText(q)) + '</textarea><div class="msg-row"><button class="primary" type="button" data-act="copy">Copiar mensaje</button><span class="ok" id="copied" role="status"></span></div></div>';
+    }
+  }
+  $('#quote').innerHTML = h;
+}
+
+/* fechas especiales */
+function renderSpecials() {
+  var list = specials.slice().sort(function (a, b) { return a.from < b.from ? -1 : 1; });
+  $('#sp-list').innerHTML = list.map(function (s) {
+    var n = nightsOf(s.from, addDays(s.to, 1)).length;
+    return '<li class="c-' + s.cat + '"><span class="nm">' + esc(s.name || 'Sin nombre') + '</span><span class="rg">' + fmtRange(s.from, s.to) + ' (' + n + (n === 1 ? ' noche' : ' noches') + ')</span><span class="pill"><i class="dot"></i>' + CAT_NAME[s.cat] + '</span><button class="ghost" type="button" data-act="del" data-id="' + esc(s.id) + '" aria-label="Quitar ' + esc(s.name) + '">Quitar</button></li>';
+  }).join('') || '<li><span class="nm">No hay fechas especiales cargadas.</span></li>';
+}
+
+/* tarifas */
+function renderRates() {
+  var h = '<thead><tr><th>Unidad</th>' + ORDER.map(function (c) { return '<th>' + CAT_NAME[c] + '</th>'; }).join('') + '</tr></thead><tbody>';
+  ROOMS.forEach(function (r) {
+    h += '<tr><td>' + r.name + '</td>' + ORDER.map(function (c) {
+      var v = rates[r.id][c];
+      return '<td><input type="number" inputmode="numeric" min="0" step="10" id="r-' + r.id + '-' + c + '" data-room="' + r.id + '" data-cat="' + c + '" value="' + (v == null ? '' : v) + '" placeholder="Sin definir" aria-label="' + r.name + ', ' + CAT_NAME[c] + '"></td>';
+    }).join('') + '</tr>';
+  });
+  $('#rates').innerHTML = h + '</tbody>';
+}
+
+/* eventos */
+document.addEventListener('click', function (e) {
+  var day = e.target.closest('.day');
+  if (day && !day.disabled) {
+    var s = day.getAttribute('data-d');
+    example = false;
+    if (!sel.inn || sel.out) { sel.inn = s; sel.out = null; }
+    else if (s > sel.inn) { sel.out = s; }
+    else { sel.inn = s; }
+    renderCal(); renderQuote(); return;
+  }
+  var b = e.target.closest('[data-act]');
+  if (!b) return;
+  var act = b.getAttribute('data-act');
+  if (act === 'inc' || act === 'dec') {
+    var id = b.getAttribute('data-room'), r = ROOMS.filter(function (x) { return x.id === id; })[0];
+    qty[id] = Math.max(0, Math.min(r.max, qty[id] + (act === 'inc' ? 1 : -1)));
+    save(); renderQuote();
+  } else if (act === 'del') {
+    var did = b.getAttribute('data-id');
+    specials = specials.filter(function (s) { return s.id !== did; });
+    save(); renderSpecials(); renderCal(); renderQuote();
+  } else if (act === 'copy') {
+    var ta = $('#msg'), done = function (t) { var c = $('#copied'); if (c) c.textContent = t; };
+    try {
+      navigator.clipboard.writeText(ta.value).then(function () { done('Copiado'); }, function () { ta.select(); done('Seleccionado: copialo con Ctrl+C'); });
+    } catch (err) { ta.select(); done('Seleccionado: copialo con Ctrl+C'); }
+  }
+});
+$('#prev').addEventListener('click', function () { view.m--; if (view.m < 1) { view.m = 12; view.y--; } renderCal(); });
+$('#next').addEventListener('click', function () { view.m++; if (view.m > 12) { view.m = 1; view.y++; } renderCal(); });
+$('#rates').addEventListener('input', function (e) {
+  var t = e.target; if (!t.dataset || !t.dataset.room) return;
+  var v = t.value === '' ? null : Math.max(0, Number(t.value));
+  rates[t.dataset.room][t.dataset.cat] = (v === null || isNaN(v)) ? null : v;
+  save(); renderQuote();
+});
+$('#sp-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var from = $('#sp-from').value, to = $('#sp-to').value, err = $('#sp-err');
+  if (!from || !to) { err.textContent = 'Completá la primera y la última noche.'; return; }
+  if (to < from) { err.textContent = 'La última noche tiene que ser igual o posterior a la primera.'; return; }
+  err.textContent = '';
+  specials.push({ id: 'u' + Date.now(), name: $('#sp-name').value.trim(), from: from, to: to, cat: $('#sp-cat').value });
+  $('#sp-name').value = ''; $('#sp-from').value = ''; $('#sp-to').value = '';
+  save(); renderSpecials(); renderCal(); renderQuote();
+});
+$('#sp-reset').addEventListener('click', function () {
+  specials = clone(DEF_SPECIALS); save(); renderSpecials(); renderCal(); renderQuote();
+});
+
+renderLegend(); renderCal(); renderQuote(); renderSpecials(); renderRates();
+})();
+</script>
+
+</body>
+</html>

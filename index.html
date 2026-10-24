@@ -246,7 +246,9 @@
   .g-2{background:linear-gradient(135deg,#1F5C63,#164349);}
   .g-3{background:linear-gradient(135deg,#2F5233,#1C3620);}
   .g-4{background:linear-gradient(135deg,#EFA93B,#C97F1E);}
-  .gallery-note{margin-top:18px; font-size:.9rem; color:var(--green); font-style:italic;}
+  .gallery-note{margin-top:18px; font-size:.95rem; font-weight:600;}
+  .gallery-note a{color:var(--coral-deep); text-decoration:none;}
+  .gallery-note a:hover{text-decoration:underline;}
   @media (max-width:860px){ .gallery-grid{grid-template-columns:repeat(2,1fr);} .g-tile.big{grid-row:span 1;} }
 
   /* ============ REVIEWS BANNER ============ */
@@ -631,7 +633,6 @@
     <div class="wrap">
       <div class="section-head">
         <h2 data-i18n="gallery.title">Galeria</h2>
-        <p class="sub" data-i18n="gallery.sub">Fotos reais em breve — por enquanto, um adiantamento.</p>
       </div>
       <div class="gallery-grid">
         <div class="g-tile g-1 big">
@@ -651,7 +652,7 @@
           <span data-i18n="gallery.beach">Praia da Pipa</span>
         </div>
       </div>
-      <p class="gallery-note" data-i18n="gallery.note">As fotos ao vivo chegam em breve — enquanto isso, siga o Instagram para ver a pousada de verdade.</p>
+      <p class="gallery-note"><a id="galleryInstaLink" href="#" target="_blank" rel="noopener" data-i18n="gallery.note">Siga-nos no Instagram</a></p>
     </div>
   </section>
 
@@ -818,9 +819,9 @@ const T = {
     "rooms.apt.title":"Apartamento Flor de Caju","rooms.apt.desc":"Um apartamento completo, com cozinha própria, para até 4 pessoas. Ideal para famílias ou grupos que querem mais espaço e independência.","rooms.apt.tags":"Até 4 pessoas · Cozinha completa · Banheiro privativo",
     "rooms.kit.title":"Suíte com cozinha","rooms.kit.desc":"Pensada para casais, com cozinha compacta para quem prefere preparar suas próprias refeições. Se precisar, dá para acomodar uma pessoa a mais.","rooms.kit.tags":"Cozinha compacta · Banheiro privativo",
     "rooms.classic.title":"Suíte clássica","rooms.classic.desc":"Simples e aconchegante, para casais — com a opção de acomodar uma pessoa a mais quando necessário.","rooms.classic.tags":"Sem cozinha · Banheiro privativo",
-    "gallery.title":"Galeria","gallery.sub":"Fotos reais em breve — por enquanto, um adiantamento.",
+    "gallery.title":"Galeria",
     "gallery.rooms":"Quartos","gallery.terrace":"Terraço","gallery.neighborhood":"Bairro","gallery.beach":"Praia da Pipa",
-    "gallery.note":"As fotos ao vivo chegam em breve — enquanto isso, siga o Instagram para ver a pousada de verdade.",
+    "gallery.note":"Siga-nos no Instagram @pousadaflordecaju",
     "modal.photo1":"Quarto","modal.photo2":"Banheiro","modal.photo3":"Detalhe","modal.photo4":"Vista","modal.close":"Fechar",
     "booking.title":"Reservar","booking.sub":"Escolha as datas e a quantidade de hóspedes, e fale com a gente no WhatsApp para confirmar.",
     "booking.summaryTitle":"Sua estadia","booking.checkin":"chegada","booking.checkout":"saída","booking.guests":"hóspedes",
@@ -858,9 +859,9 @@ const T = {
     "rooms.apt.title":"Apartamento Flor de Caju","rooms.apt.desc":"Un apartamento completo, con cocina propia, para hasta 4 personas. Ideal para familias o grupos que buscan más espacio e independencia.","rooms.apt.tags":"Hasta 4 personas · Cocina completa · Baño privado",
     "rooms.kit.title":"Suite con cocina","rooms.kit.desc":"Pensada para parejas, con cocina compacta para quienes prefieren preparar sus propias comidas. Si hace falta, se puede sumar una persona más.","rooms.kit.tags":"Cocina compacta · Baño privado",
     "rooms.classic.title":"Suite clásica","rooms.classic.desc":"Simple y acogedora, para parejas, con la opción de sumar una persona más cuando haga falta.","rooms.classic.tags":"Baño privado",
-    "gallery.title":"Galería","gallery.sub":"Fotos reales muy pronto — por ahora, un adelanto.",
+    "gallery.title":"Galería",
     "gallery.rooms":"Habitaciones","gallery.terrace":"Terraza","gallery.neighborhood":"Barrio","gallery.beach":"Playa de Pipa",
-    "gallery.note":"Las fotos reales llegan pronto — mientras tanto, seguinos en Instagram para ver la pousada de verdad.",
+    "gallery.note":"Seguinos en Instagram @pousadaflordecaju",
     "modal.photo1":"Habitación","modal.photo2":"Baño","modal.photo3":"Detalle","modal.photo4":"Vista","modal.close":"Cerrar",
     "booking.title":"Reservar","booking.sub":"Elegí las fechas y la cantidad de huéspedes, y escribinos por WhatsApp para confirmar.",
     "booking.summaryTitle":"Tu estadía","booking.checkin":"llegada","booking.checkout":"salida","booking.guests":"huéspedes",
@@ -898,9 +899,9 @@ const T = {
     "rooms.apt.title":"Flor de Caju Apartment","rooms.apt.desc":"A full apartment with its own kitchen, for up to 4 people. Ideal for families or groups who want more space and independence.","rooms.apt.tags":"Up to 4 people · Full kitchen · Private bathroom",
     "rooms.kit.title":"Suite with kitchen","rooms.kit.desc":"Designed for couples, with a compact kitchen for those who prefer to cook their own meals. An extra person can be added if needed.","rooms.kit.tags":"Compact kitchen · Private bathroom",
     "rooms.classic.title":"Classic suite","rooms.classic.desc":"Simple and cozy, for couples — with the option to add one more person when needed.","rooms.classic.tags":"Private bathroom",
-    "gallery.title":"Gallery","gallery.sub":"Real photos coming soon — for now, a preview.",
+    "gallery.title":"Gallery",
     "gallery.rooms":"Rooms","gallery.terrace":"Terrace","gallery.neighborhood":"Neighborhood","gallery.beach":"Pipa Beach",
-    "gallery.note":"Real photos are on their way — in the meantime, follow us on Instagram to see the real pousada.",
+    "gallery.note":"Follow us on Instagram @pousadaflordecaju",
     "modal.photo1":"Room","modal.photo2":"Bathroom","modal.photo3":"Detail","modal.photo4":"View","modal.close":"Close",
     "booking.title":"Book your stay","booking.sub":"Choose your dates and number of guests, then message us on WhatsApp to confirm.",
     "booking.summaryTitle":"Your stay","booking.checkin":"check-in","booking.checkout":"check-out","booking.guests":"guests",
@@ -955,6 +956,7 @@ function applyLang(lang){
   const instaUrl = `https://instagram.com/${CONFIG.instagramHandle}`;
   document.getElementById("navInstaBtn").href = instaUrl;
   document.getElementById("footInstaBtn").href = instaUrl;
+  document.getElementById("galleryInstaLink").href = instaUrl;
 
   document.getElementById("modalClose").setAttribute("aria-label", dict["modal.close"]);
   if(!document.getElementById("roomModal").hidden && currentModalRoom){

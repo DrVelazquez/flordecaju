@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome · Pousada Flor de Caju</title>
+<meta name="description" content="Welcome guide · Bienvenido · Bem-vindo — Pousada Flor de Caju, Pipa, RN">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fff8ee; --card:#ffffff; --ink:#2b2a26; --muted:#6f6a5f;
+  --caju:#e8643a; --caju-dark:#c94c25; --leaf:#2f6b4f; --sand:#f3e6d0; --line:#eadfcb;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;margin:0}
+a{color:inherit}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+
+/* language switch: only the active language is shown */
+[data-l]{display:none}
+html[data-lang="es"] [data-l="es"],
+html[data-lang="pt"] [data-l="pt"],
+html[data-lang="en"] [data-l="en"]{display:revert}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:10;background:rgba(255,248,238,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:52px}
+.brand{font-family:Fraunces,serif;font-weight:700;font-size:1.05rem;color:var(--caju-dark);text-decoration:none}
+.lang{display:flex;gap:4px;background:var(--sand);border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;font:600 .8rem Inter,sans-serif;padding:6px 11px;border-radius:999px;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--caju);color:#fff}
+
+/* hero */
+.hero{padding:34px 0 18px}
+.hero h1{font-size:2.1rem;color:var(--leaf)}
+.hero p{margin:10px 0 0;color:var(--muted);font-size:1.05rem}
+
+/* quick facts */
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.fact small{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+.fact strong{display:block;font-family:Fraunces,serif;font-size:1.35rem;margin-top:2px}
+.fact.wide{grid-column:1/-1}
+.wifi{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wifi code{font:600 1.25rem ui-monospace,Menlo,monospace;color:var(--leaf);user-select:all}
+
+/* cards */
+section{margin:26px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;overflow:hidden}
+.card h2{font-size:1.35rem;margin-bottom:8px}
+.card p{margin:8px 0}
+.muted{color:var(--muted)}
+.photo{display:block;width:calc(100% + 36px);margin:-18px -18px 14px;height:210px;object-fit:cover;background:var(--sand)}
+iframe{display:block;width:100%;height:230px;border:0;border-radius:12px;margin-top:12px;background:var(--sand)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;text-decoration:none;font:600 .95rem Inter,sans-serif;padding:11px 16px;border-radius:12px;background:var(--caju);color:#fff}
+.btn:active{background:var(--caju-dark)}
+.btn.ghost{background:var(--sand);color:var(--ink)}
+.btn.wa{background:#1fa855}
+.btn.block{width:100%}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* arrival */
+.arrive{display:flex;gap:8px;margin-top:12px}
+.arrive input{flex:1;font:500 1rem Inter,sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0}
+
+/* ask chips */
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.chip{display:flex;align-items:center;gap:10px;text-decoration:none;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:12px;font-weight:500;font-size:.95rem}
+.chip span.e{font-size:1.4rem}
+
+ul.clean{list-style:none;padding:0;margin:8px 0}
+ul.clean li{padding:8px 0;border-top:1px solid var(--line)}
+ul.clean li:first-child{border-top:0}
+
+footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:.9rem;transition:transform .25s;z-index:20}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Flor de Caju</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-set="es" aria-pressed="true">ES</button>
+      <button data-set="pt" aria-pressed="false">PT</button>
+      <button data-set="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <div class="hero">
+    <h1>
+      <span data-l="es">¡Bienvenidos a Flor de Caju! 🥥</span>
+      <span data-l="pt">Bem-vindos à Flor de Caju! 🥥</span>
+      <span data-l="en">Welcome to Flor de Caju! 🥥</span>
+    </h1>
+    <p>
+      <span data-l="es">Todo lo que necesitás para llegar y sentirte como en casa. Cualquier duda, nos escribís por WhatsApp.</span>
+      <span data-l="pt">Tudo o que você precisa para chegar e se sentir em casa. Qualquer dúvida, é só chamar no WhatsApp.</span>
+      <span data-l="en">Everything you need to arrive and feel at home. Any question, just message us on WhatsApp.</span>
+    </p>
+  </div>
+
+  <!-- QUICK FACTS -->
+  <div class="facts">
+    <div class="fact">
+      <small><span data-l="es">Check-in</span><span data-l="pt">Check-in</span><span data-l="en">Check-in</span></small>
+      <strong><span data-l="es">después de las 14:00</span><span data-l="pt">a partir das 14h</span><span data-l="en">after 2:00 PM</span></strong>
+    </div>
+    <div class="fact">
+      <small><span data-l="es">Check-out</span><span data-l="pt">Check-out</span><span data-l="en">Check-out</span></small>
+      <strong><span data-l="es">hasta las 11:00</span><span data-l="pt">até as 11h</span><span data-l="en">by 11:00 AM</span></strong>
+    </div>
+    <div class="fact wide wifi">
+      <div>
+        <small>Wi-Fi</small>
+        <span class="muted" style="font-size:.85rem">
+          <span data-l="es">Clave</span><span data-l="pt">Senha</span><span data-l="en">Password</span>
+        </span><br>
+        <code id="wifi">cajudeflor</code>
+      </div>
+      <button class="btn ghost" id="copyWifi">
+        <span data-l="es">Copiar</span><span data-l="pt">Copiar</span><span data-l="en">Copy</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ARRIVAL TIME -->
+  <section>
+    <div class="card">
+      <h2>
+        <span data-l="es">🕑 ¿A qué hora llegás?</span>
+        <span data-l="pt">🕑 A que horas você chega?</span>
+        <span data-l="en">🕑 What time will you arrive?</span>
+      </h2>
+      <p class="muted">
+        <span data-l="es">Si podés, avisanos tu horario de llegada así te estamos esperando.</span>
+        <span data-l="pt">Se puder, avise o horário de chegada para te esperarmos.</span>
+        <span data-l="en">If you can, let us know your arrival time so we're ready for you.</span>
+      </p>
+      <form class="arrive" id="arriveForm">
+        <input type="time" id="arriveTime" required aria-label="Arrival time">
+        <button class="btn wa" type="submit">
+          <span data-l="es">Avisar</span><span data-l="pt">Avisar</span><span data-l="en">Send</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- HOW TO FIND US -->
+  <section id="location">
+    <div class="card">
+      <img class="photo" src="https://pousadaflordecaju.com.br/frente-posada.jpg" alt="Entrada de la Pousada Flor de Caju" loading="lazy" onerror="this.style.display='none'">
+      <h2>
+        <span data-l="es">📍 Cómo encontrarnos</span>
+        <span data-l="pt">📍 Como nos encontrar</span>
+        <span data-l="en">📍 How to find us</span>
+      </h2>
+      <p>
+        <span data-l="es">Estamos en la <b>Rua do Céu</b>, la calle de adoquines de colores, justo a la mitad de la Rua dos Golfinhos. Fijate en la foto: así es nuestra entrada.</span>
+        <span data-l="pt">Estamos na <b>Rua do Céu</b>, a rua de paralelepípedos coloridos, bem no meio da Rua dos Golfinhos. Olhe a foto: essa é a nossa entrada.</span>
+        <span data-l="en">We're on <b>Rua do Céu</b>, the street with colorful cobblestones, right in the middle of Rua dos Golfinhos. See the photo: that's our entrance.</span>
+      </p>
+      <iframe loading="lazy" title="Pousada Flor de Caju" src="https://www.google.com/maps?q=-6.229343,-35.050782&z=17&output=embed"></iframe>
+      <div class="row">
+        <a class="btn" target="_blank" rel="noopener" href="https://maps.app.goo.gl/joUQLnKx33frjnSt7">
+          <span data-l="es">Abrir en Google Maps</span><span data-l="pt">Abrir no Google Maps</span><span data-l="en">Open in Google Maps</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARKING -->
+  <section>
+    <div class="card">
+      <h2>
+        <span data-l="es">🚗 Estacionamiento</span>
+        <span data-l="pt">🚗 Estacionamento</span>
+        <span data-l="en">🚗 Parking</span>
+      </h2>
+      <p>
+        <span data-l="es">La pousada no tiene estacionamiento, pero podés dejar el auto en la esquina frente a la heladería <b>Coco da Morena</b>; las calles de ahí suelen estar tranquilas. Desde ahí cruzás por el <b>Beco do Céu</b> y en <b>3 minutos caminando</b> llegás a nuestra puerta.</span>
+        <span data-l="pt">A pousada não tem estacionamento, mas você pode deixar o carro na esquina em frente à sorveteria <b>Coco da Morena</b>; as ruas ali costumam ser tranquilas. De lá, atravesse pelo <b>Beco do Céu</b> e em <b>3 minutos a pé</b> você chega à nossa porta.</span>
+        <span data-l="en">The pousada has no parking, but you can leave your car on the corner in front of the <b>Coco da Morena</b> ice cream shop; the streets there are usually quiet. From there, cut through <b>Beco do Céu</b> and you'll reach our door in <b>3 minutes on foot</b>.</span>
+      </p>
+      <iframe loading="lazy" title="Coco da Morena" src="https://www.google.com/maps?q=Coco+da+Morena+Pipa+Tibau+do+Sul&output=embed"></iframe>
+      <div class="row">
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Coco+da+Morena+Pipa+Tibau+do+Sul">
+          <span data-l="es">Ver estacionamiento en Maps</span><span data-l="pt">Ver estacionamento no Maps</span><span data-l="en">See parking in Maps</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEACH -->
+  <section>
+    <div class="card">
+      <h2>
+        <span data-l="es">🏖️ La playa</span>
+        <span data-l="pt">🏖️ A praia</span>
+        <span data-l="en">🏖️ The beach</span>
+      </h2>
+      <p>
+        <span data-l="es">La <b>Praia do Centro</b> está a unos <b>10 minutos caminando</b>. Para las mejores olas, la <b>Praia do Amor</b> se alcanza bajando por la escalera desde la Rua dos Golfinhos.</span>
+        <span data-l="pt">A <b>Praia do Centro</b> fica a uns <b>10 minutos a pé</b>. Para as melhores ondas, a <b>Praia do Amor</b> é acessada pela escada na Rua dos Golfinhos.</span>
+        <span data-l="en"><b>Praia do Centro</b> is about a <b>10-minute walk</b>. For the best waves, <b>Praia do Amor</b> is reached by the stairs from Rua dos Golfinhos.</span>
+      </p>
+      <p class="muted">
+        <span data-l="es">🐬 Los delfines y las tortugas se ven desde la playa. Si vas a Baía dos Golfinhos, mirá antes la tabla de mareas.</span>
+        <span data-l="pt">🐬 Golfinhos e tartarugas aparecem da própria praia. Se for à Baía dos Golfinhos, confira antes a tábua de marés.</span>
+        <span data-l="en">🐬 Dolphins and turtles can be seen from the beach. If you go to Baía dos Golfinhos, check the tide table first.</span>
+      </p>
+      <div class="row">
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://tabuademares.com/br/rio-grande-do-norte/tibau-do-sul">
+          <span data-l="es">Tabla de mareas</span><span data-l="pt">Tábua de marés</span><span data-l="en">Tide table</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPERMARKETS -->
+  <section>
+    <div class="card">
+      <h2>
+        <span data-l="es">🛒 Supermercados</span>
+        <span data-l="pt">🛒 Supermercados</span>
+        <span data-l="en">🛒 Supermarkets</span>
+      </h2>
+      <p class="muted">
+        <span data-l="es">Los dos más convenientes de Pipa:</span>
+        <span data-l="pt">Os dois mais em conta de Pipa:</span>
+        <span data-l="en">The two best-value ones in Pipa:</span>
+      </p>
+      <ul class="clean">
+        <li><b>Pai e Filho</b> — <span data-l="es">el más grande</span><span data-l="pt">o maior</span><span data-l="en">the biggest</span>
+          · <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Supermercado+Pai+e+Filho+Pipa">Maps</a></li>
+        <li><b>São José</b> — <span data-l="es">un poco más de variedad</span><span data-l="pt">um pouco mais de variedade</span><span data-l="en">a bit more variety</span>
+          · <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Supermercado+S%C3%A3o+Jos%C3%A9+Pipa">Maps</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TERRACE -->
+  <section>
+    <div class="card" style="background:var(--sand);border-color:transparent">
+      <h2>
+        <span data-l="es">🌿 Terraza para todos</span>
+        <span data-l="pt">🌿 Terraço para todos</span>
+        <span data-l="en">🌿 Terrace for everyone</span>
+      </h2>
+      <p>
+        <span data-l="es">Tenemos una terraza de uso libre para todos los huéspedes. Usala cuando quieras: para el mate, un libro o el atardecer.</span>
+        <span data-l="pt">Temos um terraço de uso livre para todos os hóspedes. Aproveite quando quiser: para um chimarrão, um livro ou o pôr do sol.</span>
+        <span data-l="en">We have a terrace that all guests can use freely. Enjoy it any time: for a mate, a book or the sunset.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ASK US -->
+  <section>
+    <div class="card">
+      <h2>
+        <span data-l="es">💬 ¿Te ayudamos con algo?</span>
+        <span data-l="pt">💬 Podemos ajudar com algo?</span>
+        <span data-l="en">💬 Can we help with anything?</span>
+      </h2>
+      <p class="muted">
+        <span data-l="es">Tocá lo que te interese y nos escribís por WhatsApp.</span>
+        <span data-l="pt">Toque no que te interessa e fale com a gente no WhatsApp.</span>
+        <span data-l="en">Tap what interests you and message us on WhatsApp.</span>
+      </p>
+      <div class="chips">
+        <a class="chip" data-wa="surf" href="#"><span class="e">🏄</span><span><span data-l="es">Surf</span><span data-l="pt">Surf</span><span data-l="en">Surfing</span></span></a>
+        <a class="chip" data-wa="bike" href="#"><span class="e">🚲</span><span><span data-l="es">Bicicletas</span><span data-l="pt">Bicicletas</span><span data-l="en">Bikes</span></span></a>
+        <a class="chip" data-wa="mate" href="#"><span class="e">🧉</span><span><span data-l="es">Yerba mate</span><span data-l="pt">Erva-mate</span><span data-l="en">Yerba mate</span></span></a>
+        <a class="chip" data-wa="tours" href="#"><span class="e">🌅</span><span><span data-l="es">Excursiones</span><span data-l="pt">Passeios</span><span data-l="en">Tours</span></span></a>
+        <a class="chip" data-wa="tips" href="#"><span class="e">✨</span><span><span data-l="es">Consejos</span><span data-l="pt">Dicas</span><span data-l="en">Tips</span></span></a>
+        <a class="chip" data-wa="other" href="#"><span class="e">🙋</span><span><span data-l="es">Otra cosa</span><span data-l="pt">Outra coisa</span><span data-l="en">Something else</span></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section>
+    <div class="card">
+      <h2>
+        <span data-l="es">📞 Contacto</span>
+        <span data-l="pt">📞 Contato</span>
+        <span data-l="en">📞 Contact</span>
+      </h2>
+      <p>
+        <span data-l="es">La forma más rápida de encontrarnos es WhatsApp.</span>
+        <span data-l="pt">A forma mais rápida de falar com a gente é pelo WhatsApp.</span>
+        <span data-l="en">The fastest way to reach us is WhatsApp.</span>
+      </p>
+      <div class="row">
+        <a class="btn wa block" data-wa="hello" href="#">WhatsApp · +55 84 9829-7312</a>
+        <a class="btn ghost block" href="tel:+558498297312">
+          <span data-l="es">Llamar</span><span data-l="pt">Ligar</span><span data-l="en">Call</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <a class="btn ghost block" href="https://pousadaflordecaju.com.br/guia.html">
+      <span data-l="es">Ver la guía completa de Pipa →</span>
+      <span data-l="pt">Ver o guia completo de Pipa →</span>
+      <span data-l="en">See the full Pipa guide →</span>
+    </a>
+  </section>
+
+</main>
+
+<footer>
+  <span data-l="es">¡Los esperamos! 🥥</span>
+  <span data-l="pt">Esperamos você! 🥥</span>
+  <span data-l="en">See you soon! 🥥</span>
+  <br>Pousada Flor de Caju · Pipa, RN
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var PHONE = "558498297312";
+  var root = document.documentElement;
+
+  var MSG = {
+    es:{hello:"Hola! Soy huésped de Flor de Caju.",
+        surf:"Hola! Nos interesa hacer surf en Pipa. ¿Nos ayudan?",
+        bike:"Hola! Nos interesa alquilar bicicletas. ¿Nos ayudan?",
+        mate:"Hola! Necesitamos yerba mate. ¿Nos ayudan?",
+        tours:"Hola! Nos interesan excursiones. ¿Qué nos recomiendan?",
+        tips:"Hola! ¿Nos dan algunos consejos para disfrutar Pipa?",
+        other:"Hola! Tenemos una consulta.",
+        arrive:function(t){return "Hola! Vamos a llegar a Flor de Caju a las "+t+".";},
+        copied:"Clave copiada"},
+    pt:{hello:"Olá! Sou hóspede da Flor de Caju.",
+        surf:"Olá! Temos interesse em surfar em Pipa. Podem nos ajudar?",
+        bike:"Olá! Temos interesse em alugar bicicletas. Podem nos ajudar?",
+        mate:"Olá! Precisamos de erva-mate. Podem nos ajudar?",
+        tours:"Olá! Temos interesse em passeios. O que vocês recomendam?",
+        tips:"Olá! Podem nos dar algumas dicas para aproveitar Pipa?",
+        other:"Olá! Temos uma dúvida.",
+        arrive:function(t){return "Olá! Vamos chegar na Flor de Caju às "+t+".";},
+        copied:"Senha copiada"},
+    en:{hello:"Hi! I'm a guest at Flor de Caju.",
+        surf:"Hi! We're interested in surfing in Pipa. Can you help?",
+        bike:"Hi! We're interested in renting bikes. Can you help?",
+        mate:"Hi! We need yerba mate. Can you help?",
+        tours:"Hi! We're interested in tours. What do you recommend?",
+        tips:"Hi! Any tips to make the most of Pipa?",
+        other:"Hi! We have a question.",
+        arrive:function(t){return "Hi! We'll arrive at Flor de Caju at "+t+".";},
+        copied:"Password copied"}
+  };
+
+  function wa(text){ return "https://wa.me/"+PHONE+"?text="+encodeURIComponent(text); }
+
+  function setLang(l){
+    if(!MSG[l]) l="es";
+    root.setAttribute("data-lang", l);
+    root.setAttribute("lang", l);
+    document.querySelectorAll("[data-set]").forEach(function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-set")===l ? "true":"false");
+    });
+    document.querySelectorAll("[data-wa]").forEach(function(a){
+      a.href = wa(MSG[l][a.getAttribute("data-wa")]);
+      a.target = "_blank"; a.rel = "noopener";
+    });
+    try{ localStorage.setItem("fdc-lang", l); }catch(e){}
+  }
+
+  document.querySelectorAll("[data-set]").forEach(function(b){
+    b.addEventListener("click", function(){ setLang(b.getAttribute("data-set")); });
+  });
+
+  // initial language: ?lang=xx > saved > browser > es
+  var q = new URLSearchParams(location.search).get("lang");
+  var saved = null; try{ saved = localStorage.getItem("fdc-lang"); }catch(e){}
+  var nav = (navigator.language||"es").slice(0,2).toLowerCase();
+  setLang(q || saved || nav);
+
+  function toast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  document.getElementById("copyWifi").addEventListener("click", function(){
+    var txt = document.getElementById("wifi").textContent;
+    var l = root.getAttribute("data-lang");
+    if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(function(){ toast(MSG[l].copied); }); }
+    else { toast(txt); }
+  });
+
+  document.getElementById("arriveForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var l = root.getAttribute("data-lang");
+    var t = document.getElementById("arriveTime").value;
+    window.open(wa(MSG[l].arrive(t)), "_blank", "noopener");
+  });
+})();
+</script>
+</body>
+</html>

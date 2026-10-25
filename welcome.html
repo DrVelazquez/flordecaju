@@ -57,6 +57,7 @@ section{margin:26px 0}
 .card p{margin:8px 0}
 .muted{color:var(--muted)}
 .photo{display:block;width:calc(100% + 36px);margin:-18px -18px 14px;height:210px;object-fit:cover;background:var(--sand)}
+.photo[hidden]{display:none}
 iframe{display:block;width:100%;height:230px;border:0;border-radius:12px;margin-top:12px;background:var(--sand)}
 
 /* buttons */
@@ -159,10 +160,60 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
     </div>
   </section>
 
+  <!-- FROM THE AIRPORT -->
+  <section id="airport">
+    <div class="card">
+      <h2>
+        <span data-l="es">✈️ Si venís desde el aeropuerto de Natal</span>
+        <span data-l="pt">✈️ Vindo do aeroporto de Natal</span>
+        <span data-l="en">✈️ Coming from Natal airport</span>
+      </h2>
+      <ul class="clean">
+        <li>
+          <b><span data-l="es">Traslado con nosotros</span><span data-l="pt">Traslado com a gente</span><span data-l="en">Transfer with us</span></b><br>
+          <span class="muted">
+            <span data-l="es">Ofrecemos traslado desde el aeropuerto. Escribinos y lo coordinamos.</span>
+            <span data-l="pt">Oferecemos traslado do aeroporto. Fale com a gente e combinamos.</span>
+            <span data-l="en">We offer airport pickup. Message us and we'll arrange it.</span>
+          </span>
+        </li>
+        <li>
+          <b>Uber</b><br>
+          <span class="muted">
+            <span data-l="es">No está mal si son más de una persona, porque se reparte el costo.</span>
+            <span data-l="pt">Vale a pena se forem mais pessoas, porque o custo é dividido.</span>
+            <span data-l="en">Not bad if you're more than one person, since you split the cost.</span>
+          </span>
+        </li>
+        <li>
+          <b><span data-l="es">Bus público</span><span data-l="pt">Ônibus</span><span data-l="en">Public bus</span></b><br>
+          <span class="muted">
+            <span data-l="es">Podés tomar el bus a Pipa desde la terminal de ómnibus (rodoviária) de Natal.</span>
+            <span data-l="pt">Dá para pegar o ônibus para Pipa na rodoviária de Natal.</span>
+            <span data-l="en">You can take the bus to Pipa from Natal's bus station (rodoviária).</span>
+          </span>
+        </li>
+        <li>
+          <b>BlaBlaCar</b><br>
+          <span class="muted">
+            <span data-l="es">Buena opción, pero hay que reservar y organizar con anticipación.</span>
+            <span data-l="pt">Boa opção, mas é preciso reservar e se organizar com antecedência.</span>
+            <span data-l="en">A good option, but you need to book and organize ahead of time.</span>
+          </span>
+        </li>
+      </ul>
+      <div class="row">
+        <a class="btn wa" data-wa="transfer" href="#">
+          <span data-l="es">Pedir traslado por WhatsApp</span><span data-l="pt">Pedir traslado pelo WhatsApp</span><span data-l="en">Ask for a transfer on WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- HOW TO FIND US -->
   <section id="location">
     <div class="card">
-      <img class="photo" src="https://pousadaflordecaju.com.br/frente-posada.jpg" alt="Entrada de la Pousada Flor de Caju" loading="lazy" onerror="this.style.display='none'">
+      <img class="photo" data-photo="frente-posada,hero-1" alt="Entrada de la Pousada Flor de Caju" hidden>
       <h2>
         <span data-l="es">📍 Cómo encontrarnos</span>
         <span data-l="pt">📍 Como nos encontrar</span>
@@ -185,6 +236,7 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
   <!-- PARKING -->
   <section>
     <div class="card">
+      <img class="photo" data-photo="coco-da-morena" alt="Coco da Morena" hidden>
       <h2>
         <span data-l="es">🚗 Estacionamiento</span>
         <span data-l="pt">🚗 Estacionamento</span>
@@ -207,6 +259,7 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
   <!-- BEACH -->
   <section>
     <div class="card">
+      <img class="photo" data-photo="galeria-praia,hero-3" alt="Praia da Pipa" hidden>
       <h2>
         <span data-l="es">🏖️ La playa</span>
         <span data-l="pt">🏖️ A praia</span>
@@ -255,6 +308,7 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
   <!-- TERRACE -->
   <section>
     <div class="card" style="background:var(--sand);border-color:transparent">
+      <img class="photo" data-photo="galeria-terraco,hero-2" alt="Terraza / Terraço / Terrace" hidden>
       <h2>
         <span data-l="es">🌿 Terraza para todos</span>
         <span data-l="pt">🌿 Terraço para todos</span>
@@ -340,6 +394,7 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
 
   var MSG = {
     es:{hello:"Hola! Soy huésped de Flor de Caju.",
+        transfer:"Hola! Quisiera consultar por el traslado desde el aeropuerto de Natal hasta Flor de Caju.",
         surf:"Hola! Nos interesa hacer surf en Pipa. ¿Nos ayudan?",
         bike:"Hola! Nos interesa alquilar bicicletas. ¿Nos ayudan?",
         mate:"Hola! Necesitamos yerba mate. ¿Nos ayudan?",
@@ -349,6 +404,7 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
         arrive:function(t){return "Hola! Vamos a llegar a Flor de Caju a las "+t+".";},
         copied:"Clave copiada"},
     pt:{hello:"Olá! Sou hóspede da Flor de Caju.",
+        transfer:"Olá! Gostaria de saber sobre o traslado do aeroporto de Natal até a Flor de Caju.",
         surf:"Olá! Temos interesse em surfar em Pipa. Podem nos ajudar?",
         bike:"Olá! Temos interesse em alugar bicicletas. Podem nos ajudar?",
         mate:"Olá! Precisamos de erva-mate. Podem nos ajudar?",
@@ -358,6 +414,7 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
         arrive:function(t){return "Olá! Vamos chegar na Flor de Caju às "+t+".";},
         copied:"Senha copiada"},
     en:{hello:"Hi! I'm a guest at Flor de Caju.",
+        transfer:"Hi! I'd like to ask about the transfer from Natal airport to Flor de Caju.",
         surf:"Hi! We're interested in surfing in Pipa. Can you help?",
         bike:"Hi! We're interested in renting bikes. Can you help?",
         mate:"Hi! We need yerba mate. Can you help?",
@@ -393,6 +450,24 @@ footer{padding:10px 0 50px;text-align:center;color:var(--muted);font-size:.85rem
   var saved = null; try{ saved = localStorage.getItem("fdc-lang"); }catch(e){}
   var nav = (navigator.language||"es").slice(0,2).toLowerCase();
   setLang(q || saved || nav);
+
+  // photos: same fotos/ folder as the main site; tries several names and extensions, hides the image if none exist
+  var DIRS = ["/fotos/","fotos/"], EXTS = ["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
+  function probe(src){
+    return new Promise(function(res){ var im = new Image(); im.onload = function(){res(true);}; im.onerror = function(){res(false);}; im.src = src; });
+  }
+  async function findPhoto(names){
+    for(var n=0;n<names.length;n++) for(var d=0;d<DIRS.length;d++) for(var e=0;e<EXTS.length;e++){
+      var src = DIRS[d]+names[n]+"."+EXTS[e];
+      if(await probe(src)) return src;
+    }
+    return null;
+  }
+  document.querySelectorAll("img[data-photo]").forEach(function(img){
+    findPhoto(img.getAttribute("data-photo").split(",")).then(function(src){
+      if(src){ img.src = src; img.hidden = false; }
+    });
+  });
 
   function toast(msg){
     var t = document.getElementById("toast");

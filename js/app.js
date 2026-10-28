@@ -10,6 +10,8 @@
     // Contabilidad vive en otra planilla: se carga recién la primera vez
     // que se abre esta pestaña, no en cada login, para no hacerlo más lento.
     if (target === 'contabilidad') Contabilidad.abrirPestana();
+    // El calendario siempre se abre en "hoy" (mes actual y scroll a la fecha).
+    if (target === 'calendario') Calendario.abrirPestana();
   });
 })();
 
@@ -23,7 +25,7 @@ async function iniciarApp() {
     return;
   }
   Auth.mostrarApp();
-  Calendario.render();
+  Calendario.abrirPestana();
   Reservas.render();
   Pagos.render();
   Hoy.render();

@@ -9,6 +9,13 @@ const Reservas = (() => {
       .join('');
   }
 
+  // Fecha (AAAA-MM-DD) en que se cargó la reserva. Tolera distintos nombres
+  // de columna por si la planilla ya tenía uno; '' si no hay dato.
+  function fechaCreacionDe(r) {
+    const v = r.creada || r.creado || r.created_at || r.fecha_reserva || r.timestamp || '';
+    return String(v).slice(0, 10);
+  }
+
   function render() {
     const tbody = document.getElementById('tbl-reservas-body');
     const buscar = (document.getElementById('filtro-cliente').value || '').toLowerCase();
@@ -27,7 +34,17 @@ const Reservas = (() => {
       const rangoHasta = hasta || '9999-12-31';
       lista = lista.filter(r => r.checkin <= rangoHasta && r.checkout >= rangoDesde);
     }
-    lista.sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+    // Orden: por fecha de check-in (más próximas primero) o por fecha en que
+    // se hizo la reserva (más recientes primero; las que no tienen fecha
+    // registrada quedan al final).
+    const orden = document.getElementById('orden-reservas').value;
+    if (orden === 'creada') {
+      lista.sort((a, b) =>
+        fechaCreacionDe(b).localeCompare(fechaCreacionDe(a)) ||
+        (a.checkin || '').localeCompare(b.checkin || ''));
+    } else {
+      lista.sort((a, b) => (a.checkin || '').localeCompare(b.checkin || ''));
+    }
 
     const infoEl = document.getElementById('reservas-filtro-info');
     if (desde || hasta) {
@@ -45,7 +62,7 @@ const Reservas = (() => {
       const estadia = estadiaInfo(r);
       return `
         <tr>
-          <td class="row-link" data-open-reserva="${r.id}">${r.cliente_nombre || '—'}</td>
+          <td class="row-link" data-open-reserva="${r.id}">${r.cliente_nombre || '—'}${fechaCreacionDe(r) ? `<div class="hint-text" style="padding-top:2px;">Reservó el ${fmtDate(fechaCreacionDe(r))}</div>` : ''}</td>
           <td>${habitacionNombre(r.habitacion_id)}</td>
           <td>${fmtDate(r.checkin)}</td>
           <td>${fmtDate(r.checkout)}</td>
@@ -382,6 +399,7 @@ const Reservas = (() => {
       origen: document.getElementById('f-origen').value,
       notas: document.getElementById('f-notas').value.trim(),
     };
+    if (!id) payload.creada = hoyISO(); // fecha en que se hizo la reserva
     if (payload.checkout <= payload.checkin) {
       showToast('La fecha de check-out debe ser posterior al check-in', true);
       return;
@@ -450,6 +468,7 @@ const Reservas = (() => {
     document.getElementById('btn-eliminar-reserva').addEventListener('click', eliminar);
     document.getElementById('filtro-cliente').addEventListener('input', render);
     document.getElementById('filtro-estado').addEventListener('change', render);
+    document.getElementById('orden-reservas').addEventListener('change', render);
     document.getElementById('filtro-desde').addEventListener('change', render);
     document.getElementById('filtro-hasta').addEventListener('change', render);
     document.getElementById('btn-filtro-fechas-limpiar').addEventListener('click', () => {

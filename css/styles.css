@@ -173,6 +173,12 @@ label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color:
   cursor: pointer;
 }
 .gantt-day-cell.weekend { background: #FBF7EC; }
+/* Primeros días del mes siguiente: levemente atenuados, con separador. */
+.gantt-day-header.next-month { background: var(--color-surface-2); font-style: italic; }
+.gantt-day-cell.next-month { background-image: linear-gradient(rgba(0,0,0,.025), rgba(0,0,0,.025)); }
+.gantt-day-header.next-month-start, .gantt-day-cell.next-month-start { box-shadow: inset 2px 0 0 var(--color-ink-soft); }
+.gantt-day-header { flex-direction: column; }
+.mes-sig-tag { font-size: 9px; text-transform: uppercase; letter-spacing: .04em; line-height: 1; }
 .gantt-day-cell.today { box-shadow: inset 2px 0 0 var(--color-fruit); }
 .gantt-day-cell:hover { background: #F1E9D2; }
 

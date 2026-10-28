@@ -134,6 +134,7 @@
           <button id="mes-prev" class="icon-btn" aria-label="Mes anterior">‹</button>
           <h2 id="mes-label">—</h2>
           <button id="mes-next" class="icon-btn" aria-label="Mes siguiente">›</button>
+          <button id="mes-hoy" class="btn btn-ghost" type="button">Hoy</button>
         </div>
         <div class="legend">
           <span class="legend-item"><i class="dot pago-pagado"></i> Pagado</span>
@@ -171,6 +172,12 @@
             <input id="filtro-hasta" type="date" lang="pt-BR" />
           </label>
           <button type="button" id="btn-filtro-fechas-limpiar" class="btn btn-ghost">Limpiar fechas</button>
+          <label class="filter-date-label">Ordenar por
+            <select id="orden-reservas">
+              <option value="checkin">Fecha de check-in</option>
+              <option value="creada">Fecha de reserva (más recientes primero)</option>
+            </select>
+          </label>
         </div>
       </div>
       <p id="reservas-filtro-info" class="hint-text"></p>

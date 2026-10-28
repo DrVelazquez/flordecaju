@@ -47,7 +47,9 @@ const Reservas = (() => {
     }
 
     const infoEl = document.getElementById('reservas-filtro-info');
-    if (desde || hasta) {
+    if (orden === 'creada' && lista.length && !lista.some(r => fechaCreacionDe(r))) {
+      infoEl.textContent = 'Ninguna reserva tiene guardada la fecha en que se hizo, por eso el orden no cambia. Revisá que la planilla tenga la columna "creada" en la hoja Reservas.';
+    } else if (desde || hasta) {
       infoEl.textContent = `Mostrando ${lista.length} de ${Store.reservas.length} reserva(s) — filtradas por fecha. Usá "Limpiar fechas" para ver todo el historial.`;
     } else {
       infoEl.textContent = '';
@@ -448,6 +450,13 @@ const Reservas = (() => {
     if (!id) return;
     if (!confirm('¿Eliminar esta reserva y sus pagos y consumos asociados? Esta acción no se puede deshacer.')) return;
     try {
+      // Se borran primero los pagos y consumos uno por uno con las mismas
+      // llamadas que usan los botones "Eliminar pago/consumo", que son las
+      // que también quitan el ingreso de Contabilidad. Después se borra la reserva.
+      const pagosDeReserva = Store.pagos.filter(p => p.reserva_id === id);
+      for (const p of pagosDeReserva) await Api.deletePago(p.id);
+      const consumosDeReserva = consumosDe(id);
+      for (const c of consumosDeReserva) await Api.deleteConsumo(c.id);
       await Api.deleteReserva(id);
       await reloadData();
       invalidarContabilidad();

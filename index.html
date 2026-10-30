@@ -220,14 +220,27 @@
   .room-card h3{font-size:1.28rem;}
   .room-card p{font-size:.96rem; color:var(--ink);}
   .room-tags{font-size:.86rem; color:var(--coral-deep); font-weight:600; letter-spacing:.01em;}
-  .room-photos-btn{
-    display:inline-flex; align-items:center; gap:8px;
-    background:none; border:none; padding:0; margin-top:2px;
-    color:var(--teal); font-weight:600; font-size:.92rem; cursor:pointer; text-align:left;
-  }
-  .room-photos-btn:hover{color:var(--coral-deep);}
-  .room-photos-btn svg{width:18px; height:18px; flex:none;}
   @media (max-width:900px){ .rooms-grid{grid-template-columns:1fr;} }
+
+  /* ---- miniaturas de fotos dentro de cada cuarto ---- */
+  .room-thumbs-wrap{margin-top:auto; padding-top:10px; border-top:1px solid var(--line);}
+  .room-thumbs-wrap[hidden]{display:none;}
+  .room-thumbs-label{
+    display:flex; align-items:center; gap:8px; margin:0 0 10px;
+    color:var(--teal); font-weight:600; font-size:.9rem;
+  }
+  .room-thumbs-label svg{width:18px; height:18px; flex:none;}
+  .room-thumbs{display:grid; grid-template-columns:repeat(4,1fr); gap:6px;}
+  .rt-thumb{
+    position:relative; aspect-ratio:1; padding:0; border:none; cursor:pointer;
+    border-radius:var(--radius); overflow:hidden; background:var(--sand-2);
+  }
+  .rt-thumb img{width:100%; height:100%; object-fit:cover; transition:transform .25s ease;}
+  .rt-thumb:hover img{transform:scale(1.07);}
+  .rt-more{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(28,54,32,.62); color:var(--white); font-weight:700; font-size:1.05rem;
+  }
 
   /* ============ GALLERY ============ */
   .gallery-grid{
@@ -417,6 +430,7 @@
     .btn:hover{transform:none;}
     .hc-track{transition:none;}
     .ac-track{transition:none;}
+    .rt-thumb:hover img{transform:none;}
   }
 </style>
 </head>
@@ -610,30 +624,39 @@
           <h3 data-i18n="rooms.apt.title">Apartamento Flor de Caju</h3>
           <p data-i18n="rooms.apt.desc">Um apartamento completo, com cozinha própria, para até 4 pessoas. Ideal para famílias ou grupos que querem mais espaço e independência.</p>
           <div class="room-tags" data-i18n="rooms.apt.tags">Até 4 pessoas · Cozinha completa · Banheiro privativo</div>
-          <button class="room-photos-btn" type="button" data-room="apt">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.5-2h5L16 6"/></svg>
-            <span data-i18n="rooms.viewPhotos">Ver fotos</span>
-          </button>
+          <div class="room-thumbs-wrap" data-room="apt" hidden>
+            <div class="room-thumbs-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.5-2h5L16 6"/></svg>
+              <span class="rt-count"></span>
+            </div>
+            <div class="room-thumbs"></div>
+          </div>
         </div>
         <div class="room-card">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 11h16v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5Z"/><path d="M8 11V8M12 11V6M16 11V8"/></svg>
           <h3 data-i18n="rooms.kit.title">Suíte com cozinha</h3>
           <p data-i18n="rooms.kit.desc">Pensada para casais, com cozinha compacta para quem prefere preparar suas próprias refeições. Se precisar, dá para acomodar uma pessoa a mais.</p>
           <div class="room-tags" data-i18n="rooms.kit.tags">Cozinha compacta · Banheiro privativo</div>
-          <button class="room-photos-btn" type="button" data-room="kit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.5-2h5L16 6"/></svg>
-            <span data-i18n="rooms.viewPhotos">Ver fotos</span>
-          </button>
+          <div class="room-thumbs-wrap" data-room="kit" hidden>
+            <div class="room-thumbs-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.5-2h5L16 6"/></svg>
+              <span class="rt-count"></span>
+            </div>
+            <div class="room-thumbs"></div>
+          </div>
         </div>
         <div class="room-card">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>
           <h3 data-i18n="rooms.classic.title">Suíte clássica</h3>
           <p data-i18n="rooms.classic.desc">Simples e aconchegante, para casais — com a opção de acomodar uma pessoa a mais quando necessário.</p>
           <div class="room-tags" data-i18n="rooms.classic.tags">Banheiro privativo</div>
-          <button class="room-photos-btn" type="button" data-room="classic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.5-2h5L16 6"/></svg>
-            <span data-i18n="rooms.viewPhotos">Ver fotos</span>
-          </button>
+          <div class="room-thumbs-wrap" data-room="classic" hidden>
+            <div class="room-thumbs-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.5-2h5L16 6"/></svg>
+              <span class="rt-count"></span>
+            </div>
+            <div class="room-thumbs"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -814,7 +837,7 @@ const T = {
     "about.text":"Pipa é para relaxar e também para curtir de verdade: natureza por todo lado, noites animadas e gente boa pra conhecer. Tem praia badalada e praia desertinha, muito surf, muita yoga e uma cena gastronômica que surpreende. Os golfinhos você vai ver, garantido — e as tartarugas marinhas também.",
     "about.caption1":"Natureza por todo lado","about.caption2":"Vida noturna e boa gastronomia","about.caption3":"Praia, mar e tartarugas",
     "weather.now":"agora em Pipa",
-    "rooms.title":"Quartos","rooms.sub":"3 tipos de quartos, todos com banheiro privativo.","rooms.viewPhotos":"Ver fotos",
+    "rooms.title":"Quartos","rooms.sub":"3 tipos de quartos, todos com banheiro privativo.","rooms.viewPhotos":"Ver fotos","rooms.photosCount":"{n} fotos · toque para ampliar",
     "rooms.apt.title":"Apartamento Flor de Caju","rooms.apt.desc":"Um apartamento completo, com cozinha própria, para até 4 pessoas. Ideal para famílias ou grupos que querem mais espaço e independência.","rooms.apt.tags":"Até 4 pessoas · Cozinha completa · Banheiro privativo",
     "rooms.kit.title":"Suíte com cozinha","rooms.kit.desc":"Pensada para casais, com cozinha compacta para quem prefere preparar suas próprias refeições. Se precisar, dá para acomodar uma pessoa a mais.","rooms.kit.tags":"Cozinha compacta · Banheiro privativo",
     "rooms.classic.title":"Suíte clássica","rooms.classic.desc":"Simples e aconchegante, para casais — com a opção de acomodar uma pessoa a mais quando necessário.","rooms.classic.tags":"Sem cozinha · Banheiro privativo",
@@ -855,7 +878,7 @@ const T = {
     "about.text":"Pipa es un destino para relajarse y también para disfrutarlo a fondo: naturaleza por todos lados, una vida nocturna animada y buena gente para conocer. Hay playas concurridas y otras tranquilas y desiertas, mucho surf, mucho yoga y una oferta gastronómica que sorprende. Es habitual avistar delfines, y también tortugas marinas.",
     "about.caption1":"Naturaleza por todos lados","about.caption2":"Vida nocturna y buena gastronomía","about.caption3":"Playa, mar y tortugas",
     "weather.now":"ahora en Pipa",
-    "rooms.title":"Habitaciones","rooms.sub":"3 tipos de habitaciones, todas con baño privado.","rooms.viewPhotos":"Ver fotos",
+    "rooms.title":"Habitaciones","rooms.sub":"3 tipos de habitaciones, todas con baño privado.","rooms.viewPhotos":"Ver fotos","rooms.photosCount":"{n} fotos · tocá para ampliar",
     "rooms.apt.title":"Apartamento Flor de Caju","rooms.apt.desc":"Un apartamento completo, con cocina propia, para hasta 4 personas. Ideal para familias o grupos que buscan más espacio e independencia.","rooms.apt.tags":"Hasta 4 personas · Cocina completa · Baño privado",
     "rooms.kit.title":"Suite con cocina","rooms.kit.desc":"Pensada para parejas, con cocina compacta para quienes prefieren preparar sus propias comidas. Si hace falta, se puede sumar una persona más.","rooms.kit.tags":"Cocina compacta · Baño privado",
     "rooms.classic.title":"Suite clásica","rooms.classic.desc":"Simple y acogedora, para parejas, con la opción de sumar una persona más cuando haga falta.","rooms.classic.tags":"Baño privado",
@@ -896,7 +919,7 @@ const T = {
     "about.text":"Pipa is for relaxing, and for really letting loose too: nature everywhere, a lively nightlife and great people to meet. There are lively beaches and quiet, empty ones if that's what you're after, plenty of surf, plenty of yoga, and a food scene that surprises. You'll spot dolphins here, guaranteed — and sea turtles too.",
     "about.caption1":"Nature all around","about.caption2":"Nightlife and great food","about.caption3":"Beach, sea and turtles",
     "weather.now":"in Pipa right now",
-    "rooms.title":"Rooms","rooms.sub":"3 room types, all with a private bathroom.","rooms.viewPhotos":"See photos",
+    "rooms.title":"Rooms","rooms.sub":"3 room types, all with a private bathroom.","rooms.viewPhotos":"See photos","rooms.photosCount":"{n} photos · tap to enlarge",
     "rooms.apt.title":"Flor de Caju Apartment","rooms.apt.desc":"A full apartment with its own kitchen, for up to 4 people. Ideal for families or groups who want more space and independence.","rooms.apt.tags":"Up to 4 people · Full kitchen · Private bathroom",
     "rooms.kit.title":"Suite with kitchen","rooms.kit.desc":"Designed for couples, with a compact kitchen for those who prefer to cook their own meals. An extra person can be added if needed.","rooms.kit.tags":"Compact kitchen · Private bathroom",
     "rooms.classic.title":"Classic suite","rooms.classic.desc":"Simple and cozy, for couples — with the option to add one more person when needed.","rooms.classic.tags":"Private bathroom",
@@ -926,6 +949,9 @@ let currentLang = "pt";
 let selStart = null, selEnd = null;
 let selGuests = 2;
 let lastFocusedBeforeModal = null;
+let currentModalRoom = null;
+let modalToken = 0;
+const roomCounts = {};
 
 function waUrl(text){
   return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
@@ -940,6 +966,20 @@ function formatPrice(lang){
   if(lang === "en") return `R$ ${n} (BRL)`;         // R$ 220 (BRL)
   return `R$ ${n}`;                                 // R$ 220
 }
+
+// atualiza o texto "N fotos · toque para ampliar" de cada quarto no idioma atual
+function updateRoomLabels(){
+  document.querySelectorAll(".room-thumbs-wrap").forEach(w=>{
+    const n = roomCounts[w.dataset.room];
+    if(!n) return;
+    w.querySelector(".rt-count").textContent = T[currentLang]["rooms.photosCount"].replace("{n}", n);
+    const title = T[currentLang][`rooms.${w.dataset.room}.title`];
+    w.querySelectorAll(".rt-thumb").forEach((b, i)=>{
+      b.setAttribute("aria-label", `${title} — ${i+1}/${n}`);
+    });
+  });
+}
+
 function applyLang(lang){
   currentLang = lang;
   try{ localStorage.setItem("lang", lang); }catch(e){}
@@ -966,6 +1006,7 @@ function applyLang(lang){
   document.getElementById("galleryInstaLink").href = instaUrl;
 
   document.getElementById("modalClose").setAttribute("aria-label", dict["modal.close"]);
+  updateRoomLabels();
   if(!document.getElementById("roomModal").hidden && currentModalRoom){
     openRoomGallery(currentModalRoom);
   }
@@ -1239,12 +1280,60 @@ async function findPhoto(dirs, names, exts = PHOTO_EXTS){
   return null;
 }
 
-/* ============ ROOM PHOTOS MODAL ============ */
-const roomGalleryClasses = ["g-1","g-2","g-3","g-4"];
-let currentModalRoom = null;
-let modalToken = 0;
+/* ============ FOTOS DOS QUARTOS (usadas pelas miniaturas e pelo modal) ============ */
+// procura {quarto}-1 ... {quarto}-40 (aceita buracos na numeração) e devolve [{n, src}] em ordem; resultado em cache
+const roomPhotoCache = {};
+function findRoomPhotos(roomKey){
+  if(!roomPhotoCache[roomKey]){
+    roomPhotoCache[roomKey] = (async ()=>{
+      const found = [];
+      for(const dir of ["fotos/habitaciones/","fotos/"]){
+        for(const ext of ["jpg","jpeg","png","webp","JPG","JPEG","PNG"]){
+          const nums = Array.from({length:40}, (_, i)=> i+1);
+          const ok = await Promise.all(nums.map(n=> probeImage(`${dir}${roomKey}-${n}.${ext}`)));
+          nums.forEach((n,i)=>{ if(ok[i]) found.push({n, src:`${dir}${roomKey}-${n}.${ext}`}); });
+          if(found.length) break;
+        }
+        if(found.length) break;
+      }
+      return found.sort((x,y)=> x.n - y.n);
+    })();
+  }
+  return roomPhotoCache[roomKey];
+}
 
-function openRoomGallery(roomKey){
+/* ============ MINIATURAS DENTRO DE CADA QUARTO ============ */
+const THUMBS_SHOWN = 4;
+document.querySelectorAll(".room-thumbs-wrap").forEach(async wrap=>{
+  const key = wrap.dataset.room;
+  const photos = await findRoomPhotos(key);
+  if(!photos.length) return;            // sem fotos: a grade fica escondida
+  roomCounts[key] = photos.length;
+  const box = wrap.querySelector(".room-thumbs");
+  box.innerHTML = "";
+  photos.slice(0, THUMBS_SHOWN).forEach((p, i)=>{
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "rt-thumb";
+    const img = document.createElement("img");
+    img.src = p.src; img.alt = ""; img.loading = "lazy";
+    btn.appendChild(img);
+    // na última miniatura mostra "+N" se houver mais fotos
+    const extra = photos.length - THUMBS_SHOWN;
+    if(i === THUMBS_SHOWN - 1 && extra > 0){
+      const more = document.createElement("span");
+      more.className = "rt-more"; more.textContent = `+${extra}`;
+      btn.appendChild(more);
+    }
+    btn.addEventListener("click", ()=> openRoomGallery(key, p.n));
+    box.appendChild(btn);
+  });
+  wrap.hidden = false;
+  updateRoomLabels();
+});
+
+/* ============ ROOM PHOTOS MODAL (ampliar fotos) ============ */
+function openRoomGallery(roomKey, startN){
   currentModalRoom = roomKey;
   const dict = T[currentLang];
   const modal = document.getElementById("roomModal");
@@ -1253,27 +1342,22 @@ function openRoomGallery(roomKey){
   gallery.innerHTML = "";
   const myToken = ++modalToken;
   (async ()=>{
-    // procura -1 ... -40 em paralelo (aceita buracos na numeração) e mostra em ordem
-    let found = [];
-    for(const dir of ["fotos/habitaciones/","fotos/"]){
-      for(const ext of ["jpg","jpeg","png","webp","JPG","JPEG","PNG"]){
-        const nums = Array.from({length:40}, (_, i)=> i+1);
-        const ok = await Promise.all(nums.map(n=> probeImage(`${dir}${roomKey}-${n}.${ext}`)));
-        nums.forEach((n,i)=>{ if(ok[i]) found.push({n, src:`${dir}${roomKey}-${n}.${ext}`}); });
-        if(found.length) break;
-      }
-      if(found.length) break;
-    }
+    const found = await findRoomPhotos(roomKey);
     if(myToken !== modalToken) return;
     if(!found.length){ gallery.innerHTML = `<p class="modal-note" style="grid-column:1/-1">${dict["gallery.note"]}</p>`; return; }
-    found.sort((x,y)=> x.n - y.n).forEach(f=> addPhoto(f.src, f.n));
+    found.forEach(f=> addPhoto(f.src, f.n, f.n === startN));
   })();
-  function addPhoto(src, n){
+  function addPhoto(src, n, focus){
     const img = document.createElement("img");
     img.className = "m-photo"; img.src = src; img.loading = "lazy";
     img.alt = `${dict[`rooms.${roomKey}.title`]} ${n}`;
     img.addEventListener("click", ()=> img.classList.toggle("zoom"));
     gallery.appendChild(img);
+    // a foto em que a pessoa tocou já abre ampliada
+    if(focus){
+      img.classList.add("zoom");
+      img.addEventListener("load", ()=> img.scrollIntoView({block:"center"}), {once:true});
+    }
   }
   document.getElementById("modalNote").textContent = "";
   lastFocusedBeforeModal = document.activeElement;
@@ -1293,9 +1377,6 @@ function handleModalKeydown(e){
   if(e.key === "Escape") closeRoomGallery();
 }
 
-document.querySelectorAll(".room-photos-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=> openRoomGallery(btn.dataset.room));
-});
 document.getElementById("modalClose").addEventListener("click", closeRoomGallery);
 document.getElementById("roomModal").addEventListener("click", (e)=>{
   if(e.target.id === "roomModal") closeRoomGallery();

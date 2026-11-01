@@ -10,8 +10,8 @@
 /* Tarifa por noche (R$) por tipo de unidad y categoría de fecha */
 var RATES = {
   suite:  { baja: 220, feriado: 290, alta: 500, pico: 700,  carnaval: 630 },   // Suite estándar sin cocina
-  studio: { baja: 270, feriado: 350, alta: 650, pico: 850,  carnaval: 700 },   // Suite tipo estudio con cocina
-  apto:   { baja: 440, feriado: 550, alta: 900, pico: 1500, carnaval: 1400 }   // Apartamento
+  studio: { baja: 270, feriado: 350, especial: 415, alta: 650, pico: 850,  carnaval: 700 },   // Suite tipo estudio con cocina
+  apto:   { baja: 440, feriado: 550, especial: 620, alta: 900, pico: 1500, carnaval: 1400 }   // Apartamento
 };
 
 /* Cantidad de personas incluidas en la tarifa; por encima se cobra persona extra por noche.
@@ -25,7 +25,7 @@ var MAX_GUESTS = { apto: 4, studio: 3, suite: 3 };
 /* Fechas especiales (noche desde / hasta, ambas incluidas) */
 var SPECIALS = [
   { from: '2026-10-30', to: '2026-11-01', cat: 'feriado' },   // Finados
-  { from: '2026-11-19', to: '2026-11-21', cat: 'feriado' },   // Consciência Negra
+  { from: '2026-11-19', to: '2026-11-21', cat: 'especial' },   // Consciência Negra
   { from: '2027-02-05', to: '2027-02-09', cat: 'carnaval' },  // Carnaval 2027
   { from: '2027-03-25', to: '2027-03-27', cat: 'feriado' },   // Semana Santa
   { from: '2027-04-20', to: '2027-04-20', cat: 'feriado' },   // Tiradentes
@@ -41,7 +41,7 @@ var SPECIALS = [
 ];
 
 /* ---------- lógica (idéntica a calculadora.html) ---------- */
-var PRI = ['pico', 'carnaval', 'alta', 'feriado', 'baja'];
+var PRI = ['pico', 'carnaval', 'alta', 'feriado', 'especial', 'baja'];
 function pad(n) { return String(n).padStart(2, '0'); }
 function iso(y, m, d) { return y + '-' + pad(m) + '-' + pad(d); }
 function toUTC(s) { var p = s.split('-').map(Number); return Date.UTC(p[0], p[1] - 1, p[2]); }

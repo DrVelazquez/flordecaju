@@ -191,13 +191,13 @@ body{margin:0}
   </details>
 </div>
 
-<script src="tarifas.js"></script>
+<script src="api/tarifas.js"></script>
 <script>
 (function () {
 'use strict';
 var T = window.Tarifas;
 if (!T || typeof T.quote !== 'function') {
-  document.body.innerHTML = '<p class="fatal">No se pudo cargar <code>tarifas.js</code>. Verificá que esté en la misma carpeta que este archivo.</p>';
+  document.body.innerHTML = '<p class="fatal">No se pudo cargar <code>tarifas.js</code>. Verificá que exista api/tarifas.js junto a este archivo.</p>';
   return;
 }
 /*LOGIC-START*/

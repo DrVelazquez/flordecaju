@@ -271,12 +271,12 @@ function computeQuote(inn, out, qty, rates, specials, opts) {
 var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 var MES3 = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 var DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
-var KEY = 'flor-de-caju-cotizador-v7';
+var KEY = 'flor-de-caju-cotizador-v8';
 
 var DEF_RATES = {
   suite:    { baja: 220, feriado: 290, alta: 500, pico: 700,  nochevieja: 1650, carnaval: 630 },
-  studio:   { baja: 270, feriado: 350, alta: 650, pico: 850,  nochevieja: 1150, carnaval: 700 },
-  mezanino: { baja: 270, feriado: 350, alta: 650, pico: 1050, nochevieja: 2000, carnaval: 700 },
+  studio:   { baja: 270, feriado: 350, alta: 650, pico: 1050, nochevieja: 2000, carnaval: 700 },
+  mezanino: { baja: 270, feriado: 350, alta: 650, pico: 850,  nochevieja: 1150, carnaval: 700 },
   apto:     { baja: 440, feriado: 550, alta: 900, pico: 1500, nochevieja: 2500, carnaval: 1400 }
 };
 var DEF_SPECIALS = [

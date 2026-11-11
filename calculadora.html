@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cotizador Flor de Caju</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
@@ -21,6 +21,7 @@
   --feriado: #b97c0a;  --feriado-t: #faefd2;
   --alta: #cf5428;     --alta-t: #fae2d7;
   --pico: #ae1f50;     --pico-t: #f7dce5;
+  --nochevieja: #2c4fb0; --nochevieja-t: #dde5f8;
   --carnaval: #6b3db3; --carnaval-t: #eadff7;
   --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
@@ -33,6 +34,7 @@
     --feriado: #e0a83a;  --feriado-t: #3a2f13;
     --alta: #ec7e55;     --alta-t: #3d2218;
     --pico: #e56a93;     --pico-t: #3d1a28;
+    --nochevieja: #7f9cf0; --nochevieja-t: #1c2646;
     --carnaval: #a584e6; --carnaval-t: #2c2142;
     color-scheme: dark;
   }
@@ -44,6 +46,7 @@
   --feriado: #e0a83a;  --feriado-t: #3a2f13;
   --alta: #ec7e55;     --alta-t: #3d2218;
   --pico: #e56a93;     --pico-t: #3d1a28;
+  --nochevieja: #7f9cf0; --nochevieja-t: #1c2646;
   --carnaval: #a584e6; --carnaval-t: #2c2142;
   color-scheme: dark;
 }
@@ -93,6 +96,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .c-feriado { --c: var(--feriado); --t: var(--feriado-t); }
 .c-alta { --c: var(--alta); --t: var(--alta-t); }
 .c-pico { --c: var(--pico); --t: var(--pico-t); }
+.c-nochevieja { --c: var(--nochevieja); --t: var(--nochevieja-t); }
 .c-carnaval { --c: var(--carnaval); --t: var(--carnaval-t); }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .85rem; }
 .legend span, .pill { display: inline-flex; align-items: center; gap: 6px; }
@@ -177,7 +181,7 @@ body{margin:0}
 
   <details class="panel" id="specials-box">
     <summary>Feriados y fechas especiales</summary>
-    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. La temporada alta (24 dic al 28 feb) se repite todos los años. Navidad y Año Nuevo están cargados para 2026 y 2027: noches del 24 y 25 dic, y del 30 dic al 2 ene. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
+    <p class="note" style="margin-top:0">Cada rango marca las noches que se cobran con la tarifa de su categoría. La temporada alta (24 dic al 28 feb) se repite todos los años, y la noche del 24 ya es temporada alta. Las noches del 30 dic, 1 ene y 2 ene (Año Nuevo) y la noche del 31 dic (Nochevieja) tienen tarifa propia y también se repiten todos los años: no hace falta cargarlas acá. Los feriados caen sobre la noche: un feriado el lunes cobra las noches de viernes, sábado y domingo.</p>
     <ul class="sp-list" id="sp-list"></ul>
     <form class="addrow" id="sp-form">
       <label for="sp-name">Nombre<input id="sp-name" type="text" placeholder="Ej: Fiesta local"></label>
@@ -204,9 +208,9 @@ body{margin:0}
 (function () {
 'use strict';
 /*LOGIC-START*/
-var PRI = ['pico', 'carnaval', 'alta', 'feriado', 'baja'];
-var ORDER = ['baja', 'feriado', 'alta', 'pico', 'carnaval'];
-var CAT_NAME = { baja: 'Temporada baja', feriado: 'Feriado en baja', alta: 'Temporada alta', pico: 'Navidad y Año Nuevo', carnaval: 'Carnaval' };
+var PRI = ['nochevieja', 'pico', 'carnaval', 'alta', 'feriado', 'baja'];
+var ORDER = ['baja', 'feriado', 'alta', 'pico', 'nochevieja', 'carnaval'];
+var CAT_NAME = { baja: 'Temporada baja', feriado: 'Feriado en baja', alta: 'Temporada alta', pico: 'Año Nuevo (30 dic, 1 y 2 ene)', nochevieja: 'Nochevieja (31 dic)', carnaval: 'Carnaval' };
 var ROOMS = [
   { id: 'suite', name: 'Suite estándar', max: 3 },
   { id: 'studio', name: 'Studio', max: 1 },
@@ -222,6 +226,8 @@ function dow(s) { return new Date(toUTC(s)).getUTCDay(); }
 function categoryOf(s, specials) {
   var md = s.slice(5), found = {};
   if (md >= '12-24' || md <= '02-28') found.alta = 1;
+  if (md === '12-31') found.nochevieja = 1;
+  if (md === '12-30' || md === '01-01' || md === '01-02') found.pico = 1;
   for (var i = 0; i < specials.length; i++) {
     var sp = specials[i];
     if (s >= sp.from && s <= sp.to) found[sp.cat] = 1;
@@ -265,13 +271,13 @@ function computeQuote(inn, out, qty, rates, specials, opts) {
 var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 var MES3 = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 var DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
-var KEY = 'flor-de-caju-cotizador-v6';
+var KEY = 'flor-de-caju-cotizador-v7';
 
 var DEF_RATES = {
-  suite:    { baja: 220, feriado: 290, alta: 500, pico: 700,  carnaval: 630 },
-  studio:   { baja: 270, feriado: 350, alta: 650, pico: 850,  carnaval: 700 },
-  mezanino: { baja: 270, feriado: 350, alta: 650, pico: 850,  carnaval: 700 },
-  apto:     { baja: 440, feriado: 550, alta: 900, pico: 1500, carnaval: 1400 }
+  suite:    { baja: 220, feriado: 290, alta: 500, pico: 700,  nochevieja: 1650, carnaval: 630 },
+  studio:   { baja: 270, feriado: 350, alta: 650, pico: 850,  nochevieja: 1150, carnaval: 700 },
+  mezanino: { baja: 270, feriado: 350, alta: 650, pico: 1050, nochevieja: 2000, carnaval: 700 },
+  apto:     { baja: 440, feriado: 550, alta: 900, pico: 1500, nochevieja: 2500, carnaval: 1400 }
 };
 var DEF_SPECIALS = [
   { id: 'd1', name: 'Finados (lunes 2 nov)', from: '2026-10-30', to: '2026-11-01', cat: 'feriado' },
@@ -283,11 +289,7 @@ var DEF_SPECIALS = [
   { id: 'd7', name: 'Independência (martes 7 sep)', from: '2027-09-03', to: '2027-09-06', cat: 'feriado' },
   { id: 'd8', name: 'Aparecida (martes 12 oct)', from: '2027-10-08', to: '2027-10-11', cat: 'feriado' },
   { id: 'd9', name: 'Finados (martes 2 nov)', from: '2027-10-29', to: '2027-11-01', cat: 'feriado' },
-  { id: 'd10', name: 'Proclamação da República (lunes 15 nov)', from: '2027-11-12', to: '2027-11-14', cat: 'feriado' },
-  { id: 'd11', name: 'Navidad 2026 (noches del 24 y 25)', from: '2026-12-24', to: '2026-12-25', cat: 'pico' },
-  { id: 'd12', name: 'Año Nuevo 2026/27 (noches del 30 dic al 2 ene)', from: '2026-12-30', to: '2027-01-02', cat: 'pico' },
-  { id: 'd13', name: 'Navidad 2027 (noches del 24 y 25)', from: '2027-12-24', to: '2027-12-25', cat: 'pico' },
-  { id: 'd14', name: 'Año Nuevo 2027/28 (noches del 30 dic al 2 ene)', from: '2027-12-30', to: '2028-01-02', cat: 'pico' }
+  { id: 'd10', name: 'Proclamação da República (lunes 15 nov)', from: '2027-11-12', to: '2027-11-14', cat: 'feriado' }
 ];
 
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -316,7 +318,7 @@ var now = new Date();
 var today = iso(now.getFullYear(), now.getMonth() + 1, now.getDate());
 var sel = { inn: null, out: null };
 var example = false;
-if (today <= '2026-12-19') { sel.inn = '2026-12-19'; sel.out = '2026-12-28'; example = true; }
+if (today <= '2026-12-29') { sel.inn = '2026-12-29'; sel.out = '2027-01-03'; example = true; }
 var view = sel.inn ? { y: 2026, m: 12 } : { y: now.getFullYear(), m: now.getMonth() + 1 };
 var curMonth = { y: now.getFullYear(), m: now.getMonth() + 1 };
 

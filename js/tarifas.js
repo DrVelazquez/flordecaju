@@ -9,9 +9,9 @@
 
 /* Tarifa por noche (R$) por tipo de unidad y categoría de fecha */
 var RATES = {
-  suite:  { baja: 220, feriado: 290, alta: 500, pico: 700,  carnaval: 630 },   // Suite estándar sin cocina
-  studio: { baja: 270, feriado: 350, especial: 415, alta: 650, pico: 850,  carnaval: 700 },   // Suite tipo estudio con cocina
-  apto:   { baja: 440, feriado: 550, especial: 620, alta: 900, pico: 1500, carnaval: 1400 }   // Apartamento
+  suite:  { baja: 220, feriado: 290, alta: 500, pico: 700, revelion: 1100,  carnaval: 630 },   // Suite estándar sin cocina
+  studio: { baja: 270, feriado: 350, especial: 415, alta: 650, pico: 850, revelion: 1300,  carnaval: 700 },   // Suite tipo estudio con cocina
+  apto:   { baja: 440, feriado: 550, especial: 620, alta: 900, pico: 1500, revelion: 1800, carnaval: 1400 }   // Apartamento
 };
 
 /* Cantidad de personas incluidas en la tarifa; por encima se cobra persona extra por noche.
@@ -36,8 +36,9 @@ var SPECIALS = [
   { from: '2027-11-12', to: '2027-11-14', cat: 'feriado' },   // Proclamação da República
   { from: '2026-12-24', to: '2026-12-25', cat: 'pico' },      // Navidad 2026
   { from: '2026-12-30', to: '2027-01-02', cat: 'pico' },      // Año Nuevo 2026/27
-  { from: '2027-12-24', to: '2027-12-25', cat: 'pico' },      // Navidad 2027
-  { from: '2027-12-30', to: '2028-01-02', cat: 'pico' }       // Año Nuevo 2027/28
+  { from: '2027-12-24', to: '2027-12-25', cat: 'pico' },      // Navidad 2027      // Navidad 2027
+  { from: '2027-12-30', to: '2028-01-01', cat: 'revelion' },
+  { from: '2027-01-01', to: '2028-01-02', cat: 'pico' }       // Año Nuevo 2027/28
 ];
 
 /* ---------- lógica (idéntica a calculadora.html) ---------- */

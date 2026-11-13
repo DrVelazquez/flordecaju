@@ -10,7 +10,7 @@
 /* Tarifa por noche (R$) por tipo de unidad y categoría de fecha */
 var RATES = {
   suite:  { baja: 220, feriado: 290, alta: 500, pico: 700, revelion: 1100,  carnaval: 630 },   // Suite estándar sin cocina
-  studio: { baja: 270, feriado: 350, especial: 415, alta: 650, pico: 850, revelion: 1300,  carnaval: 700 },   // Suite tipo estudio con cocina
+  studio: { baja: 220, feriado: 290, especial: 415, alta: 550, pico: 850, revelion: 1300,  carnaval: 700 },   // Suite tipo estudio con cocina
   apto:   { baja: 440, feriado: 550, especial: 620, alta: 900, pico: 1500, revelion: 1800, carnaval: 1400 }   // Apartamento
 };
 

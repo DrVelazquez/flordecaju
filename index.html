@@ -90,6 +90,21 @@
   .btn-ghost:hover{border-color:var(--green-deep);}
   .btn svg{width:19px; height:19px; flex:none;}
 
+  /* botão discreto "Reservar pelo Booking.com" */
+  .btn-booking{
+    background:transparent; color:var(--teal); border-color:var(--teal);
+    padding:11px 20px; font-size:.92rem; justify-content:center;
+  }
+  .btn-booking:hover{background:var(--teal); color:var(--white);}
+  .btn-booking svg{width:16px; height:16px;}
+  .hero-booking-link{
+    display:inline-flex; align-items:center; gap:6px;
+    margin:-34px 0 44px; font-size:.9rem; font-weight:600; color:var(--teal);
+    text-decoration:none; border-bottom:1px solid rgba(31,92,99,.35); padding-bottom:1px;
+  }
+  .hero-booking-link:hover{border-bottom-color:var(--teal);}
+  .hero-booking-link svg{width:14px; height:14px; flex:none;}
+
   /* ============ HEADER ============ */
   header{
     position:sticky; top:0; z-index:50;
@@ -99,11 +114,11 @@
   }
   .headbar{
     display:flex; align-items:center; justify-content:space-between;
-    padding:16px 0;
+    padding:16px 0; gap:12px;
   }
-  .logo{display:flex; align-items:center; gap:10px; text-decoration:none;}
-  .logo svg{width:34px; height:34px;}
-  .logo-text{font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; color:var(--green-deep);}
+  .logo{display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;}
+  .logo svg{width:34px; height:34px; flex:none;}
+  .logo-text{font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; color:var(--green-deep); white-space:nowrap;}
   nav.mainnav{display:flex; align-items:center; gap:28px;}
   nav.mainnav a{
     text-decoration:none; color:var(--ink); font-size:0.95rem; font-weight:500;
@@ -134,12 +149,13 @@
   .hero-grid{
     display:grid; grid-template-columns:1.05fr 0.95fr; gap:40px; align-items:end;
   }
+  .hero-grid > *{min-width:0;}
   .hero h1{font-size:clamp(2.1rem,4.4vw,3.4rem); max-width:12ch;}
   .hero .lede{font-size:1.12rem; color:var(--ink); max-width:46ch;}
   .hero-ctas{display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; padding-bottom:56px;}
   @media (max-width:900px){
     .hero-grid{grid-template-columns:1fr;}
-    .hero-media{order:-1; max-width:460px; margin:0 auto;}
+    .hero-media{order:-1; max-width:460px; margin:0 auto; width:100%;}
   }
 
   /* ---- hero media: carousel + map ---- */
@@ -182,7 +198,7 @@
   .highlight-cta{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin:-14px; transition:border-color .15s ease, transform .15s ease;}
   .highlight-cta:hover{border-color:var(--coral); transform:translateY(-1px);}
   @media (max-width:860px){ .highlights-grid{grid-template-columns:1fr 1fr;} }
-  @media (max-width:560px){ .highlights-grid{grid-template-columns:1fr;} }
+  @media (max-width:560px){ .highlights-grid{grid-template-columns:1fr;} .highlight-cta{margin:0;} }
 
   /* ============ ABOUT ============ */
   #sobre{position:relative; overflow:hidden; isolation:isolate;}
@@ -204,7 +220,7 @@
     padding-top:14px; border-top:1px solid var(--line);
   }
   .facts svg{width:20px; height:20px; flex:none; color:var(--coral); margin-top:2px;}
-  @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} .facts{grid-template-columns:1fr;} }
+  @media (max-width:760px){ .about-grid{grid-template-columns:1fr; gap:28px;} .facts{grid-template-columns:1fr;} }
 
   .weather-widget{
     display:flex; align-items:center; gap:16px; align-self:start;
@@ -230,6 +246,7 @@
   .room-card p{font-size:.96rem; color:var(--ink);}
   .room-tags{font-size:.86rem; color:var(--coral-deep); font-weight:600; letter-spacing:.01em;}
   @media (max-width:900px){ .rooms-grid{grid-template-columns:1fr;} }
+  @media (max-width:480px){ .room-card{padding:24px 20px;} }
 
   /* ---- miniaturas de fotos dentro de cada cuarto ---- */
   .room-thumbs-wrap{margin-top:auto; padding-top:10px; border-top:1px solid var(--line);}
@@ -337,13 +354,14 @@
     background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
     box-shadow:var(--shadow); padding:38px; display:grid; grid-template-columns:1.3fr 1fr; gap:40px;
   }
-  @media (max-width:900px){ .booking-card{grid-template-columns:1fr; padding:26px;} }
-  @media (max-width:480px){ .booking-card{padding:18px;} }
+  .booking-card > div{min-width:0;}
+  @media (max-width:900px){ .booking-card{grid-template-columns:1fr; padding:26px; gap:28px;} }
+  @media (max-width:480px){ .booking-card{padding:16px;} }
 
   .cal-nav{display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;}
   .cal-nav-btn{
-    width:32px; height:32px; border-radius:50%; border:1px solid var(--line);
-    background:var(--white); cursor:pointer; font-size:1.15rem; line-height:1;
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--line);
+    background:var(--white); cursor:pointer; font-size:1.15rem; line-height:1; padding:0;
     display:flex; align-items:center; justify-content:center; color:var(--green-deep);
   }
   .cal-nav-btn:hover:not(:disabled){border-color:var(--green-deep);}
@@ -352,43 +370,57 @@
   .cal{flex:1; min-width:230px;}
   .cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
   .cal-head strong{font-family:'Fraunces',serif; color:var(--green-deep); font-size:1.05rem; text-transform:capitalize;}
-  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px;}
   .cal-dow{font-size:.72rem; text-align:center; color:var(--green); font-weight:600; padding-bottom:4px;}
   .cal-day{
-    aspect-ratio:1; border:none; background:none; border-radius:6px;
-    font-size:.86rem; color:var(--ink); cursor:pointer;
+    aspect-ratio:1; width:100%; min-width:0; padding:0; margin:0;
+    border:none; background:none; border-radius:6px;
+    font-size:.86rem; line-height:1; color:var(--ink); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
   }
   .cal-day:hover:not(:disabled){background:var(--sand-2);}
   .cal-day:disabled{color:rgba(42,36,23,0.28); cursor:default;}
   .cal-day.empty{visibility:hidden;}
   .cal-day.selected{background:var(--coral); color:var(--white); font-weight:700;}
   .cal-day.in-range{background:rgba(219,90,52,0.18);}
-  @media (max-width:560px){ .cal-months{flex-direction:column; gap:22px;} .cal{min-width:0;} }
+  /* no celular: um mês por vez, para os dias não ficarem apertados */
+  @media (max-width:560px){
+    .cal-months{flex-direction:column; gap:0;}
+    .cal{min-width:0; width:100%;}
+    .cal + .cal{display:none;}
+    .cal-day{font-size:.95rem; border-radius:8px;}
+    .cal-grid{gap:3px;}
+    .cal-nav{justify-content:space-between;}
+    .cal-nav-btn{width:40px; height:40px;}
+  }
 
   .booking-summary h3{font-size:1.4rem;}
-  .stay-dates{display:flex; gap:16px; margin:18px 0; flex-wrap:wrap;}
-  .stay-dates > div{flex:1; min-width:96px; border-top:1px solid var(--line); padding-top:10px;}
+  .stay-dates{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; margin:18px 0;}
+  .stay-dates > div{min-width:0; border-top:1px solid var(--line); padding-top:10px;}
+  .stay-dates > div:last-child{grid-column:1 / -1;}
   .stay-dates .label{font-size:.78rem; color:var(--green); text-transform:lowercase; font-weight:600;}
-  .stay-dates .value{font-size:1.02rem; font-weight:600; color:var(--green-deep); margin-top:2px;}
-  .stepper{display:flex; align-items:center; gap:10px; margin-top:2px;}
+  .stay-dates .value{font-size:1rem; font-weight:600; color:var(--green-deep); margin-top:2px;}
+  .stepper{display:flex; align-items:center; gap:12px; margin-top:4px;}
   .stepper button{
-    width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
-    background:var(--white); cursor:pointer; font-size:1rem; line-height:1;
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); padding:0;
+    background:var(--white); cursor:pointer; font-size:1.1rem; line-height:1;
     display:flex; align-items:center; justify-content:center; color:var(--green-deep);
   }
-  .stepper button:hover{border-color:var(--green-deep);}
-  .stepper span{min-width:16px; text-align:center; font-weight:700; color:var(--green-deep); font-size:1.02rem;}
+  .stepper button:hover:not(:disabled){border-color:var(--green-deep);}
+  .stepper button:disabled{opacity:.35; cursor:not-allowed;}
+  .stepper span{min-width:20px; text-align:center; font-weight:700; color:var(--green-deep); font-size:1.05rem;}
   .booking-note{font-size:.86rem; color:var(--ink); opacity:.75; margin-top:16px;}
   #bookBtn{width:100%; justify-content:center;}
   #bookBtn[aria-disabled="true"]{opacity:.45; cursor:not-allowed; pointer-events:none; transform:none;}
+  #bookBookingBtn{width:100%; margin-top:10px;}
 
   /* tipo de suite */
-  .suite-types{margin:0 0 18px; padding:0; border:none;}
+  .suite-types{margin:0 0 18px; padding:0; border:none; min-width:0;}
   .suite-types legend{font-size:.78rem; color:var(--green); font-weight:600; padding:0; margin-bottom:8px;}
   .suite-opt{display:block; position:relative; margin-bottom:8px; cursor:pointer;}
   .suite-opt input{position:absolute; opacity:0; inset:0; width:100%; height:100%; margin:0; cursor:pointer;}
   .suite-opt .opt-body{
-    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    display:flex; justify-content:space-between; align-items:center; gap:4px 12px; flex-wrap:wrap;
     border:1px solid var(--line); border-radius:10px; padding:11px 14px; background:var(--white);
     transition:border-color .15s, background .15s;
   }
@@ -430,11 +462,12 @@
   .rv-viewport{background:var(--white); box-shadow:0 2px 14px rgba(28,54,32,.08);}
   @media (max-width:700px){ .rv-arrow{display:none;} .rv-slide.rv-img{padding:12px 14px;} }
   .modal-note{margin-top:18px; font-size:.88rem; color:var(--green); font-style:italic;}
-  @media (max-width:560px){ .modal-gallery{grid-template-columns:1fr 1fr;} .modal-card{padding:24px;} }
+  @media (max-width:560px){ .modal-gallery{grid-template-columns:1fr 1fr;} .modal-card{padding:24px;} .modal-overlay{padding:14px;} }
 
   /* ============ FOOTER ============ */
   footer{background:var(--sand-2); border-top:1px solid var(--line);}
   .footer-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:48px; padding:72px 0 36px;}
+  .footer-grid > *{min-width:0;}
   .footer-ctas{display:flex; flex-wrap:wrap; gap:14px; margin:22px 0;}
   .footer-meta{font-size:.92rem; color:var(--green-deep);}
   .footer-meta a{text-decoration:none; border-bottom:1px solid var(--line);}
@@ -450,6 +483,31 @@
     box-shadow:0 8px 20px rgba(0,0,0,.25); text-decoration:none;
   }
   .float-wa svg{width:28px; height:28px; color:#fff;}
+
+  /* ============ AJUSTES CELULAR ============ */
+  @media (max-width:560px){
+    .headbar{padding:12px 0;}
+    .logo svg{width:30px; height:30px;}
+    .logo-text{font-size:1.02rem;}
+    .head-right{gap:8px;}
+    .head-right > .btn{display:none;}              /* o botão "Reservar" do topo some; o WhatsApp flutuante e a seção Reservar continuam */
+    .langswitch{gap:2px; padding:3px;}
+    .langswitch button{width:32px; height:32px; font-size:1rem;}
+
+    .hero{padding-top:28px;}
+    .hero-ctas{flex-direction:column; align-items:stretch; padding-bottom:40px;}
+    .hero-ctas .btn{width:100%; justify-content:center;}
+    .hero-booking-link{margin:-24px 0 32px;}
+    .price-pill{font-size:.92rem; padding:9px 14px;}
+
+    .footer-ctas{flex-direction:column; align-items:stretch;}
+    .footer-ctas .btn{width:100%; justify-content:center;}
+    .foot-bottom{padding-bottom:84px;}               /* espaço para o botão flutuante não cobrir o rodapé */
+    .float-wa{bottom:16px; right:16px; width:52px; height:52px;}
+  }
+  @media (max-width:360px){
+    .logo-text{display:none;}
+  }
 
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
@@ -518,6 +576,10 @@
             <span data-i18n="hero.guide">Ver guia de Pipa</span>
           </a>
         </div>
+        <a class="hero-booking-link" id="heroBookingLink" href="#" target="_blank" rel="noopener">
+          <span data-i18n="booking.viaBooking">Reservar pelo Booking.com</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+        </a>
       </div>
 
       <div class="hero-media">
@@ -756,6 +818,10 @@
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-1.9-1.2 7.2 7.2 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4a.5.5 0 0 0 0-.4c-.1-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.7 2.7 0 0 0-.9 2c0 1.2.9 2.4 1 2.5.1.2 1.8 2.8 4.4 3.8a5 5 0 0 0 3.1.6c.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1-.2-.2-.4-.3Z"/></svg>
             <span data-i18n="booking.button">Consultar no WhatsApp</span>
           </a>
+          <a class="btn btn-booking" id="bookBookingBtn" href="#" target="_blank" rel="noopener">
+            <span data-i18n="booking.viaBooking">Reservar pelo Booking.com</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+          </a>
           <p class="booking-note" data-i18n="booking.note">Vamos te passar a cotação e confirmar a disponibilidade por WhatsApp. O pagamento (Pix ou cartão) combinamos por lá.</p>
         </div>
       </div>
@@ -782,6 +848,10 @@
         <a class="btn btn-ghost" id="footInstaBtn" href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
           <span data-i18n="footer.instagram">Instagram</span>
+        </a>
+        <a class="btn btn-booking" id="footBookingBtn" href="#" target="_blank" rel="noopener">
+          <span data-i18n="booking.viaBooking">Reservar pelo Booking.com</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
         </a>
       </div>
       <div class="payments" style="padding-top:6px;">
@@ -854,7 +924,13 @@ const CONFIG = {
   whatsappNumber: "558498297312",      // formato: 55 + DDD + número, sem espaços ou símbolos
   email: "pousadaflordecaju@gmail.com",
   instagramHandle: "pousadaflordecaju",   // sem o @
-  priceFrom: 220                          // preço "a partir de" por noite, em reais (R$)
+  priceFrom: 220,                         // preço "a partir de" por noite, em reais (R$)
+  // página da pousada no Booking.com, uma por idioma
+  bookingUrls: {
+    pt: "https://www.booking.com/hotel/br/casa-em-pipa-rua-do-ceu.pt-br.html",
+    es: "https://www.booking.com/hotel/br/casa-em-pipa-rua-do-ceu.es.html",
+    en: "https://www.booking.com/hotel/br/casa-em-pipa-rua-do-ceu.en-gb.html"
+  }
 };
 
 // capacidade máxima por tipo de acomodação
@@ -892,7 +968,7 @@ const T = {
     "booking.title":"Reservar","booking.sub":"Escolha as datas, o tipo de acomodação e a quantidade de hóspedes, e fale com a gente no WhatsApp para receber a cotação e a disponibilidade.",
     "booking.typeLabel":"tipo de acomodação","booking.type.apto":"Apartamento","booking.type.studio":"Suíte estúdio com cozinha","booking.type.suite":"Suíte padrão sem cozinha","booking.max4":"Máx. 4 pessoas","booking.max3":"Máx. 3 pessoas","booking.max3b":"Máx. 3 pessoas",
     "booking.summaryTitle":"Sua estadia","booking.checkin":"chegada","booking.checkout":"saída","booking.guests":"hóspedes",
-    "booking.button":"Consultar no WhatsApp","booking.note":"Vamos te passar a cotação e confirmar a disponibilidade por WhatsApp. O pagamento (Pix ou cartão) combinamos por lá.",
+    "booking.button":"Consultar no WhatsApp","booking.viaBooking":"Reservar pelo Booking.com","booking.note":"Vamos te passar a cotação e confirmar a disponibilidade por WhatsApp. O pagamento (Pix ou cartão) combinamos por lá.",
     "payments.title":"Formas de pagamento aceitas",
     "payments.pix":"Pix","payments.visa":"Visa","payments.master":"Mastercard","payments.elo":"Elo","payments.hiper":"Hipercard","payments.amex":"Amex","payments.transfer":"Transferência bancária",
     "payments.secure":"Pagamento combinado direto com a pousada, com segurança e confirmação por WhatsApp.",
@@ -934,7 +1010,7 @@ const T = {
     "booking.title":"Reservar","booking.sub":"Elegí las fechas, el tipo de alojamiento y la cantidad de huéspedes, y escribinos por WhatsApp para recibir la cotización y la disponibilidad.",
     "booking.typeLabel":"tipo de alojamiento","booking.type.apto":"Apartamento","booking.type.studio":"Suite tipo estudio con cocina","booking.type.suite":"Suite estándar sin cocina","booking.max4":"Máx. 4 personas","booking.max3":"Máx. 3 personas","booking.max3b":"Máx. 3 personas",
     "booking.summaryTitle":"Tu estadía","booking.checkin":"llegada","booking.checkout":"salida","booking.guests":"huéspedes",
-    "booking.button":"Consultar por WhatsApp","booking.note":"Te pasamos la cotización y confirmamos la disponibilidad por WhatsApp. El pago (Pix o tarjeta) lo coordinamos por ahí.",
+    "booking.button":"Consultar por WhatsApp","booking.viaBooking":"Reservar por Booking.com","booking.note":"Te pasamos la cotización y confirmamos la disponibilidad por WhatsApp. El pago (Pix o tarjeta) lo coordinamos por ahí.",
     "payments.title":"Formas de pago aceptadas",
     "payments.pix":"Pix","payments.visa":"Visa","payments.master":"Mastercard","payments.elo":"Elo","payments.hiper":"Hipercard","payments.amex":"Amex","payments.transfer":"Transferencia bancaria",
     "payments.secure":"El pago se coordina directamente con la pousada, con seguridad y confirmación por WhatsApp.",
@@ -976,7 +1052,7 @@ const T = {
     "booking.title":"Book your stay","booking.sub":"Choose your dates, room type and number of guests, then message us on WhatsApp to get a quote and check availability.",
     "booking.typeLabel":"room type","booking.type.apto":"Apartment","booking.type.studio":"Studio suite with kitchen","booking.type.suite":"Standard suite, no kitchen","booking.max4":"Max. 4 guests","booking.max3":"Max. 3 guests","booking.max3b":"Max. 3 guests",
     "booking.summaryTitle":"Your stay","booking.checkin":"check-in","booking.checkout":"check-out","booking.guests":"guests",
-    "booking.button":"Ask on WhatsApp","booking.note":"We'll send you a quote and confirm availability over WhatsApp. Payment (Pix or card) is arranged there.",
+    "booking.button":"Ask on WhatsApp","booking.viaBooking":"Book on Booking.com","booking.note":"We'll send you a quote and confirm availability over WhatsApp. Payment (Pix or card) is arranged there.",
     "payments.title":"Payment methods accepted",
     "payments.pix":"Pix","payments.visa":"Visa","payments.master":"Mastercard","payments.elo":"Elo","payments.hiper":"Hipercard","payments.amex":"Amex","payments.transfer":"Bank transfer",
     "payments.secure":"Payment is arranged directly with the pousada, securely, confirmed over WhatsApp.",
@@ -1006,6 +1082,18 @@ function waUrl(text){
 }
 function mailUrl(subject, body){
   return `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body||"")}`;
+}
+// link do Booking.com no idioma atual; se já houver datas escolhidas, leva as datas e hóspedes
+function isoDate(d){
+  const m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+  return `${d.getFullYear()}-${m}-${day}`;
+}
+function bookingUrl(lang, withStay){
+  const base = CONFIG.bookingUrls[lang] || CONFIG.bookingUrls.en;
+  if(withStay && selStart && selEnd){
+    return `${base}?checkin=${isoDate(selStart)}&checkout=${isoDate(selEnd)}&group_adults=${selGuests}&no_rooms=1`;
+  }
+  return base;
 }
 
 function formatPrice(lang){
@@ -1052,6 +1140,10 @@ function applyLang(lang){
   document.getElementById("navInstaBtn").href = instaUrl;
   document.getElementById("footInstaBtn").href = instaUrl;
   document.getElementById("galleryInstaLink").href = instaUrl;
+
+  // Booking.com (hero e rodapé: link simples; seção Reservar: leva as datas, ver updateBookingSummary)
+  document.getElementById("heroBookingLink").href = bookingUrl(lang, false);
+  document.getElementById("footBookingBtn").href = bookingUrl(lang, false);
 
   document.getElementById("modalClose").setAttribute("aria-label", dict["modal.close"]);
   updateRoomLabels();
@@ -1132,7 +1224,7 @@ function renderCalendars(){
   const m1 = viewMonth, y1 = viewYear;
   const m2 = (viewMonth+1) % 12, y2 = viewMonth === 11 ? viewYear+1 : viewYear;
   container.appendChild(buildMonthGrid(y1, m1, currentLang));
-  container.appendChild(buildMonthGrid(y2, m2, currentLang));
+  container.appendChild(buildMonthGrid(y2, m2, currentLang));  // no celular o CSS esconde o 2º mês
 
   const prevBtn = document.getElementById("calPrev");
   if(prevBtn){
@@ -1167,6 +1259,9 @@ function updateBookingSummary(){
   document.getElementById("guestVal").textContent = selGuests;
   document.getElementById("guestPlus").disabled = selGuests >= max;
   document.getElementById("guestMinus").disabled = selGuests <= 1;
+
+  // botão "Reservar pelo Booking.com": sempre ativo; se já há datas, abre o Booking com elas
+  document.getElementById("bookBookingBtn").href = bookingUrl(currentLang, true);
 
   // botão "Consultar no WhatsApp": só ativa com datas escolhidas, e abre o WhatsApp com a mensagem pronta
   const btn = document.getElementById("bookBtn");

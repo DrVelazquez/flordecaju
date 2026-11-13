@@ -11,13 +11,23 @@
     cnpj: '',                                   // ej: '00.000.000/0001-00' (vacío = no se muestra)
     direccion: 'Rua do Céu, Pipa',
     ciudad: 'Tibau do Sul — RN, Brasil',
-    telefono: '',                               // ej: '+55 84 9 XXXX-XXXX' (vacío = no se muestra)
-  email: 'pousadaflordecaju@gmail.com',
-  web: 'Instagram: @pousadaflordecaju'
+    telefono: '+55 84 9829-7312',                               // ej: '+55 84 9 XXXX-XXXX' (vacío = no se muestra)
+    email: 'pousadaflordecaju@gmail.com',
+    web: 'Instagram: @pousadaflordecaju'
   };
 
   const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
   const COLOR = { principal: [214, 90, 49], texto: [40, 40, 40], suave: [120, 120, 120], linea: [220, 220, 220], ok: [46, 139, 87], warn: [217, 130, 20], bad: [192, 57, 43] };
+
+  const POLITICA_CANCELAMENTO = {
+    titulo: 'Política de Cancelamento – Flor de Caju',
+    itens: [
+      'A reserva é confirmada mediante o pagamento antecipado de 50% do valor total da hospedagem. Os 50% restantes são pagos no momento do check-in.',
+      'Cancelamentos realizados com 7 dias ou mais de antecedência da data do check-in: reembolso integral do valor pago.',
+      'Cancelamentos realizados com menos de 7 dias de antecedência: o valor pago não será reembolsável.',
+      'Em caso de não comparecimento (no-show), não haverá reembolso do valor pago.'
+    ]
+  };
 
   /* ---------- 2) DATOS DESDE Store (state.js) ---------- */
   function obtenerDatos(reservaId) {
@@ -232,6 +242,29 @@
       const l = doc.splitTextToSize(String(d.notas), R - M);
       ensure(l.length * 5);
       doc.text(l, M, y); y += l.length * 5;
+    }
+
+    // ----- Política de cancelamento (pequena, em todos os comprovantes) -----
+    {
+      const P = POLITICA_CANCELAMENTO;
+      const wTxt = R - M - 4;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
+      const blocos = P.itens.map(t => doc.splitTextToSize('•  ' + t, wTxt));
+      const altura = 5 + blocos.reduce((s, l) => s + l.length * 3.5 + 1, 0) + 2;
+      y += 6;
+      ensure(altura + 2);
+      doc.setFillColor(246, 246, 246);
+      doc.roundedRect(M, y, R - M, altura, 1.5, 1.5, 'F');
+      let yy = y + 5;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); setC(COLOR.texto);
+      doc.text(P.titulo, M + 2, yy);
+      yy += 4.5;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); setC(COLOR.suave);
+      blocos.forEach(l => {
+        doc.text(l, M + 2, yy);
+        yy += l.length * 3.5 + 1;
+      });
+      y += altura;
     }
 
     // ----- Rodapé (todas as páginas) -----

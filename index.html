@@ -154,25 +154,6 @@
   .hero .lede{font-size:1.12rem; color:var(--ink); max-width:46ch;}
   .hero-ctas{display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; padding-bottom:56px;}
 
-  /* En móvil: título → fotos → texto y botones → mapa */
-  @media (max-width:900px){
-    .hero-grid{grid-template-columns:1fr; gap:0;}
-    .hero-grid > div:first-child,
-    .hero-media{display:contents;}
-
-    .hero h1{order:1; max-width:none; margin-bottom:18px;}
-    .hero-carousel{order:2; width:100%; max-width:460px; margin:0 auto 26px;}
-    .hero .lede{order:3;}
-    .hero .price-pill{order:4; justify-self:start;}
-    .hero-ctas{order:5;}
-    .hero-booking-link{order:6;}
-    .hero-map{order:7; margin-bottom:32px;}
-
-    /* fotos menos recortadas en móvil */
-    .hc-slide{aspect-ratio:4/3;}
-    .hc-slide.has-photo{background-position:center;}
-  }
-
   /* ---- hero media: carousel + map ---- */
   .hero-media{display:flex; flex-direction:column; gap:16px; padding-bottom:32px;}
   .hero-carousel{
@@ -203,6 +184,24 @@
   .hero-map-link{display:block; text-align:center; padding:10px; font-size:.86rem; font-weight:600; color:var(--green-deep); text-decoration:none; border-top:1px solid var(--line);}
   .hero-map-link:hover{color:var(--coral-deep);}
 
+  /* ---- MÓVIL: título → fotos → texto y botones → mapa (debe ir al final del bloque HERO) ---- */
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr; gap:0;}
+    .hero-grid > div:first-child{display:contents;}
+    .hero .hero-media{display:contents;}
+
+    .hero h1{order:1; max-width:none; margin-bottom:18px;}
+    .hero .hero-carousel{order:2; width:100%; max-width:460px; margin:0 auto 26px;}
+    .hero .lede{order:3;}
+    .hero .price-pill{order:4; justify-self:start;}
+    .hero .hero-ctas{order:5;}
+    .hero .hero-booking-link{order:6;}
+    .hero .hero-map{order:7; margin-bottom:32px;}
+
+    /* fotos menos recortadas en móvil */
+    .hero .hc-slide{aspect-ratio:4/3;}
+    .hero .hc-slide.has-photo{background-position:center;}
+  }
   /* ============ HIGHLIGHTS ============ */
   .highlights{padding:40px 0; background:var(--sand-2);}
   .highlights-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px 28px;}
